@@ -1,0 +1,13 @@
+{% extends "template/en/base.html" %}
+
+{% block title %}UI/{{ ui.name.en }}{% endblock title %}
+{% block article_content %}
+    <h1>UI/{{ ui.name.en }}</h1>
+    {% include "template/en/infobox/ui.html" %}
+    <p><b>{{ ui.name.en }}</b> is a part of the UI (user interface) in Blue Archive.</p>
+    <p>Description: {{ ui.desc.en }}</p>
+    <h2>Used Track</h2>
+    <p>Track Name: {{ ui.track.name.en }}</p>
+    <p>Track No.: {{ ui.track.no }} (of {{ ui.track.namespace.1 }})</p>
+    <p>Composer: {{ ui.track.composer.nickname }} (<a href="{{ ui.track.composer.contact.url.value }}"><img src="/static/images/social/{{ ui.track.composer.contact.platform.en }}.png" class="social-logo">{{ ui.track.composer.contact.url.platform.en }}: {{ ui.track.composer.nickname }}</a>)</p>
+{% endblock %}

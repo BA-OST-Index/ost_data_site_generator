@@ -1,0 +1,226 @@
+{% macro word_case(text) %}
+        {{text[0]|upper}}{{text[1:]}}
+{% endmacro %}
+
+{% macro tag_altogether(tags) %}
+    {% for tag in tags %}<a href="/en/tag/{{ tag.namespace[-1] }}.html"><span class="badge badge-{{ tag.color_css }}">{{ tag.name.en }}</span></a>&nbsp;{% endfor %}
+{% endmacro %}
+
+{% macro track_type_for_show(track) %}
+    {% if track.track_type == 0 %}OST{% elif track.track_type == 1 %}Short Animation{% elif track.track_type == 2 %}Animation{% else %}Other{% endif %}
+{% endmacro %}
+
+{% macro output_usedby_story(data_story) %}
+    <ul>
+        {% for key, value in data_story.items() %}
+            {% set value = value[0] %}
+            {% if value.filetype == 15 %}
+            <li>
+                <a href="/en/character/student/{{ value.pos.student }}/bond/{{ value.pos.no }}.html">
+                    <img src="/static/images/student/icon/{{ value.student.image.collection_texture }}.png" class="icon-stu"/>{{ value.student.name.personal_name.en }} Bond Story {{ value.pos.no }}: {{ value.name.en }}
+                </a>
+            </li>
+            {% elif value.filetype == 14 %}
+            <li>
+                <a href="/en/event/{{ value.pos.event_id }}/story/{{ value.pos.no }}.html">Event {{ value.parent_data.0.name.en }} Story {{ value.pos.segment }}: {{ value.name.en }}
+                </a></li>
+            {% else %}
+            <li>
+                {% if value.filetype == 11 %}
+                    {% set story_type = "main" %}
+                {% elif value.filetype == 12 %}
+                    {% set story_type = "side" %}
+                {% elif value.filetype == 13 %}
+                    {% set story_type = "short" %}
+                {% else %}
+                    {% set story_type = "other" %}
+                {% endif %}
+                <a href="/en/main/story/{{ story_type }}/{{ value.pos.volume }}/{{ value.pos.chapter }}/{{ value.pos.segment }}.html">
+                    {{ word_case(story_type) }}Story Volume {{ value.pos.volume }} Chapter {{ value.pos.chapter }} Episode {{ value.pos.segment }}: {{ value.name.en }}
+                </a></li>
+            {% endif %}
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro output_usedby_battle(data_battle) %}
+    <ul>
+        {% for key, value in data_battle.items() %}
+            {% set value = value[0] %}
+            {% if value.filetype == 21 %}
+                {% if value.no[0] == "N" %}
+                    {% set mission_type = "Normal" %}
+                {% else %}
+                    {% set mission_type = "Hard" %}
+                {% endif %}
+                <li>
+                    <a href="/en/battle/main/{{ value.chapter }}/{{ value.no }}.html">Main Battle Chapter {{ value.chapter }} Mission {{ value.no[1] }} ({{ mission_type }}, Sub {{ value.no[2] }})</a>
+                </li>
+            {% elif value.filetype == 22 %}
+                {% if value.no[0] == "N" %}
+                    {% set mission_type = "Normal" %}
+                {% else %}
+                    {% set mission_type = "Hard" %}
+                {% endif %}
+                <li>
+                    <a href="/en/event/{{ value.event_id }}/{{ value.no }}.html">Event {{ value.parent_data.0.name.en }} Battle No.{{ value.no[1:] }} ({{ mission_type }}): {{ value.name.en }}</a>
+                </li>
+            {% else %}
+                {% if value.filetype == 24 %}
+                    {% set mission_type = "total_assault" %}
+                {% elif value.filetype == 25 %}
+                    {% set mission_type = "bounty_hunt" %}
+                {% elif value.filetype == 26 %}
+                    {% set mission_type = "school_exchange" %}
+                {% else %}
+                    {% set mission_type = "special_commision" %}
+                {% endif %}
+                <li>
+                    <a href="/en/battle/{{ mission_type }}/{{ value.id }}.html">{{ value.name.en }}</a>
+                </li>
+            {% endif %}
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro output_usedby_ui(data_ui) %}
+    <ul>
+        {% for key, value in data_ui.items() %}
+            {% set i = value.0 %}
+
+            <!--Special case for UiInfoEvent-->
+            {% if i.filetype == 32 %}
+                <li><a href="/en/event/{{ i.event_id }}/ui/{{ i.id }}.html">{{ i.name.en }}</a>&nbsp;-&nbsp;{{ i.desc.en }}</li>
+            {% else %}
+                <li><a href="/en/ui/{{ i.namespace.1 }}.html">{{ i.name.en }}</a>&nbsp;-&nbsp;{{ i.desc.en }}</li>
+            {% endif %}
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro output_usedby_ui_list(data_ui) %}
+    <ul>
+        {% for i in data_ui %}
+            <!--Special case for UiInfoEvent-->
+            {% if i.filetype == 32 %}
+                <li><a href="/en/event/{{ i.event_id }}/ui/{{ i.id }}.html">{{ i.name.en }}</a>&nbsp;-&nbsp;{{ i.desc.en }}</li>
+            {% else %}
+                <li><a href="/en/ui/{{ i.namespace.1 }}.html">{{ i.name.en }}</a>&nbsp;-&nbsp;{{ i.desc.en }}</li>
+            {% endif %}
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro output_usedby_ui_for_all_ui(data_ui) %}
+    <ul>
+        {% for i in data_ui %}
+            {% set i = i[1] %}
+
+            <!--Special case for UiInfoEvent-->
+            {% if i.filetype == 32 %}
+                <li><a href="/en/event/{{ i.event_id }}/ui/{{ i.id }}.html">{{ i.name.en }}</a>&nbsp;-&nbsp;{{ i.desc.en }}</li>
+            {% else %}
+                <li><a href="/en/ui/{{ i.namespace.1 }}.html">{{ i.name.en }}</a>&nbsp;-&nbsp;{{ i.desc.en }}</li>
+            {% endif %}
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro output_usedby_background(data_background) %}
+    <table class="gallery">
+        <tr>
+            {% for key, value in data_background.items() %}
+                <td class="gallery-img"><img src="{{ value.0.image.value }}"><p class="gallery-caption"><a href="/en/background/{{ value.0.filename }}.html">{% if value.0.desc.en != "" %}{{ value.0.desc.en }}{% else %}{{ value.0.filename }}{% endif %}</a></p></td>
+            {% else %}
+                <td>Nothing to show!</td>
+            {% endfor %}
+        </tr>
+    </table>
+{% endmacro %}
+
+{% macro output_usedby_background_list(data_background) %}
+    <table class="gallery">
+        <tr>
+            {% for value in data_background %}
+                <td class="gallery-img"><img src="{{ value.image.value }}"><p class="gallery-caption"><a href="/en/background/{{ value.filename }}.html">{% if value.desc.en != "" %}{{ value.desc.en }}{% else %}{{ value.filename }}{% endif %}</a></p></td>
+            {% else %}
+                <td>Nothing to show!</td>
+            {% endfor %}
+        </tr>
+    </table>
+{% endmacro %}
+
+{% macro output_usedby_track(data_track) %}
+    <ul>
+        {% for key, value in data_track.items() %}
+            {% set value = value.0 %}
+            {% set track_type = track_type_for_show(value) %}
+
+            <li><a href="/en/track/{{ value.namespace.1 }}/{{ value.namespace.2 }}.html">{{ track_type }} No.{{ value.no }}: {{ value.name.realname.en }}</a> by {{ value.composer.nickname }}</li>
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro output_usedby_track_list(data_track) %}
+    <ul>
+        {% for value in data_track %}
+            {% set track_type = track_type_for_show(value) %}
+
+            <li><a href="/en/track/{{ value.namespace.1 }}/{{ value.namespace.2 }}.html">{{ track_type }} No.{{ value.no }}: {{ value.name.realname.en }}</a> by {{ value.composer.nickname }}</li>
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro output_usedby_video(data_video) %}
+    <ul>
+        {% for key, value in data_video.items() %}
+            {% set value = value.0 %}
+
+            <li><a href="/en/video/{{ value.namespace.1 }}.html">Video <i>{{ value.name.en }}</i></a>: {{ value.desc.en }}</li>
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro output_usedby_character(data_character) %}
+    <ul>
+        {% for char in data_character.character %}
+            {% if char.filetype == 52 %}
+            <li>
+                <a href="/en/character/npc/{{ char.name.en|lower }}/">
+                    {{ char.name.en }}
+                </a>
+            </li>
+            {% else %}
+            <li>
+                <a href="/en/character/student/{{ char.name.path_name|lower }}/">
+                    <img src="/static/images/student/icon/{{ char.image.collection_texture }}.png" class="icon-stu"/>{{ char.name.personal_name.en }}
+                </a>
+            </li>
+            {% endif %}
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro get_ordinal_number(number) %}{% if number == 1 %}1st{% elif number == 2 %}2nd{% elif number == 3 %}3rd{% else %}{{ number }}th{% endif %}{% endmacro %}
+
+{% macro get_social_for_composer(composer) %}
+    <a href="{{ composer.contact.url.value }}"><img src="/static/images/social/{{ composer.contact.platform.en }}.png" class="social-logo">{{ composer.contact.url.platform.en }}: {{ composer.nickname }}</a>
+{% endmacro %}

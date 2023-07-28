@@ -1,0 +1,16 @@
+{% extends "template/en/base.html" %}
+{% from 'template/en/_macro.html' import output_usedby_track, output_usedby_background %}
+
+{% block title %}Tag/{{ tag.name.en }}{% endblock title %}
+{% block article_content %}
+    {% from "template/en/_macro.html" import output_used_track, output_usedby_background %}
+
+    <h1>Tag/{{ tag.name.en }}</h1>
+    <p>This is a page showing the detail information of the tag "{{ tag.name.en }}".</p>
+    {% include "template/en/infobox/tag.html" %}
+    <h2>Usage Info</h2>
+    <h3>Tracks</h3>
+    {{ output_usedby_track(tag.used_by.data_track) }}
+    <h3>Backgrounds</h3>
+    {{ output_usedby_background(tag.used_by.data_background) }}
+{% endblock %}

@@ -1,0 +1,26 @@
+<!--Do not use for events!-->
+{% extends "template/en/base.html" %}
+
+{% block title %}All Stories of {{ story.name.en }}{% endblock title %}
+{% block article_content %}
+    <h1>All Stories of {{ story.name.en }}</h1>
+    <p>{{ story.desc.en }}</p>
+    <br/>
+    <ul>
+        {% for i in story.include %}
+            {% set i = i.1 %}
+            {% if story.filetype == -22 %}
+                <li>{{ i.name.en }} - {{ i.desc.en }}</li>
+            {% elif story.filetype == -23 %}
+                <li>Volume {{ i.namespace[-1] }}: {{ i.name.en }} - {{ i.desc.en }}</li>
+            {% elif story.filetype == -24 %}
+                <li>Chapter {{ i.namespace[-1] }}: {{ i.name.en }} - {{ i.desc.en }}</li>
+            {% elif story.filetype == -25 %}
+                <li>Episode {{ i.pos.segment }}: {{ i.name.en }} - {{ i.desc.en }}</li>
+            {% elif story.filetype == -54 %}
+                <li>Story {{ i.pos.segment }}: {{ i.name.en }} - {{ i.desc.en }}</li>
+            {% else %}
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endblock %}

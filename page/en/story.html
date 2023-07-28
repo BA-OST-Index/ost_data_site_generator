@@ -1,0 +1,45 @@
+{% extends "template/en/base.html" %}
+
+{% block title %}Story/{{ story.name.en }}{% endblock title %}
+{% block article_content %}
+    {% from "template/en/_macro.html" import get_ordinal_number, output_usedby_character, output_usedby_track_list, output_usedby_background_list %}
+
+    <h1>Story/{{ story.name.en }}</h1>
+    {% include "template/en/infobox/story.html" %}
+    {% if story.filetype == 11 %}
+        <p><b>{{ story.name.en }}</b> is the {{ get_ordinal_number(story.pos.segment) }} story of Chapter {{ story.pos.chapter }}, Volume {{ story.pos.volume }} of the main story.</p>
+    {% elif story.filetype == 15 %}
+        <p><b>{{ story.name.en }}</b> is the {{ get_ordinal_number(story.pos.no) }} story of the bond story of the student <img src="/static/images/student/icon/{{ story.student.image.collection_texture }}.webp" class="icon-stu"/>{{ story.student.name.personal_name.en }}.</p>
+    {% elif story.filetype == 14 %}
+        <p><b>{{ story.name.en }}</b> is the {{ get_ordinal_number(story.pos.no) }} story of the event {{ story.parent_data.0.name.en }}.</p>
+    {% else %}
+        <p><b>{{ story.name.en }}</b> is the {{ get_ordinal_number(story.pos.no) }} story of Chapter {{ story.pos.chapter }} of story {{ story.parent_data.1.name.en }}.</p>
+    {% endif %}
+    <p>Descriptions:</p>
+    <ul>
+        {% for desc in story.desc %}
+            <li>{{ desc.en }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Battle/Bond Track Info</h2>
+    {% if story.is_battle or story.is_memory %}
+        {% set track = story.bgm_battle or story.bgm_bond %}
+        <p>Track: <a href="/en/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}.html">{{ track.name.en }}</a> (No. {{ track.no }})</p>
+    {% else %}
+        <p>This story contains no battle/recollection lobby part, therefore there's no such track information.</p>
+    {% endif %}
+    <h2>Story Parts</h2>
+    {% for part in story.part %}
+        <h3>{{ part.name.en }}</h3>
+        <p>Description: {{ part.desc.en }}</p>
+        <h4>Characters</h4>
+        {{ output_usedby_character(part) }}
+        <h4>Tracks</h4>
+        {{ output_usedby_track_list(part.track) }}
+        <h4>Backgrounds</h4>
+        {{ output_usedby_background_list(part.background) }}
+    {% else %}
+        <p>Nothing to show!</p>
+    {% endfor %}
+{% endblock %}

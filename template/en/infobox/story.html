@@ -1,0 +1,45 @@
+{% macro word_case(text) %}
+    {{text[0]|upper}}{{text[1:]}}
+{% endmacro %}
+
+<table id="infobox">
+    <tr>
+        <td colspan="2" class="infobox-title">{{ story.name.en }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" class="infobox-icon"><img src="{{ story.image.value }}" /></td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">General Information</td></tr>
+    <tr>
+        <td class="infobox-col-title">Story Name</td>
+        <td class="infobox-col-value">{{ story.name.en }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">Story Position</td>
+        {% if story.filetype == 14 %}
+            <td class="infobox-col-value">Event {{ story.parent_data.0.name.en }} (ID {{ story.pos.event_id }})<br/>Story {{ story.pos.segment }}</td>
+        {% elif story.filetype == 15 %}
+            <td class="infobox-col-value"><img src="/static/images/student/icon/{{ story.student.image.collection_texture }}.png" class="icon-stu"/>{{ story.student.name.personal_name.en }}<br/>Bond Story {{ story.pos.no }}</td>
+        {% else %}
+            {% if story.filetype == 11 %}
+                {% set story_type = "main" %}
+            {% elif story.filetype == 12 %}
+                {% set story_type = "side" %}
+            {% elif story.filetype == 13 %}
+                {% set story_type = "short" %}
+            {% else %}
+                {% set story_type = "other" %}
+            {% endif %}
+            <td class="infobox-col-value">{{ word_case(story_type) }}Story<br/>Volume {{ story.pos.volume }}<br/>Chapter {{ story.pos.chapter }}<br/>Episode {{ story.pos.segment }}</td>
+        {% endif %}
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">Special Case</td></tr>
+    <tr>
+        <td class="infobox-col-title">Battle Included</td>
+        <td class="infobox-col-value">{% if story.is_battle %}Yes{% else %}No{% endif %}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">Recollection Lobby</td>
+        <td class="infobox-col-value">{% if story.is_memory %}Yes{% else %}No{% endif %}</td>
+    </tr>
+</table>

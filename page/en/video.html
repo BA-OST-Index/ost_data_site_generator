@@ -1,0 +1,11 @@
+{% extends "template/en/base.html" %}
+{% from 'template/en/_macro.html' import output_usedby_track_list %}
+
+{% block title %}Video/{{ video.name.en }}{% endblock title %}
+{% block article_content %}
+    <h1>Video/{{ video.name.en }}</h1>
+    {% include "template/en/infobox/video.html" %}
+    <p><b>{{ video.name.en }}</b> is a video related to Blue Archive.</p>
+    <h2>Track Information</h2>
+    {{ output_usedby_track_list(video.track) }}
+{% endblock %}

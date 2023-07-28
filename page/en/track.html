@@ -1,0 +1,38 @@
+{% extends "template/en/base.html" %}
+
+{% block title %}Track/{{ track.name.realname.en }}{% endblock title %}
+{% block article_content %}
+    {% from "template/en/_macro.html" import track_type_for_show, output_usedby_background, output_usedby_story, output_usedby_battle, output_usedby_ui, output_usedby_video %}
+
+    <h1>Track/{{ track.no }}. {{ track.name.realname.en }}</h1>
+    {% include "template/en/infobox/track.html" %}
+    <p><b>{{ track.name.realname.en }}</b> is the No. {{ track.no }} track in the {{ track_type_for_show(track) }}.</p>
+    <p>{{ track.desc.en }}</p>
+    <h2>Name Translation</h2>
+    <h3>Original Names</h3>
+    <ul>
+        <li>English: {{ track.name.realname.en }}</li>
+        <li>中文简体 (Chinese Simplified): {{ track.name.realname.zh_cn }}</li>
+        <li>中文繁體 (Chinese Traditional): {{ track.name.realname.zh_tw }}</li>
+    </ul>
+    <h3>Other Names</h3>
+    <ul>
+        {% for i in track.name.known_as %}
+            <li>{{ i.en }} / {{ i.zh_cn }} / {{ i.zh_tw }}</li>
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+    <h2>Usage Info</h2>
+    <p>This section shows instances where the song has been referenced.</p>
+    <h3>Backgrounds</h3>
+    {{ output_usedby_background(track.used_by.data_background) }}
+    <h3>Stories</h3>
+    {{ output_usedby_story(track.used_by.data_story) }}
+    <h3>Battles</h3>
+    {{ output_usedby_battle(track.used_by.data_battle) }}
+    <h3>UIs</h3>
+    {{ output_usedby_ui(track.used_by.data_ui) }}
+    <h3>Videos</h3>
+    {{ output_usedby_video(track.used_by.data_video) }}
+{% endblock article_content %}

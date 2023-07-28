@@ -1,0 +1,32 @@
+{% extends "template/en/base.html" %}
+
+{% block title %}Battle/{{ battle.name.en }}{% endblock title %}
+{% block article_content %}
+    {% from "template/en/_macro.html" import get_social_for_composer %}
+    <h1>Battle/
+        <span>{{ battle.name.en }}</span>
+    </h1>
+    {% include "template/en/infobox/battle.html" %}
+
+    {% if battle.filetype == 24 %}
+        <h2>BOSS Info</h2>
+        <ul>
+            <li>Name: {{ battle.name.en }} ({{ battle.name.jp }})</li>
+            <li>Faction: {{ battle.faction.en }} ({{ battle.faction.jp }})</li>
+            <li>Description: {{ battle.profile.en }}</li>
+        </ul>
+    {% endif %}
+
+    <h2>Track Info</h2>
+    {% if battle.filetype in [21, 22] %}
+        {% set track = battle.track.0 %}
+    {% else %}
+        {% set track = battle.track %}
+    {% endif %}
+    <p style="text-align: center"><img src="{{ track.image.value }}" width="50%"></p>
+    <ul>
+        <li>Name: <a href="/en/track/{{ track.namespace.1 }}/{{ track.no }}.html">{{ track.name.en }}</a> (No.{{ track.no }})</li>
+        <li>Description: {{ track.desc.en }}</li>
+        <li>Composer: {{ track.composer.nickname }} ({{ get_social_for_composer(track.composer) }})</li>
+    </ul>
+{% endblock %}

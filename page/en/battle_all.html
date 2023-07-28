@@ -1,0 +1,43 @@
+{% extends "template/en/base.html" %}
+
+{% block title %}All Battles{% endblock title %}
+{% block article_content %}
+    <h1>All Battles</h1>
+    <p>{{ battle.desc.en }}</p>
+    <h2>{{ battle.name.en }}</h2>
+    <ul>
+        {% for i in battle.include %}
+            <!--Folder Data File-->
+            {% if i.1.filetype < 0 %}
+                <li><a href="{{ i.0 }}">{{ i.1.name.en }}</a></li>
+                {% continue %}
+            {% endif %}
+
+            <!--Actual Data File-->
+            {% set i = i.1 %}
+            {% if i.filetype == 23 %}
+                <li>Doesn't support Arena!</li>
+            {% elif i.filetype == 21 %}
+                {% if i.no[0] %}
+                    {% set mission_type = "Normal" %}
+                {% else %}
+                    {% set mission_type = "Hard" %}
+                {% endif %}
+                <li><a href="/en/main/battle/{{ i.chapter }}/{{ i.no }}.html">Main Battle Chapter {{ i.chapter }} Mission {{ i.no[1] }} ({{ mission_type }})</a></li>
+            {% elif i.filetype == 22 %}
+                {% if i.no[0] %}
+                    {% set mission_type = "Normal" %}
+                {% else %}
+                    {% set mission_type = "Challenge" %}
+                {% endif %}
+                <li><a href="/en/event/{{ i.event_id }}/battle/{{ i.no }}.html">Event {{ i.parent_data.0.name.en }} Mission {{ i.no[1] }} ({{ mission_type }})</a></li>
+            {% elif i.filetype == 24 %}
+                <li><a href="/en/main/battle/total_assault/{{ i.id }}.html">BOSS {{ i.name.en }} ({{ i.name.jp }})</a></li>
+            {% elif i.filetype > 0 %}
+                <li><a href="/en/main/battle/{{ i.namespace.2 }}/{{ i.namespace.3 }}.html">{{ i.name.en }}</a></li>
+            {% endif %}
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

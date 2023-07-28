@@ -1,0 +1,13 @@
+{% extends "template/en/base.html" %}
+
+{% block title %}{{ video.name.en }}{% endblock title %}
+{% block article_content %}
+    <h1>{{ video.name.en }}</h1>
+    <p>{{ video.desc.en }}</p>
+    <ul>
+        {% for i in video.include %}
+            {% set i = i[1] %}
+            <li><a href="/en/video/{{ i.namespace.1 }}.html">{{ i.name.en }}</a>&nbsp;-&nbsp;{{ i.desc.en }}</li>
+        {% endfor %}
+    </ul>
+{% endblock article_content %}

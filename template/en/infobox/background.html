@@ -1,0 +1,22 @@
+{% from "template/en/_macro.html" import tag_altogether %}
+<table id="infobox">
+    <tr>
+        <td colspan="2" class="infobox-title">{{ background.name.en }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" class="infobox-icon"><img width="80%" src="{{ background.image.value }}"></td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">General Information</td></tr>
+    <tr>
+        <td class="infobox-col-title">Full Name</td>
+        <td class="infobox-col-value">{{ background.name.en }} ({{ background.name.jp }})</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">Description</td>
+        <td class="infobox-col-value">{{ background.desc.en }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">Tags</td>
+        <td class="infobox-col-value">{{ tag_altogether(background.tags) }}</td>
+    </tr>
+</table>

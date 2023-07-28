@@ -1,0 +1,71 @@
+{% from "template/en/_macro.html" import tag_altogether, get_social_for_composer %}
+<table id="infobox">
+    <tr>
+        <td colspan="2" class="infobox-title">{{ track.no }}. {{ track.name.realname.en }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" class="infobox-icon"><img src="{{ track.image.value }}" /></td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">General Information</td></tr>
+    <tr>
+        <td class="infobox-col-title">Track Name (no.)</td>
+        <td class="infobox-col-value">{{ track.name.realname.en }} ({{ track.no }})</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">Also known as (aka):</td>
+        <td class="infobox-col-value">{% for i in track.name.known_as %}{{ i.en }}<br />{% endfor %}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">Duration</td>
+        <td class="infobox-col-value">{{ track.duration }}s ({{ track.duration_splited.0 }}min {{ track.duration_splited.1 }}s)</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">Released Date</td>
+        <td class="infobox-col-value">{{ track.release_date_format }} ({{ track.release_date }})</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">Tags</td>
+        <td class="infobox-col-value">{{ tag_altogether(track.tag) }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">Track Type</td>
+        <td class="infobox-col-value">{{ track_type_for_show(track) }}</td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">Composer Information</td></tr>
+    <tr>
+        <td class="infobox-col-title">Nickname</td>
+        <td class="infobox-col-value">{{ track.composer.nickname }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">Contact</td>
+        <td class="infobox-col-value">{{ get_social_for_composer(track.composer) }}</td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">Version Information</td></tr>
+    {% for version in track.version %}
+        <tr>
+            <td class="infobox-col-title">{{ version.desc.en }}</td>
+            <td class="infobox-col-value">{% for i in version.url %}<a href="{{ i.value }}"><img src="/static/images/social/{{ i.platform.en }}.png" class="social-logo">{{ i.platform.en }}</a>&nbsp;&nbsp;{% endfor %}</td>
+        </tr>
+    {% endfor %}
+    <tr><td colspan="2" class="infobox-subtitle">Special Usage Information</td></tr>
+    <tr>
+        <td class="infobox-col-title">OST</td>
+        <td class="infobox-col-value">{% if track.special_case.is_ost %}Yes{% else %}No{% endif %}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">Story</td>
+        <td class="infobox-col-value">{% if track.special_case.is_story %}Yes{% else %}No{% endif %}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">Battle</td>
+        <td class="infobox-col-value">{% if track.special_case.is_battle %}Yes{% else %}No{% endif %}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">Recollection Lobby</td>
+        <td class="infobox-col-value">{% if track.special_case.is_bond %}Yes{% else %}No{% endif %}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">Event</td>
+        <td class="infobox-col-value">{% if track.special_case.is_event %}Yes{% else %}No{% endif %}</td>
+    </tr>
+</table>

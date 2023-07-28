@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width">
+
+    <title>{% block title %}{% endblock title %}- BA OST Index</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/css/git-wiki-style.css">
+    <link rel="stylesheet" href="/static/css/custom.css">
+    <link rel="shortcut icon" type="image/png" href="/static/images/site/favicon.png">
+    <style>
+        body {
+            transition: opacity ease-in 0.2s;
+        }
+
+        body[unresolved] {
+            opacity: 0;
+            display: block;
+            overflow: hidden;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body style="visibility: visible; opacity: 1;" data-new-gr-c-s-check-loaded="14.1115.0" data-gr-ext-installed="">
+<div class="wrapper">
+    {% block header %}{% endblock header %}
+    <script>
+        function sidebar_toggle() {
+            var sidebar = document.getElementById("git-wiki-sidebar");
+            if (sidebar.style.display == "block") {
+                sidebar.style.display = "none";
+                sidebar.style.position = "inherit";
+            } else {
+                $(sidebar).attr('style', 'display: block;');
+            }
+        }
+    </script>
+
+    <div class="git-wiki-page">
+        <div id="git-wiki-content">
+            {% block article_content %}{% endblock article_content %}{{ content }}
+        </div>
+    </div>
+
+    {% block footer %}{% endblock footer %}
+</div>
+</body>
+</html>

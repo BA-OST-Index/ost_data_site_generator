@@ -1,0 +1,21 @@
+<table id="infobox">
+    <tr>
+        <td colspan="2" class="infobox-title">{{ ui.name.en }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" class="infobox-icon"><img src="{{ ui.image.value }}" /></td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">General Information</td></tr>
+    <tr>
+        <td class="infobox-col-title">Name</td>
+        <td class="infobox-col-value">{{ ui.name.en }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">Description</td>
+        <td class="infobox-col-value">{{ ui.desc.en }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">Track</td>
+        <td class="infobox-col-value"><a href="/track/{{ ui.track.namespace.1 }}/{{ ui.track.namespace.2 }}">{{ ui.track.no }}. {{ ui.track.name.realname.en }} by {{ ui.track.composer.nickname }}</a></td>
+    </tr>
+</table>

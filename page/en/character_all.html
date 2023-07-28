@@ -1,0 +1,53 @@
+{% extends "template/en/base.html" %}
+
+{% block title %}
+    {% if char.filetype == -51 %}All Characters & Categories
+    {% elif char.filetype == -52 %}All of the {{ char.name }}s{% endif %}
+{% endblock title %}
+{% block article_content %}
+    {% if char.filetype == -51 %}
+        <h1>All Characters & Categories</h1>
+        <h2>NPC</h2>
+        <ul class="stu-list">
+            {% for i in char.include.0.1.include %}
+                {% set curr = i.1 %}
+                <li><a href="/en/character/npc/{{ curr.namespace[-1]|lower }}.html">{{ curr.name.en }}</a></li>
+            {% else %}
+                <li>Nothing to show!</li>
+            {% endfor %}
+        </ul>
+        <h2>Students</h2>
+        <ul class="stu-list">
+            {% for i in char.include.1.1.include %}
+                {% set curr = i.1 %}
+                <li>
+                    <a href="/en/character/student/{{ curr.student.name.path_name|lower }}/">
+                        <img src="/static/images/student/icon/{{ curr.student.image.collection_texture }}.png" class="icon-stu"/>{{ curr.student.name.name.en }}
+                    </a>
+                </li>
+            {% else %}
+                <li>Nothing to show!</li>
+            {% endfor %}
+        </ul>
+    {% elif char.filetype == -52 %}
+        <h1>All of the {{ char.name }}s</h1>
+        <ul class="stu-list">
+            {% for i in char.include %}
+                {% set curr = i.1 %}
+                {% if curr.student %}
+                    {% set curr = curr.student %}
+                    <li>
+                        <a href="/en/character/student/{{ curr.name.path_name|lower }}/">
+                            <img src="/static/images/student/icon/{{ curr.image.collection_texture }}.png" class="icon-stu"/>{{ curr.name.name.en }}
+                        </a>
+                    </li>
+                {% else %}
+                    <li><a href="/en/character/npc/{{ curr.namespace[-1]|lower }}.html">{{ curr.name.en }}</a></li>
+                {% endif %}
+            {% else %}
+                <li>Nothing to show!</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+    {% endif %}
+{% endblock %}

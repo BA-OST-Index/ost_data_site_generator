@@ -1,0 +1,15 @@
+{% extends "template/en/base.html" %}
+
+{% block title %}All Tags{% endblock title %}
+{% block article_content %}
+    <h1>All Tags</h1>
+    <p>This page lists all the tags.</p>
+    <ul>
+        {% for i in tag.include %}
+            {% set tag = i.1 %}
+            <li><a href="/en/tag/{{ i.0 }}.html" class="text-{{ color_css }}">{{ tag.name.en }}</a></li>
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+{% endblock article_content %}

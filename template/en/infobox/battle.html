@@ -1,0 +1,44 @@
+<table id="infobox">
+    <tr>
+        <td colspan="2" class="infobox-title">{{ battle.name.en }}</td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">General Information</td></tr>
+    <tr>
+        <td class="infobox-col-title">Name</td>
+        <td class="infobox-col-value">{{ battle.name.en }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">Position</td>
+        <td class="infobox-col-value">
+            {% if battle.filetype == 21 %}
+                {% if battle.no[0] == "N" %}
+                    {% set mission_type = "Normal" %}
+                {% else %}
+                    {% set mission_type = "Hard" %}
+                {% endif %}
+
+                <span>Main<br />Chapter {{ battle.chapter }}<br />Mission {{ battle.no[1] }} ({{ mission_type }})</span>
+            {% elif battle.filetype == 22 %}
+                {% if battle.no[0] == "N" %}
+                    {% set mission_type = "Normal" %}
+                {% else %}
+                    {% set mission_type = "Challenge" %}
+                {% endif %}
+
+                <span>Event <a href="/event/{{ battle.event_id }}">{{ battle.parent_data.0.name.en }}</a><br/>Mission {{ battle.no[1:] }} ({{ mission_type }})</span>
+            {% elif battle.filetype == 23 %}
+                <span>Doesn't support Arena yet!</span>
+            {% elif battle.filetype == 24 %}
+                <span>Total Assault<br />BOSS {{ battle.name.en }}</span>
+            {% else %}
+                {% if battle.filetype == 25 %}
+                    <span>Bounty Hunt<br/>{{ battle.name.en }}</span>
+                {% elif battle.filetype == 26 %}
+                    <span>School Exchange<br/>{{ battle.name.en }}</span>
+                {% elif battle.filetype == 27 %}
+                    <span>Special Commission<br/>{{ battle.name.en }}</span>
+                {% endif %}
+            {% endif %}
+        </td>
+    </tr>
+</table>

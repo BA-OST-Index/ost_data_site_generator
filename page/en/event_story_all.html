@@ -1,0 +1,14 @@
+{% extends "template/en/base.html" %}
+
+{% block title %}Event/{{ event.name.en }}/Stories{% endblock title %}
+{% block article_content %}
+    <h1>Event/{{ event.name.en }}/Stories</h1>
+    <p>{{ event.desc.en }}</p>
+    <h2>All Stories</h2>
+    <ul>
+        {% for i in include %}
+            {% set i = i.1 %}
+            <li><a href="/en/event/{{ i.pos.event_id }}/story/{{ i.pos.segment }}.html">Story {{ i.pos.segment }}: {{ i.name.en }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

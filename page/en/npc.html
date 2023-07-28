@@ -1,0 +1,16 @@
+{% extends "template/en/base.html" %}
+
+{% block title %}NPC/{{ char.name.en }}{% endblock title %}
+{% block article_content %}
+    {% from "template/en/_macro.html" import output_usedby_story, output_usedby_track %}
+
+    <h1>NPC/{{ char.name.en }}</h1>
+    {% include "template/en/infobox/npc.html" %}
+    <center><big><p>{{ char.desc.en }}</p></big></center>
+    <p><b>{{ char.name.en }} ({{ char.name.desc }}) is an NPC in the game.</b></p>
+    <h2>Usage Info</h2>
+    <h3>Stories</h3>
+    {{ output_usedby_story(char.used_by.data_story) }}
+    <h3>Tracks</h3>
+    {{ output_usedby_track(char.used_by.data_track) }}
+{% endblock %}
