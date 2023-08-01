@@ -9,6 +9,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
     <link rel="stylesheet" href="/static/css/git-wiki-style.css">
+    <link rel="stylesheet" href="/static/css/wikipedialize.css">
     <link rel="stylesheet" href="/static/css/custom.css">
     <link rel="shortcut icon" type="image/png" href="/static/images/site/favicon.png">
     <style>
@@ -42,6 +43,7 @@
 
     <div class="git-wiki-page">
         <div id="git-wiki-content">
+            {% block navi %}{% endblock navi %}
             {% block article_content %}{% endblock article_content %}{{ content }}
         </div>
     </div>

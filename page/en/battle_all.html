@@ -2,9 +2,8 @@
 
 {% block title %}All Battles{% endblock title %}
 {% block article_content %}
-    <h1>All Battles</h1>
-    <p>{{ battle.desc.en }}</p>
     <h2>{{ battle.name.en }}</h2>
+    <p>{{ battle.desc.en }}</p>
     <ul>
         {% for i in battle.include %}
             <!--Folder Data File-->
@@ -23,7 +22,7 @@
                 {% else %}
                     {% set mission_type = "Hard" %}
                 {% endif %}
-                <li><a href="/en/main/battle/{{ i.chapter }}/{{ i.no }}.html">Main Battle Chapter {{ i.chapter }} Mission {{ i.no[1] }} ({{ mission_type }})</a></li>
+                <li><a href="/en/main/battle/main/{{ i.chapter }}/{{ i.no }}.html">Main Battle Chapter {{ i.chapter }} Mission {{ i.no[1] }} ({{ mission_type }})</a></li>
             {% elif i.filetype == 22 %}
                 {% if i.no[0] %}
                     {% set mission_type = "Normal" %}

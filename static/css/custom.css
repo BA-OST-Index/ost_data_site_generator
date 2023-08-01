@@ -12,6 +12,10 @@ img {
     margin-bottom: 0;
 }
 
+#git-wiki-content > h1 {
+    margin-bottom: 10px;
+}
+
 
 .git-wiki-copyrights p {
     text-align: right;
@@ -35,6 +39,7 @@ img {
     #infobox {
         width: 100%;
         float: inherit;
+        margin: revert;
     }
 }
 
@@ -126,6 +131,10 @@ img {
 
 .stu-list {
     font-size: 2em;
+}
+
+.navi-p {
+    font-size: 1.2em;
 }
 
 

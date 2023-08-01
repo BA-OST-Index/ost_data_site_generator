@@ -23,9 +23,8 @@
     {% else %}
         {% set track = battle.track %}
     {% endif %}
-    <p style="text-align: center"><img src="{{ track.image.value }}" width="50%"></p>
     <ul>
-        <li>Name: <a href="/en/track/{{ track.namespace.1 }}/{{ track.no }}.html">{{ track.name.en }}</a> (No.{{ track.no }})</li>
+        <li>Name: <a href="/en/track/{{ track.namespace.1 }}/{{ track.no }}.html">{{ track.name.realname.en }}</a> (No.{{ track.no }})</li>
         <li>Description: {{ track.desc.en }}</li>
         <li>Composer: {{ track.composer.nickname }} ({{ get_social_for_composer(track.composer) }})</li>
     </ul>

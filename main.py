@@ -6,6 +6,8 @@ import subprocess
 import time
 from jinja2 import Environment, FileSystemLoader
 
+ALL_LANGS = ["en"]
+
 filename_to_filetype = {
     "background.html": [71],
     "background_all.html": [-101],
@@ -27,6 +29,16 @@ filename_to_filetype = {
     "ui_all.html": [-45, -61, -62],
     "video.html": [41],
     "video_all.html": [-71]
+}
+
+page_path_and_name = {
+    "page/en/main_all.html": "main/index.html",
+    "page/en/_index.html": "index.html"
+}
+
+page_path_and_name2 = {
+    "page/index.html": "index.html",
+    # "page/404.html": "404.html"
 }
 
 environment = Environment(loader=FileSystemLoader(os.path.split(__file__)[0]), extensions=["jinja2.ext.loopcontrols"])
@@ -98,6 +110,9 @@ def traverse_path(namespace: list, lang: str = "en"):
             elif content["filetype"] == -53:
                 # for single student
                 target_path = "/".join(["data_html", lang, *namespace[1:], "index.html"])
+            elif content["filetype"] == 52:
+                # for npc
+                target_path = "/".join(["data_html", lang, *namespace[1:], "index.html"])
             else:
                 target_path = "/".join(["data_html", lang, *namespace[1:], change_extension_name(i, "html")])
             if "_all" in i:
@@ -116,15 +131,21 @@ def traverse_path(namespace: list, lang: str = "en"):
         traverse_path([*namespace, i], lang)
 
 
-traverse_path(["exported_data"], "en")
-
-template = environment.get_template("page/en/_index.html")
-result = template.render()
-with open("data_html/en/index.html", mode="w", encoding="UTF-8") as file:
-    file.write(result)
+for lang in ALL_LANGS:
+    traverse_path(["exported_data"], lang)
+    for path, name in page_path_and_name.items():
+        template = environment.get_template(path)
+        result = template.render()
+        with open(os.path.join("data_html/" + lang + "/", name), mode="w", encoding="UTF-8") as file:
+            file.write(result)
+for path, name in page_path_and_name2.items():
+    template = environment.get_template(path)
+    result = template.render()
+    with open(os.path.join("data_html/", name), mode="w", encoding="UTF-8") as file:
+        file.write(result)
 print("Generation completed")
 
-shutil.copytree("static", "data_html/static", dirs_exist_ok=True)
+shutil.copytree("static", "data_html/static", dirs_exist_ok=True, copy_function=shutil.copy)
 print("Copying completed")
 
 process = subprocess.Popen("py -m http.server --directory data_html", shell=True)
