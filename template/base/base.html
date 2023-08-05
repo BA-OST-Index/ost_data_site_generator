@@ -24,9 +24,10 @@
             position: relative;
         }
     </style>
+    <script src="/static/js/zhcn_switch.js"></script>
 </head>
 
-<body style="visibility: visible; opacity: 1;" data-new-gr-c-s-check-loaded="14.1115.0" data-gr-ext-installed="">
+<body style="visibility: visible; opacity: 1;" lang="{% block body_langcode %}{% endblock body_langcode %}">
 <div class="wrapper">
     {% block header %}{% endblock header %}
     <script>
@@ -49,6 +50,7 @@
     </div>
 
     {% block footer %}{% endblock footer %}
+    <script>display_zhcn_element();</script>
 </div>
 </body>
 </html>

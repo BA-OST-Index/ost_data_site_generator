@@ -1,4 +1,10 @@
-{% extends "template/en/base.html" %}
+{% extends "template/base/base.html" %}
+{% set current_lang = "zh_cn" %}
+{% block body_langcode %}en{% endblock %}
+
+{% block header %}
+    {% include "template/base/header_index.html" %}
+{% endblock header %}
 
 {% block article_content %}
     <h1>Welcome Sensei! / 你好，老师!</h1>
@@ -13,3 +19,7 @@
         <li><a href="/zh_tw/" lang="zh-Hant">中文(繁體)</a></li>
     </ul>
 {% endblock article_content %}
+
+{% block footer %}
+    {% include "template/en/footer.html" %}
+{% endblock footer %}

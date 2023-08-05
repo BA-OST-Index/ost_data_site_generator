@@ -1,0 +1,14 @@
+<table id="infobox">
+    <tr>
+        <td colspan="2" class="infobox-title">{{ tag.name.zh_cn }}</td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">基本信息</td></tr>
+    <tr>
+        <td class="infobox-col-title">名称</td>
+        <td class="infobox-col-value">英语: {{ tag.name.en }}<br />中文(简体): {{ tag.name.zh_cn }}<br />中文(繁体): {{ tag.name.zh_tw }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">颜色</td>
+        <td class="infobox-col-value">{{ tag.color }}<br/>{{ tag.color_css }}</td>
+    </tr>
+</table>

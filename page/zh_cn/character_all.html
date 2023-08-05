@@ -1,0 +1,51 @@
+{% extends "template/zh_cn/base.html" %}
+{% from 'template/zh_cn/_macro.html' import auto_zhcn_gen, nothing_to_show %}
+
+{% block title %}{{ char.name.zh_cn }}{% endblock title %}
+{% block article_content %}
+    {% if char.filetype == -51 %}
+        <h1>{{ char.name.zh_cn }}</h1>
+        <h2>NPC</h2>
+        <ul class="stu-list">
+            {% for i in char.include.0.1.include %}
+                {% set curr = i.1 %}
+                <li><a href="/zh_cn/character/npc/{{ curr.namespace[-1]|lower }}/">{{ auto_zhcn_gen(curr.name) }}</a></li>
+            {% else %}
+                <li>{{ nothing_to_show }}</li>
+            {% endfor %}
+        </ul>
+        <h2>学生</h2>
+        <ul class="stu-list">
+            {% for i in char.include.1.1.include %}
+                {% set curr = i.1 %}
+                <li>
+                    <a href="/zh_cn/character/student/{{ curr.student.name.path_name|lower }}/">
+                        <img src="/static/images/student/icon/{{ curr.student.image.collection_texture }}.png" class="icon-stu"/>{{ auto_zhcn_gen(curr.student.name.name) }}
+                    </a>
+                </li>
+            {% else %}
+                <li>{{ nothing_to_show }}</li>
+            {% endfor %}
+        </ul>
+    {% elif char.filetype == -52 %}
+        <h1>All of the {{ char.name }}s</h1>
+        <ul class="stu-list">
+            {% for i in char.include %}
+                {% set curr = i.1 %}
+                {% if curr.student %}
+                    {% set curr = curr.student %}
+                    <li>
+                        <a href="/zh_cn/character/student/{{ curr.name.path_name|lower }}/">
+                            <img src="/static/images/student/icon/{{ curr.image.collection_texture }}.png" class="icon-stu"/>{{ auto_zhcn_gen(curr.name.name) }}
+                        </a>
+                    </li>
+                {% else %}
+                    <li><a href="/zh_cn/character/npc/{{ curr.namespace[-1]|lower }}/">{{ auto_zhcn_gen(curr.name) }}</a></li>
+                {% endif %}
+            {% else %}
+                <li>{{ nothing_to_show }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+    {% endif %}
+{% endblock %}

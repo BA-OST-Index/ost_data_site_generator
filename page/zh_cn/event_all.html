@@ -1,0 +1,19 @@
+{% extends "template/zh_cn/base.html" %}
+{% from 'template/zh_cn/_macro.html' import auto_zhcn_gen, nothing_to_show %}
+
+{% block title %}活动/{% if event.name.zh_cn %}{{ event.name.zh_cn }}{% else %}{{ event.name.zh_cn_jp }}{% endif %}{% endblock title %}
+{% block article_content %}
+    <h1>活动/{{ auto_zhcn_gen(event.name) }}</h1>
+    <p>本页列出 活动“{{ auto_zhcn_gen(event.desc) }}” 的全部项目。</p>
+    <ul>
+        {% for i in event.include %}
+            {% if i.1.name.zh_cn %}
+                <li><a href="{{ i.0 }}">{{ i.1.name.zh_cn }} (ID: {{ i.0 }})</a></li>
+            {% else %}
+                <li><a href="{{ i.0 }}">{{ auto_zhcn_gen(i.1.name) }} (ID: {{ i.0 }})</a></li>
+            {% endif %}
+        {% else %}
+            <li>{{ nothing_to_show }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

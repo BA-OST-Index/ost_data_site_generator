@@ -3,7 +3,7 @@
 {% endmacro %}
 
 {% macro tag_altogether(tags) %}
-    {% for tag in tags %}<a href="/en/tag/{{ tag.namespace[-1] }}.html"><span class="badge badge-{{ tag.color_css }}">{{ tag.name.en }}</span></a>&nbsp;{% endfor %}
+    {% for tag in tags %}<a href="/en/tag/{{ tag.namespace[-1] }}.html"><span class="badge badge-{{ tag.color_css }}">{{ tag.name.zh_cn }}</span></a>&nbsp;{% endfor %}
 {% endmacro %}
 
 {% macro track_type_for_show(track) %}
@@ -202,7 +202,7 @@
         {% for char in data_character.character %}
             {% if char.filetype == 52 %}
             <li>
-                <a href="/en/character/npc/{{ char.name.en|lower }}/">
+                <a href="/en/character/npc/{{ char.namespace[-1]|lower }}/">
                     {{ char.name.en }}
                 </a>
             </li>

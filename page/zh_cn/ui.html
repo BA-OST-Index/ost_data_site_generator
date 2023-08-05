@@ -1,0 +1,13 @@
+{% extends "template/zh_cn/base.html" %}
+
+{% block title %}UI/{{ ui.name.zh_cn }}{% endblock title %}
+{% block article_content %}
+    <h1>UI/{{ ui.name.zh_cn }}</h1>
+    {% include "template/zh_cn/infobox/ui.html" %}
+    <p><b>{{ ui.name.zh_cn }}</b> 为蔚蓝档案UI（用户界面）中的一部分。</p>
+    <p>描述：{{ ui.desc.zh_cn }}</p>
+    <h2>使用的曲子</h2>
+    <p>名称：{{ ui.track.name.zh_cn }}</p>
+    <p>编号: {{ ui.track.no }} (相对于 {{ ui.track.namespace.1 }})</p>
+    <p>作曲者：{{ ui.track.composer.nickname }} (<a href="{{ ui.track.composer.contact.url.value }}"><img src="/static/images/social/{{ ui.track.composer.contact.platform.en }}.png" class="social-logo">{{ ui.track.composer.contact.url.platform.zh_cn }}: {{ ui.track.composer.nickname }}</a>)</p>
+{% endblock %}

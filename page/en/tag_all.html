@@ -7,7 +7,7 @@
     <ul>
         {% for i in tag.include %}
             {% set tag = i.1 %}
-            <li><a href="/en/tag/{{ i.0 }}.html" class="text-{{ color_css }}">{{ tag.name.en }}</a></li>
+            <li><a href="/en/tag/{{ i.0[:-5] }}.html" class="text-{{ color_css }}">{{ tag.name.en }} / {{ tag.name.zh_cn }}</a></li>
         {% else %}
             <li>Nothing to show!</li>
         {% endfor %}

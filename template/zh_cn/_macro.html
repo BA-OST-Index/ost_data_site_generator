@@ -1,0 +1,239 @@
+{% macro multi_zhcn_gen(data) %}<span class="lang-zh-cn-cn">{{ data.zh_cn_cn }}</span><span class="lang-zh-cn-splitter">(zh_cn_cn)&nbsp;/&nbsp;</span><span class="lang-zh-cn-tw">{{ data.zh_cn_tw }}</span><span class="lang-zh-cn-splitter">(zh_cn_tw)&nbsp;/&nbsp;</span><span class="lang-zh-cn-jp">{{ data.zh_cn_jp }}</span><span class="lang-zh-cn-splitter">(zh_cn_jp)&nbsp;</span>{% endmacro %}
+
+{%- macro auto_zhcn_gen(data) -%}{%- if "zh_cn" in data -%}{{ data.zh_cn }}{%- else -%}{{ multi_zhcn_gen(data) }}{%- endif -%}{%- endmacro -%}
+
+{% set nothing_to_show = "无内容可显示！" %}
+{% set current_lang = "zh_cn" %}
+
+{% macro word_case(text) %}
+    {{text[0]|upper}}{{text[1:]}}
+{% endmacro %}
+
+{% macro tag_altogether(tags) %}
+    {% for tag in tags %}<a href="/{{ current_lang }}/tag/{{ tag.namespace[-1] }}.html"><span class="badge badge-{{ tag.color_css }}">{{ tag.name.zh_cn }}</span></a>&nbsp;{% endfor %}
+{% endmacro %}
+
+{% macro track_type_for_show(track) %}{% if track.track_type == 0 %}OST{% elif track.track_type == 1 %}短篇动画{% elif track.track_type == 2 %}官方动画{% else %}其它{% endif %}{% endmacro %}
+
+{% macro output_usedby_story(data_story) %}
+    <ul>
+        {% for key, value in data_story.items() %}
+            {% set value = value[0] %}
+            {% if value.filetype == 15 %}
+            <li>
+                <a href="/{{ current_lang }}/character/student/{{ value.pos.student }}/bond/{{ value.pos.no }}.html">
+                    <img src="/static/images/student/icon/{{ value.student.image.collection_texture }}.png" class="icon-stu"/>{{ auto_zhcn_gen(value.student.name.personal_name) }}的第{{ value.pos.no }}个羁绊故事：{{ auto_zhcn_gen(value.name) }}
+                </a>
+            </li>
+            {% elif value.filetype == 14 %}
+            <li>
+                <a href="/{{ current_lang }}/event/{{ value.pos.event_id }}/story/{{ value.pos.no }}.html">活动 {{ value.parent_data.0.name.zh_cn }} 的第{{ value.pos.segment }}个故事：{{ auto_zhcn_gen(value.name) }}
+                </a></li>
+            {% else %}
+            <li>
+                {% if value.filetype == 11 %}
+                    {% set story_type = "main" %}
+                    {% set story_type_trans = "主线" %}
+                {% elif value.filetype == 12 %}
+                    {% set story_type = "side" %}
+                    {% set story_type_trans = "支线" %}
+                {% elif value.filetype == 13 %}
+                    {% set story_type = "short" %}
+                    {% set story_type_trans = "短篇" %}
+                {% else %}
+                    {% set story_type = "other" %}
+                    {% set story_type_trans = "其它" %}
+                {% endif %}
+                <a href="/{{ current_lang }}/main/story/{{ story_type }}/{{ value.pos.volume }}/{{ value.pos.chapter }}/{{ value.pos.segment }}.html">
+                    {{ story_type_trans }}故事第{{ value.pos.volume }}篇第{{ value.pos.chapter }}章第{{ value.pos.segment }}个：{{ auto_zhcn_gen(value.name) }}
+                </a></li>
+            {% endif %}
+        {% else %}
+            <li>{{ nothing_to_show }}</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro output_usedby_battle(data_battle) %}
+    <ul>
+        {% for key, value in data_battle.items() %}
+            {% set value = value[0] %}
+            {% if value.filetype == 21 %}
+                {% if value.no[0] == "N" %}
+                    {% set mission_type = "Normal" %}
+                    {% set mission_type_trans = "普通" %}
+                {% else %}
+                    {% set mission_type = "Hard" %}
+                    {% set mission_type_trans = "困难" %}
+                {% endif %}
+                <li>
+                    <a href="/{{ current_lang }}/battle/main/{{ value.chapter }}/{{ value.no }}.html">主线任务 第{{ value.chapter }}章 第{{ value.no[1] }}个任务 ({{ mission_type_trans }}, 第{{ value.no[2] }}个子任务)：{{ value.name.zh_cn }}</a>
+                </li>
+            {% elif value.filetype == 22 %}
+                {% if value.no[0] == "N" %}
+                    {% set mission_type = "Normal" %}
+                    {% set mission_type_trans = "普通" %}
+                {% else %}
+                    {% set mission_type = "Hard" %}
+                    {% set mission_type_trans = "困难" %}
+                {% endif %}
+                <li>
+                    <a href="/{{ current_lang }}/event/{{ value.event_id }}/{{ value.no }}.html">活动 {{ value.parent_data.0.name.zh_cn }} 的第{{ value.no[1:] }}个任务 ({{ mission_type_trans }})：{{ value.name.zh_cn }}</a>
+                </li>
+            {% else %}
+                {% if value.filetype == 24 %}
+                    {% set mission_type = "total_assault" %}
+                {% elif value.filetype == 25 %}
+                    {% set mission_type = "bounty_hunt" %}
+                {% elif value.filetype == 26 %}
+                    {% set mission_type = "school_exchange" %}
+                {% else %}
+                    {% set mission_type = "special_commision" %}
+                {% endif %}
+                <li>
+                    <a href="/{{ current_lang }}/battle/{{ mission_type }}/{{ value.id }}.html">{{ value.name.zh_cn }}</a>
+                </li>
+            {% endif %}
+        {% else %}
+            <li>{{ nothing_to_show }}</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro output_usedby_ui(data_ui) %}
+    <ul>
+        {% for key, value in data_ui.items() %}
+            {% set i = value.0 %}
+
+            <!--Special case for UiInfoEvent-->
+            {% if i.filetype == 32 %}
+                <li><a href="/{{ current_lang }}/event/{{ i.event_id }}/ui/{{ i.id }}.html">{{ auto_zhcn_gen(value.name) }}</a>&nbsp;-&nbsp;{{ value.name.zh_cn }}</li>
+            {% else %}
+                <li><a href="/{{ current_lang }}/ui/{{ i.namespace.1 }}.html">{{ auto_zhcn_gen(i.name) }}</a>&nbsp;-&nbsp;{{ i.name.zh_cn }}</li>
+            {% endif %}
+        {% else %}
+            <li>{{ nothing_to_show }}</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro output_usedby_ui_list(data_ui) %}
+    <ul>
+        {% for value in data_ui %}
+            <!--Special case for UiInfoEvent-->
+            {% if i.filetype == 32 %}
+                <li><a href="/{{ current_lang }}/event/{{ i.event_id }}/ui/{{ i.id }}.html">{{ auto_zhcn_gen(value.name) }}</a>&nbsp;-&nbsp;{{ value.name.zh_cn }}</li>
+            {% else %}
+                <li><a href="/{{ current_lang }}/ui/{{ i.namespace.1 }}.html">{{ auto_zhcn_gen(value.name) }}</a>&nbsp;-&nbsp;{{ value.name.zh_cn }}</li>
+            {% endif %}
+        {% else %}
+            <li>{{ nothing_to_show }}</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro output_usedby_ui_for_all_ui(data_ui) %}
+    <ul>
+        {% for value in data_ui %}
+            {% set i = value[1] %}
+
+            <!--Special case for UiInfoEvent-->
+            {% if i.filetype == 32 %}
+                <li><a href="/{{ current_lang }}/event/{{ i.event_id }}/ui/{{ i.id }}.html">{{ auto_zhcn_gen(value.name) }}</a>&nbsp;-&nbsp;{{ value.name.zh_cn }}</li>
+            {% else %}
+                <li><a href="/{{ current_lang }}/ui/{{ i.namespace.1 }}.html">{{ auto_zhcn_gen(i.name) }}</a>&nbsp;-&nbsp;{{ i.name.zh_cn }}</li>
+            {% endif %}
+        {% else %}
+            <li>{{ nothing_to_show }}</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro output_usedby_background(data_background) %}
+    <table class="gallery">
+        <tr>
+            {% for key, value in data_background.items() %}
+                <td class="gallery-img"><img src="{{ value.0.image.value }}"><p class="gallery-caption"><a href="/{{ current_lang }}/background/{{ value.0.filename }}.html">{% if value.0.desc.zh_cn != "" %}{{ value.0.desc.zh_cn }}{% else %}{{ value.0.filename }}{% endif %}</a></p></td>
+            {% else %}
+                <td>{{ nothing_to_show }}</td>
+            {% endfor %}
+        </tr>
+    </table>
+{% endmacro %}
+
+{% macro output_usedby_background_list(data_background) %}
+    <table class="gallery">
+        <tr>
+            {% for value in data_background %}
+                <td class="gallery-img"><img src="{{ value.image.value }}"><p class="gallery-caption"><a href="/{{ current_lang }}/background/{{ value.filename }}.html">{% if value.desc.en != "" %}{{ value.desc.zh_cn }}{% else %}{{ value.filename }}{% endif %}</a></p></td>
+            {% else %}
+                <td>{{ nothing_to_show }}</td>
+            {% endfor %}
+        </tr>
+    </table>
+{% endmacro %}
+
+{% macro output_usedby_track(data_track) %}
+    <ul>
+        {% for key, value in data_track.items() %}
+            {% set value = value.0 %}
+            {% set track_type = track_type_for_show(value) %}
+
+            <li><a href="/{{ current_lang }}/track/{{ value.namespace.1 }}/{{ value.namespace.2 }}.html">{{ track_type }} 第{{ value.no }}首：{{ value.name.realname.zh_cn }} ({{ value.name.realname.en }})</a> by {{ value.composer.nickname }}</li>
+        {% else %}
+            <li>{{ nothing_to_show }}</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro output_usedby_track_list(data_track) %}
+    <ul>
+        {% for value in data_track %}
+            {% set track_type = track_type_for_show(value) %}
+
+            <li><a href="/{{ current_lang }}/track/{{ value.namespace.1 }}/{{ value.namespace.2 }}.html">{{ track_type }} 第{{ value.no }}首：{{ value.name.realname.zh_cn }} ({{ value.name.realname.en }})</a> by {{ value.composer.nickname }}</li>
+        {% else %}
+            <li>{{ nothing_to_show }}</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro output_usedby_video(data_video) %}
+    <ul>
+        {% for key, value in data_video.items() %}
+            {% set value = value.0 %}
+
+            <li><a href="/{{ current_lang }}/video/{{ value.namespace.1 }}.html">视频<i>{{ value.name.zh_cn }}</i></a>：{{ value.desc.zh_cn }}</li>
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro output_usedby_character(data_character) %}
+    <ul>
+        {% for char in data_character.character %}
+            {% if char.filetype == 52 %}
+            <li>
+                <a href="/{{ current_lang }}/character/npc/{{ char.namespace[-1]|lower }}/">
+                    {{ auto_zhcn_gen(char.name) }}
+                </a>
+            </li>
+            {% else %}
+            <li>
+                <a href="/{{ current_lang }}/character/student/{{ char.name.path_name|lower }}/">
+                    <img src="/static/images/student/icon/{{ char.image.collection_texture }}.png" class="icon-stu"/>{{ auto_zhcn_gen(char.name.personal_name) }}
+                </a>
+            </li>
+            {% endif %}
+        {% else %}
+            <li>{{ nothing_to_show }}</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro get_ordinal_number(number) %}{% if number == 1 %}1st{% elif number == 2 %}2nd{% elif number == 3 %}3rd{% else %}{{ number }}th{% endif %}{% endmacro %}
+
+{% macro get_social_for_composer(composer) %}
+    <a href="{{ composer.contact.url.value }}"><img src="/static/images/social/{{ composer.contact.platform.en }}.png" class="social-logo">{{ composer.contact.url.platform.zh_cn }}: {{ composer.nickname }}</a>
+{% endmacro %}

@@ -1,0 +1,45 @@
+{% from 'template/zh_cn/_macro.html' import auto_zhcn_gen %}
+<table id="infobox">
+    <tr>
+        <td colspan="2" class="infobox-title">{{ auto_zhcn_gen(battle.name) }}</td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">基本信息</td></tr>
+    <tr>
+        <td class="infobox-col-title">名称</td>
+        <td class="infobox-col-value">{{ auto_zhcn_gen(battle.name) }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">位置</td>
+        <td class="infobox-col-value">
+            {% if battle.filetype == 21 %}
+                {% if battle.no[0] == "N" %}
+                    {% set mission_type = "普通" %}
+                {% else %}
+                    {% set mission_type = "困难" %}
+                {% endif %}
+
+                <span>主线任务<br />第{{ battle.chapter }}章<br />第{{ battle.no[1] }}个任务 ({{ mission_type }})</span>
+            {% elif battle.filetype == 22 %}
+                {% if battle.no[0] == "N" %}
+                    {% set mission_type = "普通" %}
+                {% else %}
+                    {% set mission_type = "挑战" %}
+                {% endif %}
+
+                <span>活动 <a href="/event/{{ battle.event_id }}">{{ auto_zhcn_gen(battle.parent_data.0.name) }}</a><br/>第{{ battle.no[1:] }}个任务 ({{ mission_type }})</span>
+            {% elif battle.filetype == 23 %}
+                <span>暂未支持战术大赛！</span>
+            {% elif battle.filetype == 24 %}
+                <span>总力战<br />BOSS {{ auto_zhcn_gen(battle.name) }}</span>
+            {% else %}
+                {% if battle.filetype == 25 %}
+                    <span>悬赏通缉<br/>{{ auto_zhcn_gen(battle.name) }}</span>
+                {% elif battle.filetype == 26 %}
+                    <span>学园交流会<br/>{{ auto_zhcn_gen(battle.name) }}</span>
+                {% elif battle.filetype == 27 %}
+                    <span>特殊任务<br/>{{ auto_zhcn_gen(battle.name) }}</span>
+                {% endif %}
+            {% endif %}
+        </td>
+    </tr>
+</table>

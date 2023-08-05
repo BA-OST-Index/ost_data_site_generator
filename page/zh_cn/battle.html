@@ -1,0 +1,29 @@
+{% extends "template/zh_cn/base.html" %}
+
+{% block title %}任务/{{ battle.name.zh_cn }}{% endblock title %}
+{% block article_content %}
+    {% from "template/zh_cn/_macro.html" import get_social_for_composer, auto_zhcn_gen %}
+    <h1>战斗/<span>{{ auto_zhcn_gen(battle.name) }}</span></h1>
+    {% include "template/zh_cn/infobox/battle.html" %}
+
+    {% if battle.filetype == 24 %}
+        <h2>BOSS信息</h2>
+        <ul>
+            <li>名称：{{ auto_zhcn_gen(battle.name) }} ({{ battle.name.jp }})</li>
+            <li>阵营：{{ auto_zhcn_gen(battle.faction) }} ({{ battle.faction.jp }})</li>
+            <li>描述：{{ auto_zhcn_gen(battle.profile) }}</li>
+        </ul>
+    {% endif %}
+
+    <h2>曲目信息</h2>
+    {% if battle.filetype in [21, 22] %}
+        {% set track = battle.track.0 %}
+    {% else %}
+        {% set track = battle.track %}
+    {% endif %}
+    <ul>
+        <li>名称：<a href="/zh_cn/track/{{ track.namespace.1 }}/{{ track.no }}.html">{{ track.name.realname.zh_cn }} ({{ track.name.realname.en }})</a> (No.{{ track.no }})</li>
+        <li>简介：{{ track.desc.zh_cn }}</li>
+        <li>作曲家：{{ track.composer.nickname }} ({{ get_social_for_composer(track.composer) }})</li>
+    </ul>
+{% endblock article_content %}

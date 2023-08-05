@@ -1,0 +1,40 @@
+{% extends "template/zh_cn/base.html" %}
+{% from 'template/zh_cn/_macro.html' import output_usedby_story, output_usedby_track, auto_zhcn_gen, nothing_to_do %}
+
+{% block title %}Student/{{ char.student.name.personal_name.zh_cn_jp }}{% endblock title %}
+{% block article_content %}
+    <h1>学生/{{ auto_zhcn_gen(char.student.name.personal_name) }}</h1>
+    {% include "template/zh_cn/infobox/student.html" %}
+
+    {% set student = char.student %}
+    <p><b>{{ auto_zhcn_gen(student.name.family_name) }} {{ auto_zhcn_gen(student.name.personal_name) }}</b> (JP: {{ student.name.family_name.jp }} {{ student.name.personal_name.jp }}) 是一位{{ auto_zhcn_gen(student.age) }}的学生，来自{{ auto_zhcn_gen(student.school.long) }}的社团{{ auto_zhcn_gen(student.club) }}。她的爱好有{{ auto_zhcn_gen(student.hobby) }}。</p>
+    <h2>羁绊剧情故事</h2>
+    {% set bond = char.include.0.1.include %}
+    {% for i in bond %}
+        {% set value = i.1 %}
+        <h3><a href="bond/{{ value.pos.no }}.html">{{ value.pos.no }}. {{ auto_zhcn_gen(value.name) }}</a></h3>
+        {% if value.is_memory %}
+            {% set track = value.bgm_bond %}
+            <big><p>可在该故事中收集到回忆大厅。大厅BGM：<a href="/zh_cn/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}.html">{{ track.name.realname.zh_cn }}</a> (No. {{ track.no }})</p></big>
+        {% endif %}
+        <p>{{ auto_zhcn_gen(value.desc) }}</p>
+        <h4>故事部分</h4>
+        <ul>
+            {% for part in i.part %}
+                <li>{{ auto_zhcn_gen(part.name) }} - {{ auto_zhcn_gen(part.desc) }}</li>
+            {% endfor %}
+        </ul>
+        <h4>背景图</h4>
+        <table class="gallery">
+            <tr>
+                <td class="gallery-img"><img src="{{ value.image.value }}"><p class="gallery-caption"><a href="/en/background/{{ value.filename }}.html">{% if value.desc.zh_cn != "" %}{{ value.desc.zh_cn }}{% else %}{{ value.filename }}{% endif %}</a></p></td>
+            </tr>
+        </table>
+    {% else %}
+        <p>{{ nothing_to_show }}</p>
+    {% endfor %}
+    <h2>其它故事</h2>
+    {{ output_usedby_story(char.student.used_by.data_story) }}
+    <h2>曲目</h2>
+    {{ output_usedby_track(char.student.used_by.data_track) }}
+{% endblock %}

@@ -3,7 +3,7 @@
 {% block title %}All Battles{% endblock title %}
 {% block article_content %}
     <h2>{{ battle.name.en }}</h2>
-    <p>{{ battle.desc.en }}</p>
+    <p>{{ battle.desc.en }}</i></p>
     <ul>
         {% for i in battle.include %}
             <!--Folder Data File-->
@@ -17,7 +17,7 @@
             {% if i.filetype == 23 %}
                 <li>Doesn't support Arena!</li>
             {% elif i.filetype == 21 %}
-                {% if i.no[0] %}
+                {% if i.no[0] == "N" %}
                     {% set mission_type = "Normal" %}
                 {% else %}
                     {% set mission_type = "Hard" %}

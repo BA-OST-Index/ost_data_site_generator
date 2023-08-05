@@ -1,9 +1,12 @@
 {% extends "template/base/base.html" %}
-{% block body_langcode %}en{% endblock %}
+{% set current_lang = "zh_cn" %}
+{% block body_langcode %}zh-Hans{% endblock %}
 
 {% block header %}
-    {% include "template/en/header.html" %}
+    {% include "template/zh_cn/header.html" %}
 {% endblock header %}
+
+{% macro get_zhcn(data) %}{% if data.zh_cn %}{{ data.zh_cn }}{% else %}{{ data.zh_cn_jp }}{% endif %}{% endmacro %}
 {% block navi %}
     {# Entry mapping #}
     {% if background %}{% set entry_ = background %}
@@ -18,9 +21,9 @@
     {% endif %}
 
     {% if entry_ and entry_.filetype > 0 %}
-        <p class="navi-p"><a href=".">&lt;-- Return to the previous directory</a></p>
+        <p class="navi-p"><a href=".">&lt;-- 返回到上一级目录</a></p>
     {% else %}
-        <p class="navi-p"><a href="..">&lt;-- Return to the previous directory</a></p>
+        <p class="navi-p"><a href="..">&lt;-- 返回到上一级目录</a></p>
     {% endif %}
 
     {% if entry_ and entry_.interpage %}
@@ -28,29 +31,29 @@
             {% set _prev = entry_.interpage.prev %}
             {% if _prev.name != "[NO_PREV]" %}
                 {% if 1 <= entry_.filetype <= 5 %}
-                    <p class="navi-p"><a href="/en/{{ _prev.namespace|join('/') }}.html">&lt;-- Previous page: {{ _prev.name.realname.en }}</a></p>
+                    <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- 上一页：{{ get_zhcn(_prev.name.realname) }} ({{ _prev.name.realname.en }})</a></p>
                 {% else %}
-                    <p class="navi-p"><a href="/en/{{ _prev.namespace|join('/') }}.html">&lt;-- Previous page: {{ _prev.name.en }}</a></p>
+                    <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- 上一页：{{ get_zhcn(_prev.name) }}</a></p>
                 {% endif %}
             {% else %}
-                <p class="navi-p">No previous page found.</p>
+                <p class="navi-p">未找到上一页</p>
             {% endif %}
         {% endif %}
         {% if entry_.interpage.next %}
             {% set _next = entry_.interpage.next %}
             {% if _next.name != "[NO_NEXT]" %}
                 {% if 1 <= entry_.filetype <= 5 %}
-                    <p class="navi-p"><a href="/en/{{ _next.namespace|join('/') }}.html">--&gt; Next page: {{ _next.name.realname.en }}</a></p>
+                    <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">--&gt; 下一页：{{ get_zhcn(_next.name.realname) }} ({{ _next.name.realname.en }})</a></p>
                 {% else %}
-                    <p class="navi-p"><a href="/en/{{ _next.namespace|join('/') }}.html">--&gt; Next page: {{ _next.name.en }}</a></p>
+                    <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">--&gt; 下一页: {{ get_zhcn(_next.name) }}</a></p>
                 {% endif %}
             {% else %}
-                <p class="navi-p">No next page found.</p>
+                <p class="navi-p">未找到下一页</p>
             {% endif %}
         {% endif %}
     {% endif %}
     <hr />
 {% endblock navi %}
 {% block footer %}
-    {% include "template/en/footer.html" %}
+    {% include "template/zh_cn/footer.html" %}
 {% endblock footer %}

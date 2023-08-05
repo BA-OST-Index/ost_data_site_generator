@@ -6,7 +6,7 @@
     <h1>Student/{{ char.student.name.personal_name.en }}</h1>
     {% include "template/en/infobox/student.html" %}
     {% set student = char.student %}
-    <p><b>{{ student.name.family_name.en }} {{ student.name.personal_name.en }}</b> (JP: {{ student.name.family_name.jp }} {{ student.name.personal_name.jp }}) is a {{ student.age.en }} student from {{ student.club.en }} of {{ student.school.en }}. She enjoys {{ student.hobby.en }}.</p>
+    <p><b>{{ student.name.family_name.en }} {{ student.name.personal_name.en }}</b> (JP: {{ student.name.family_name.jp }} {{ student.name.personal_name.jp }}) is a {{ student.age.en }} student from {{ student.club.en }} of {{ student.school.long.en }}. She enjoys {{ student.hobby.en }}.</p>
     <h2>Relationship/Bond Story</h2>
     {% set bond = char.include.0.1.include %}
     {% for i in bond %}
@@ -14,7 +14,7 @@
         <h3><a href="bond/{{ value.pos.no }}.html">{{ value.pos.no }}. {{ value.name.en }}</a></h3>
         {% if value.is_memory %}
             {% set track = value.bgm_bond %}
-            <big><p>Recollection Lobby can be collected from this story. Lobby BGM: <a href="/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}">{{ track.name.en }}</a> (No. {{ track.no }})</p></big>
+            <big><p>Recollection Lobby can be collected from this story. Lobby BGM: <a href="/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}">{{ track.name.realname.en }}</a> (No. {{ track.no }})</p></big>
         {% endif %}
         <p>{{ value.desc.en }}</p>
         <h4>Story Parts</h4>

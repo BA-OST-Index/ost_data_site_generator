@@ -1,0 +1,15 @@
+{% extends "template/zh_cn/base.html" %}
+{% from 'template/zh_cn/_macro.html' import auto_zhcn_gen %}
+
+{% block title %}活动/{{ event.parent_data.last_parent.name.zh_cn_jp }}/故事{% endblock title %}
+{% block article_content %}
+    <h1>活动/{{ auto_zhcn_gen(event.name) }}/故事</h1>
+    <p>本页列出 活动“{{ auto_zhcn_gen(event.parent_data.last_parent) }}” 的全部故事。</p>
+    <h2>全部故事</h2>
+    <ul>
+        {% for i in include %}
+            {% set i = i.1 %}
+            <li><a href="/zh_cn/event/{{ i.pos.event_id }}/story/{{ i.pos.segment }}.html">第{{ i.pos.segment }}个故事：{{ auto_zhcn_gen(i.name) }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

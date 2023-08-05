@@ -1,0 +1,48 @@
+{% extends "template/zh_cn/base.html" %}
+{% from 'template/zh_cn/_macro.html' import auto_zhcn_gen, nothing_to_show %}
+
+{% block title %}全部任务{% endblock title %}
+{% block article_content %}
+    <h2>{{ battle.name.zh_cn }}</h2>
+    {% if battle.filetype == -44 %}
+        {# For Event Battle #}
+        <p>此页显示所有 活动“{{ auto_zhcn_gen(battle.parent_data.last_parent.name) }}” 的所有任务</p>
+    {% else %}
+        <p>{{ battle.desc.zh_cn }}</p>
+    {% endif %}
+    <ul>
+        {% for i in battle.include %}
+            <!--Folder Data File-->
+            {% if i.1.filetype < 0 %}
+                <li><a href="{{ i.0 }}">{{ i.1.name.zh_cn }}</a></li>
+                {% continue %}
+            {% endif %}
+
+            <!--Actual Data File-->
+            {% set i = i.1 %}
+            {% if i.filetype == 23 %}
+                <li>不支持PvP！</li>
+            {% elif i.filetype == 21 %}
+                {% if i.no[0] == "N" %}
+                    {% set mission_type = "普通" %}
+                {% else %}
+                    {% set mission_type = "困难" %}
+                {% endif %}
+                <li><a href="/zh_cn/main/battle/main/{{ i.chapter }}/{{ i.no }}.html">主线任务第{{ i.chapter }}章 第{{ i.no[1] }}个任务 ({{ mission_type }})</a></li>
+            {% elif i.filetype == 22 %}
+                {% if i.no[0] %}
+                    {% set mission_type = "普通" %}
+                {% else %}
+                    {% set mission_type = "挑战" %}
+                {% endif %}
+                <li><a href="/zh_cn/event/{{ i.event_id }}/battle/{{ i.no }}.html">活动 {{ auto_zhcn_gen(i.parent_data.0.name) }} 第{{ i.no[1] }}个任务 ({{ mission_type }})</a></li>
+            {% elif i.filetype == 24 %}
+                <li><a href="/zh_cn/main/battle/total_assault/{{ i.id }}.html">BOSS {{ auto_zhcn_gen(i.name) }} ({{ i.name.jp }})</a></li>
+            {% elif i.filetype > 0 %}
+                <li><a href="/zh_cn/main/battle/{{ i.namespace.2 }}/{{ i.namespace.3 }}.html">{{ auto_zhcn_gen(i.name) }}</a></li>
+            {% endif %}
+        {% else %}
+            <li>{{ nothing_to_show }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

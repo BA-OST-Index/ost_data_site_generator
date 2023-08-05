@@ -1,0 +1,13 @@
+{% extends "template/zh_cn/base.html" %}
+
+{% block title %}背景/{{ background.filename }}{% endblock title %}
+{% block article_content %}
+    {% from "template/zh_cn/_macro.html" import output_usedby_story, output_usedby_track %}
+    <h1>背景/{{ background.filename }}</h1>
+    {% include "template/zh_cn/infobox/background.html" %}
+    <h2>用途信息</h2>
+    <h3>故事</h3>
+    {{ output_usedby_story(background.used_by.data_story) }}
+    <h3>曲目</h3>
+    {{ output_usedby_track(background.used_by.data_track) }}
+{% endblock %}

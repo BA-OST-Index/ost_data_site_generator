@@ -1,0 +1,71 @@
+{% from "template/zh_cn/_macro.html" import tag_altogether, get_social_for_composer %}
+<table id="infobox">
+    <tr>
+        <td colspan="2" class="infobox-title">{{ track.no }}. {{ track.name.realname.zh_cn }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" class="infobox-icon"><img src="{{ track.image.value }}" /></td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">基本信息</td></tr>
+    <tr>
+        <td class="infobox-col-title">曲目名称（编号）</td>
+        <td class="infobox-col-value">{{ track.name.realname.zh_cn }} ({{ track.name.realname.en }})<br />No. {{ track.no }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">别名</td>
+        <td class="infobox-col-value">{% for i in track.name.known_as %}{{ i.zh_cn }}<br />{% endfor %}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">长度</td>
+        <td class="infobox-col-value">{{ track.duration }}秒 ({{ track.duration_splited.0 }}分{{ track.duration_splited.1 }}秒)</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">发行日期</td>
+        <td class="infobox-col-value">{{ track.release_date_format }} ({{ track.release_date }})</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">标签</td>
+        <td class="infobox-col-value">{{ tag_altogether(track.tag) }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">曲目类型</td>
+        <td class="infobox-col-value">{{ track_type_for_show(track) }}</td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">作曲家信息</td></tr>
+    <tr>
+        <td class="infobox-col-title">昵称</td>
+        <td class="infobox-col-value">{{ track.composer.nickname }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">联系</td>
+        <td class="infobox-col-value">{{ get_social_for_composer(track.composer) }}</td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">版本信息</td></tr>
+    {% for version in track.version %}
+        <tr>
+            <td class="infobox-col-title">{{ version.desc.zh_cn }}</td>
+            <td class="infobox-col-value">{% for i in version.url %}<a href="{{ i.value }}"><img src="/static/images/social/{{ i.platform.en }}.png" class="social-logo">{{ i.platform.zh_cn }}</a>&nbsp;&nbsp;{% endfor %}</td>
+        </tr>
+    {% endfor %}
+    <tr><td colspan="2" class="infobox-subtitle">特殊信息</td></tr>
+    <tr>
+        <td class="infobox-col-title">为OST(原声带)</td>
+        <td class="infobox-col-value">{% if track.special_case.is_ost %}是{% else %}否{% endif %}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">在故事中出现</td>
+        <td class="infobox-col-value">{% if track.special_case.is_story %}是{% else %}否{% endif %}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">在战斗中出现</td>
+        <td class="infobox-col-value">{% if track.special_case.is_battle %}是{% else %}否{% endif %}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">在回忆大厅中出现</td>
+        <td class="infobox-col-value">{% if track.special_case.is_bond %}是{% else %}否{% endif %}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">在活动中出现</td>
+        <td class="infobox-col-value">{% if track.special_case.is_event %}是{% else %}否{% endif %}</td>
+    </tr>
+</table>

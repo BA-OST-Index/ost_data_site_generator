@@ -1,0 +1,38 @@
+{% extends "template/zh_cn/base.html" %}
+
+{% block title %}曲子/{{ track.name.realname.zh_cn }}{% endblock title %}
+{% block article_content %}
+    {% from "template/zh_cn/_macro.html" import track_type_for_show, output_usedby_background, output_usedby_story, output_usedby_battle, output_usedby_ui, output_usedby_video, nothing_to_show %}
+
+    <h1>曲子/{{ track.no }}. {{ track.name.realname.zh_cn }}</h1>
+    {% include "template/zh_cn/infobox/track.html" %}
+    <p><b>{{ track.name.realname.zh_cn }}</b> (<b>{{ track.name.realname.en }}</b>) 是{{ track_type_for_show(track) }}中的第{{ track.no }}首曲子。</p>
+    <p>{{ track.desc.zh_cn }}</p>
+    <h2>名称翻译</h2>
+    <h3>原始名称</h3>
+    <ul>
+        <li>English: {{ track.name.realname.en }}</li>
+        <li>中文简体 (Chinese Simplified): {{ track.name.realname.zh_cn }}</li>
+        <li>中文繁體 (Chinese Traditional): {{ track.name.realname.zh_tw }}</li>
+    </ul>
+    <h3>其他名称</h3>
+    <ul>
+        {% for i in track.name.known_as %}
+            <li>{{ i.en }} / {{ i.zh_cn }} / {{ i.zh_tw }}</li>
+        {% else %}
+            <li>{{ nothing_to_show }}</li>
+        {% endfor %}
+    </ul>
+    <h2>使用信息</h2>
+    <p>此处显示引用了这首曲子的实例。</p>
+    <h3>背景</h3>
+    {{ output_usedby_background(track.used_by.data_background) }}
+    <h3>故事</h3>
+    {{ output_usedby_story(track.used_by.data_story) }}
+    <h3>战斗</h3>
+    {{ output_usedby_battle(track.used_by.data_battle) }}
+    <h3>UI</h3>
+    {{ output_usedby_ui(track.used_by.data_ui) }}
+    <h3>视频</h3>
+    {{ output_usedby_video(track.used_by.data_video) }}
+{% endblock article_content %}

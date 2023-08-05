@@ -6,7 +6,7 @@ import subprocess
 import time
 from jinja2 import Environment, FileSystemLoader
 
-ALL_LANGS = ["en"]
+ALL_LANGS = ["en", "zh_cn"]
 
 filename_to_filetype = {
     "background.html": [71],
@@ -32,8 +32,8 @@ filename_to_filetype = {
 }
 
 page_path_and_name = {
-    "page/en/main_all.html": "main/index.html",
-    "page/en/_index.html": "index.html"
+    "page/{lang}/main_all.html": "main/index.html",
+    "page/{lang}/_index.html": "index.html"
 }
 
 page_path_and_name2 = {
@@ -106,7 +106,7 @@ def traverse_path(namespace: list, lang: str = "en"):
             template = environment.get_template(f"page/{lang}/{template_name}")
 
             if content["filetype"] in filename_to_filetype["ui.html"]:
-                target_path = "/".join(["data_html", lang, *namespace[1:], i + ".html"])
+                target_path = "/".join(["data_html", lang, *namespace[1:], change_extension_name(i, "html")])
             elif content["filetype"] == -53:
                 # for single student
                 target_path = "/".join(["data_html", lang, *namespace[1:], "index.html"])
@@ -115,6 +115,7 @@ def traverse_path(namespace: list, lang: str = "en"):
                 target_path = "/".join(["data_html", lang, *namespace[1:], "index.html"])
             else:
                 target_path = "/".join(["data_html", lang, *namespace[1:], change_extension_name(i, "html")])
+
             if "_all" in i:
                 target_path = "/".join(["data_html", lang, *namespace[1:], "index.html"])
 
@@ -134,7 +135,7 @@ def traverse_path(namespace: list, lang: str = "en"):
 for lang in ALL_LANGS:
     traverse_path(["exported_data"], lang)
     for path, name in page_path_and_name.items():
-        template = environment.get_template(path)
+        template = environment.get_template(path.format(lang=lang))
         result = template.render()
         with open(os.path.join("data_html/" + lang + "/", name), mode="w", encoding="UTF-8") as file:
             file.write(result)
@@ -148,7 +149,7 @@ print("Generation completed")
 shutil.copytree("static", "data_html/static", dirs_exist_ok=True, copy_function=shutil.copy)
 print("Copying completed")
 
-process = subprocess.Popen("py -m http.server --directory data_html", shell=True)
+process = subprocess.Popen("py -m http.server 9000 --directory data_html", shell=True)
 time.sleep(2)
-webbrowser.open("http://localhost:8000/en/index.html")
+webbrowser.open("http://localhost:9000/en/index.html")
 process.wait()

@@ -1,0 +1,20 @@
+{% extends "template/zh_cn/base.html" %}
+
+{% block title %}NPC/{{ char.name.zh_cn_jp }}{% endblock title %}
+{% block article_content %}
+    {% from "template/zh_cn/_macro.html" import output_usedby_story, output_usedby_track, auto_zhcn_gen %}
+
+    <h1>NPC/{{ auto_zhcn_gen(char.name) }}</h1>
+    {% include "template/zh_cn/infobox/npc.html" %}
+
+    <p><b>{{ auto_zhcn_gen(char.name) }} ({{ char.name.jp }}) 是一名在游戏里的NPC。</b></p>
+
+    <h2>简介</h2>
+    <p>{{ auto_zhcn_gen(char.desc) }}</p>
+
+    <h2>使用详情</h2>
+    <h3>故事</h3>
+    {{ output_usedby_story(char.used_by.data_story) }}
+    <h3>曲目</h3>
+    {{ output_usedby_track(char.used_by.data_track) }}
+{% endblock %}

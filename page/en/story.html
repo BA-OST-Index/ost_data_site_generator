@@ -11,7 +11,7 @@
     {% elif story.filetype == 15 %}
         <p><b>{{ story.name.en }}</b> is the {{ get_ordinal_number(story.pos.no) }} story of the bond story of the student <img src="/static/images/student/icon/{{ story.student.image.collection_texture }}.png" class="icon-stu"/>{{ story.student.name.personal_name.en }}.</p>
     {% elif story.filetype == 14 %}
-        <p><b>{{ story.name.en }}</b> is the {{ get_ordinal_number(story.pos.no) }} story of the event {{ story.parent_data.0.name.en }}.</p>
+        <p><b>{{ story.name.en }}</b> is the {{ get_ordinal_number(story.pos.segment) }} story of the event {{ story.parent_data.0.name.en }}.</p>
     {% else %}
         <p><b>{{ story.name.en }}</b> is the {{ get_ordinal_number(story.pos.no) }} story of Chapter {{ story.pos.chapter }} of story {{ story.parent_data.1.name.en }}.</p>
     {% endif %}
@@ -25,7 +25,7 @@
     <h2>Battle/Bond Track Info</h2>
     {% if story.is_battle or story.is_memory %}
         {% set track = story.bgm_battle or story.bgm_bond %}
-        <p>Track: <a href="/en/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}.html">{{ track.name.en }}</a> (No. {{ track.no }})</p>
+        <p>Track: <a href="/en/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}.html">{{ track.name.realname.en }}</a> (No. {{ track.no }})</p>
     {% else %}
         <p>This story contains no battle/recollection lobby part, therefore there's no such track information.</p>
     {% endif %}

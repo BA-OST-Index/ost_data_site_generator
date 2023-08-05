@@ -1,0 +1,22 @@
+{% from "template/zh_cn/_macro.html" import tag_altogether %}
+<table id="infobox">
+    <tr>
+        <td colspan="2" class="infobox-title">{{ background.name.zh_cn }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" class="infobox-icon"><img width="80%" src="{{ background.image.value }}"></td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">基本信息</td></tr>
+    <tr>
+        <td class="infobox-col-title">全名</td>
+        <td class="infobox-col-value">{{ background.name.zh_cn }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">简介</td>
+        <td class="infobox-col-value">{{ background.desc.zh_cn }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">标签</td>
+        <td class="infobox-col-value">{{ tag_altogether(background.tags) }}</td>
+    </tr>
+</table>

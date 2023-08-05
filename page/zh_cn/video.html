@@ -1,0 +1,11 @@
+{% extends "template/zh_cn/base.html" %}
+{% from 'template/zh_cn/_macro.html' import output_usedby_track_list %}
+
+{% block title %}视频/{{ video.name.zh_cn }}{% endblock title %}
+{% block article_content %}
+    <h1>视频/{{ video.name.zh_cn }}</h1>
+    {% include "template/zh_cn/infobox/video.html" %}
+    <p><b>{{ video.name.zh_cn }}</b> 是一个与蔚蓝档案相关的视频。</p>
+    <h2>曲目信息</h2>
+    {{ output_usedby_track_list(video.track) }}
+{% endblock %}

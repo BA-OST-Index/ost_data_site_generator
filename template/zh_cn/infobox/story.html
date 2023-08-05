@@ -1,0 +1,46 @@
+{% from "template/zh_cn/_macro.html" import auto_zhcn_gen %}
+<table id="infobox">
+    <tr>
+        <td colspan="2" class="infobox-title">{{ auto_zhcn_gen(story.name) }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" class="infobox-icon"><img src="{{ story.image.value }}" /></td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">基本信息</td></tr>
+    <tr>
+        <td class="infobox-col-title">名称</td>
+        <td class="infobox-col-value">{{ auto_zhcn_gen(story.name) }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">位置</td>
+        {% if story.filetype == 14 %}
+            <td class="infobox-col-value">活动 {{ auto_zhcn_gen(story.parent_data.0.name) }} (编号 {{ story.pos.event_id }})<br/>第{{ story.pos.segment }}个故事</td>
+        {% elif story.filetype == 15 %}
+            <td class="infobox-col-value"><img src="/static/images/student/icon/{{ story.student.image.collection_texture }}.png" class="icon-stu"/>{{ auto_zhcn_gen(story.student.name.personal_name) }}<br/>第{{ story.pos.no }}个羁绊故事</td>
+        {% else %}
+            {% if story.filetype == 11 %}
+                {% set story_type = "main" %}
+                {% set story_type_trans = "主线" %}
+            {% elif story.filetype == 12 %}
+                {% set story_type = "side" %}
+                {% set story_type_trans = "支线" %}
+            {% elif story.filetype == 13 %}
+                {% set story_type = "short" %}
+                {% set story_type_trans = "短篇" %}
+            {% else %}
+                {% set story_type = "other" %}
+                {% set story_type_trans = "其它" %}
+            {% endif %}
+            <td class="infobox-col-value">{{ story_type_trans }}故事<br/>第{{ story.pos.volume }}篇<br/>第{{ story.pos.chapter }}章<br/>第{{ story.pos.segment }}集</td>
+        {% endif %}
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">特殊情况</td></tr>
+    <tr>
+        <td class="infobox-col-title">包含战斗</td>
+        <td class="infobox-col-value">{% if story.is_battle %}是{% else %}否{% endif %}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">会议大厅</td>
+        <td class="infobox-col-value">{% if story.is_memory %}是{% else %}否{% endif %}</td>
+    </tr>
+</table>

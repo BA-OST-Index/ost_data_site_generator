@@ -1,0 +1,16 @@
+{% extends "template/zh_cn/base.html" %}
+{% from 'template/zh_cn/_macro.html' import nothing_to_show %}
+
+{% block title %}全部标签{% endblock title %}
+{% block article_content %}
+    <h1>全部标签</h1>
+    <p>此页面列出所有标签。</p>
+    <ul>
+        {% for i in tag.include %}
+            {% set tag = i.1 %}
+            <li><a href="/en/tag/{{ i.0[:-5] }}.html" class="text-{{ color_css }}">{{ tag.name.zh_cn }} / {{ tag.name.en }}</a></li>
+        {% else %}
+            <li>{{ nothing_to_show }}</li>
+        {% endfor %}
+    </ul>
+{% endblock article_content %}

@@ -1,0 +1,16 @@
+{% from "template/zh_cn/_macro.html" import tag_altogether %}
+<table id="infobox">
+    <tr>
+        <td colspan="2" class="infobox-title">{{ video.name.zh_cn }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" class="infobox-icon"><img width="80%" src="{{ video.image.value }}"></td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">版本信息</td></tr>
+    {% for version in video.version %}
+        <tr>
+            <td class="infobox-col-title">{{ version.desc.zh_cn }}</td>
+            <td class="infobox-col-value">{% for i in version.url %}<a href="{{ i.value }}"><img src="/static/images/social/{{ i.platform.en }}.png" class="social-logo">{{ i.platform.zh_cn }}</a>&nbsp;&nbsp;{% endfor %}</td>
+        </tr>
+    {% endfor %}
+</table>

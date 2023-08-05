@@ -1,0 +1,32 @@
+{% extends "template/zh_cn/base.html" %}
+{% from 'template/zh_cn/_macro.html' import auto_zhcn_gen %}
+
+{% block title %}{{ story.name.zh_cn_jp }}的全部故事{% endblock title %}
+{% block article_content %}
+    <h1>{{ auto_zhcn_gen(story.name) }}的全部故事</h1>
+    <p>{{ auto_zhcn_gen(story.desc) }}</p>
+    {% if 'image' in story and story.image.value != "" %}
+        <h2>相关图片</h2>
+        {% if story.image.short_desc.zh_cn != "" %}
+            <p>描述：{{ story.image.short_desc.zh_cn }}</p>
+        {% endif %}
+        <img src="{{ story.image.value }}" width="30em">
+    {% endif %}
+    <ul>
+        {% for i in story.include %}
+            {% set i = i.1 %}
+            {% if story.filetype == -22 %}
+                <li><a href="{{ i.namespace[-1] }}">{{ auto_zhcn_gen(i.name) }}</a></li>
+            {% elif story.filetype == -23 %}
+                <li><a href="{{ i.namespace[-1] }}">第{{ i.namespace[-1] }}篇：{{ auto_zhcn_gen(i.name) }}</a><br/>{{ auto_zhcn_gen(i.desc) }}</li>
+            {% elif story.filetype == -24 %}
+                <li><a href="{{ i.namespace[-1] }}">第{{ i.namespace[-1] }}章：{{ auto_zhcn_gen(i.name) }}</a><br/>{{ auto_zhcn_gen(i.desc) }}</li>
+            {% elif story.filetype == -25 %}
+                <li><a href="{{ i.pos.segment }}.html">第{{ i.pos.segment }}个：{{ auto_zhcn_gen(i.name) }}</a></li>
+            {% elif story.filetype == -54 %}
+                <li><a href="{{ i.pos.segment }}.html">第{{ i.pos.segment }}个故事: {{ auto_zhcn_gen(i.name) }}</a></li>
+            {% else %}
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endblock %}

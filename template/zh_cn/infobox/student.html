@@ -1,0 +1,31 @@
+{% from 'template/zh_cn/_macro.html' import auto_zhcn_gen %}
+
+<table id="infobox">
+    <tr>
+        <td colspan="2" class="infobox-title">{{ auto_zhcn_gen(char.student.name.family_name) }} {{ auto_zhcn_gen(char.student.name.personal_name) }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" class="infobox-icon"><img width="80%" src="/static/images/student/portrait/Portrait_{{ char.student.name.dev_name }}.webp"><br/><br/><img width="50%" src="/static/images/student/icon/{{ char.student.image.collection_texture }}.png" /></td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">基本信息</td></tr>
+    <tr>
+        <td class="infobox-col-title">全名</td>
+        <td class="infobox-col-value">{{ auto_zhcn_gen(char.student.name.family_name) }} {{ auto_zhcn_gen(char.student.name.personal_name) }}<br/>{{ char.student.name.family_name.jp }} {{ char.student.name.personal_name.jp }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">年龄</td>
+        <td class="infobox-col-value">{{ auto_zhcn_gen(char.student.age) }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">生日</td>
+        <td class="infobox-col-value">{{ char.student.birthday.localized.zh_cn_jp }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">学校/社团信息</td>
+        <td class="infobox-col-value">{{ auto_zhcn_gen(char.student.school.long) }}<br/>{{ auto_zhcn_gen(char.student.club) }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">爱好</td>
+        <td class="infobox-col-value">{{ auto_zhcn_gen(char.student.hobby) }}</td>
+    </tr>
+</table>

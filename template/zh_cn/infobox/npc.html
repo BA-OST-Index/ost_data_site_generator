@@ -1,0 +1,14 @@
+{% from "template/zh_cn/_macro.html" import auto_zhcn_gen %}
+<table id="infobox">
+    <tr>
+        <td colspan="2" class="infobox-title">{{ auto_zhcn_gen(char.name) }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" class="infobox-icon"><img width="80%" src="{{ char.image.value }}"></td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">基本信息</td></tr>
+    <tr>
+        <td class="infobox-col-title">全名</td>
+        <td class="infobox-col-value">{{ auto_zhcn_gen(char.name) }} ({{ char.name.jp }})</td>
+    </tr>
+</table>

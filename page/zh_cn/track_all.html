@@ -1,0 +1,16 @@
+{% extends "template/zh_cn/base.html" %}
+
+{% block title %}{{ track.name.zh_cn }}{% endblock title %}
+{% block article_content %}
+    <h1>{{ track.name.zh_cn }}</h1>
+    <p>{{ track.desc.zh_cn }}</p>
+    <ul>
+        {% for i in track.include %}
+            {% if i.1.filetype == 1 %}
+                <li><a href="{{ i.1.no }}.html">{{ i.1.no }}. {{ i.1.name.realname.zh_cn }}</a>&nbsp;-&nbsp;{{ i.1.desc.zh_cn }}</li>
+            {% else %}
+                <li><a href="{{ i.1.namespace.1 }}/index.html">{{ i.1.name.zh_cn }}</a>&nbsp;-&nbsp;{{ i.1.desc.zh_cn }}</li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endblock article_content %}

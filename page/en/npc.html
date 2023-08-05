@@ -6,8 +6,12 @@
 
     <h1>NPC/{{ char.name.en }}</h1>
     {% include "template/en/infobox/npc.html" %}
-    <center><big><p>{{ char.desc.en }}</p></big></center>
-    <p><b>{{ char.name.en }} ({{ char.name.desc }}) is an NPC in the game.</b></p>
+
+    <p><b>{{ char.name.en }} ({{ char.name.jp }}) is an NPC in the game.</b></p>
+
+    <h2>Description</h2>
+    <p>{{ char.desc.en }}</p>
+
     <h2>Usage Info</h2>
     <h3>Stories</h3>
     {{ output_usedby_story(char.used_by.data_story) }}
