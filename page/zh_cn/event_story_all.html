@@ -9,7 +9,7 @@
     <ul>
         {% for i in include %}
             {% set i = i.1 %}
-            <li><a href="/zh_cn/event/{{ i.pos.event_id }}/story/{{ i.pos.segment }}.html">第{{ i.pos.segment }}个故事：{{ auto_zhcn_gen(i.name) }}</a></li>
+            <li><a href="/zh_cn/event/{{ i.pos.event_id }}/story/{{ i.pos.segment }}.html">第{{ i.pos.segment }}话故事：{{ auto_zhcn_gen(i.name) }}</a></li>
         {% endfor %}
     </ul>
 {% endblock %}

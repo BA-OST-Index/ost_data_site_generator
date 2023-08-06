@@ -1,4 +1,5 @@
 {% extends "template/en/base.html" %}
+{% block title %}Welcome {% endblock title %}
 
 {#
 {% block toc %}
@@ -17,4 +18,17 @@ Contents:
 {% block article_content %}
     <h1>Welcome Sensei!</h1>
     <p>This is BA OST Index, a project created by <a href="https://github.com/sctop">sctop</a> in an attempt to track relationships between each track and the stories, battles, as well as the backgrounds, characters and UIs!</p>
+    <br />
+    <h2>Supported Data</h2>
+    <ul>
+        <li><a href="/en/background/">Background</a></li>
+        <li><a href="/en/character/">Character</a></li>
+        <li><a href="/en/event/">Event (incomplete support)</a></li>
+        <li><a href="/en/main/">Main Mission/Story</a></li>
+        <li><a href="/en/tag/">Tag (not in use)</a></li>
+        <li><a href="/en/track/">Tracks</a></li>
+        <li><a href="/en/ui/">UI</a></li>
+        <li><a href="/en/video/">Videos</a></li>
+    </ul>
+    <p>You can also navigate the website through the navigation section on the left.</p>
 {% endblock article_content %}

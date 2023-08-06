@@ -20,7 +20,7 @@
     {% elif video %}{% set entry_ = video %}
     {% endif %}
 
-    {% if entry_ and entry_.filetype > 0 %}
+    {% if entry_ and entry_.filetype > 0 and entry_.filetype != 52 %}
         <p class="navi-p"><a href=".">&lt;-- 返回到上一级目录</a></p>
     {% else %}
         <p class="navi-p"><a href="..">&lt;-- 返回到上一级目录</a></p>

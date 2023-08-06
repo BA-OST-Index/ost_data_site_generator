@@ -14,7 +14,7 @@
     <tr>
         <td class="infobox-col-title">位置</td>
         {% if story.filetype == 14 %}
-            <td class="infobox-col-value">活动 {{ auto_zhcn_gen(story.parent_data.0.name) }} (编号 {{ story.pos.event_id }})<br/>第{{ story.pos.segment }}个故事</td>
+            <td class="infobox-col-value">活动 {{ auto_zhcn_gen(story.parent_data.0.name) }} (编号 {{ story.pos.event_id }})<br/>第{{ story.pos.segment }}话</td>
         {% elif story.filetype == 15 %}
             <td class="infobox-col-value"><img src="/static/images/student/icon/{{ story.student.image.collection_texture }}.png" class="icon-stu"/>{{ auto_zhcn_gen(story.student.name.personal_name) }}<br/>第{{ story.pos.no }}个羁绊故事</td>
         {% else %}
@@ -31,7 +31,7 @@
                 {% set story_type = "other" %}
                 {% set story_type_trans = "其它" %}
             {% endif %}
-            <td class="infobox-col-value">{{ story_type_trans }}故事<br/>第{{ story.pos.volume }}篇<br/>第{{ story.pos.chapter }}章<br/>第{{ story.pos.segment }}集</td>
+            <td class="infobox-col-value">{{ story_type_trans }}故事<br/>第{{ story.pos.volume }}篇<br/>第{{ story.pos.chapter }}章<br/>第{{ story.pos.segment }}话</td>
         {% endif %}
     </tr>
     <tr><td colspan="2" class="infobox-subtitle">特殊情况</td></tr>

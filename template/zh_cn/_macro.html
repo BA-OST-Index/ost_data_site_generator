@@ -45,7 +45,7 @@
                     {% set story_type_trans = "其它" %}
                 {% endif %}
                 <a href="/{{ current_lang }}/main/story/{{ story_type }}/{{ value.pos.volume }}/{{ value.pos.chapter }}/{{ value.pos.segment }}.html">
-                    {{ story_type_trans }}故事第{{ value.pos.volume }}篇第{{ value.pos.chapter }}章第{{ value.pos.segment }}个：{{ auto_zhcn_gen(value.name) }}
+                    {{ story_type_trans }}故事第{{ value.pos.volume }}篇第{{ value.pos.chapter }}章第{{ value.pos.segment }}话：{{ auto_zhcn_gen(value.name) }}
                 </a></li>
             {% endif %}
         {% else %}
@@ -205,7 +205,7 @@
 
             <li><a href="/{{ current_lang }}/video/{{ value.namespace.1 }}.html">视频<i>{{ value.name.zh_cn }}</i></a>：{{ value.desc.zh_cn }}</li>
         {% else %}
-            <li>Nothing to show!</li>
+            <li>{{ nothing_to_show }}</li>
         {% endfor %}
     </ul>
 {% endmacro %}
