@@ -1,0 +1,9 @@
+{% extends "template/en/base.html" %}
+
+{% block title %}Event/{{ event.parent_data.last_parent.name.en }}/UIs{% endblock title %}
+{% block article_content %}
+    {% from "template/en/_macro.html" import output_usedby_ui_for_all_ui, output_usedby_ui_list %}
+    <h1>Event/{{ event.parent_data.last_parent.name.en }}/UIs</h1>
+    <p>This page lists all the UIs of the event <i>{{ event.parent_data.last_parent.name.en }}</i>.</p>
+    {{ output_usedby_ui_for_all_ui(event.include) }}
+{% endblock article_content %}

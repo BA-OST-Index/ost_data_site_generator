@@ -27,7 +27,7 @@
             </li>
             {% elif value.filetype == 14 %}
             <li>
-                <a href="/{{ current_lang }}/event/{{ value.pos.event_id }}/story/{{ value.pos.no }}.html">活动 {{ value.parent_data.0.name.zh_cn }} 的第{{ value.pos.segment }}个故事：{{ auto_zhcn_gen(value.name) }}
+                <a href="/{{ current_lang }}/event/{{ value.pos.event_id }}/story/{{ value.pos.segment }}.html">活动 {{ value.parent_data.0.name.zh_cn }} 的第{{ value.pos.segment }}个故事：{{ auto_zhcn_gen(value.name) }}
                 </a></li>
             {% else %}
             <li>
@@ -107,7 +107,7 @@
 
             <!--Special case for UiInfoEvent-->
             {% if i.filetype == 32 %}
-                <li><a href="/{{ current_lang }}/event/{{ i.event_id }}/ui/{{ i.id }}.html">{{ auto_zhcn_gen(value.name) }}</a>&nbsp;-&nbsp;{{ value.name.zh_cn }}</li>
+                <li><a href="/{{ current_lang }}/event/{{ i.event_id }}/ui/{{ i.id }}.html">{{ auto_zhcn_gen(i.name) }}</a>&nbsp;-&nbsp;{{ i.name.zh_cn }}</li>
             {% else %}
                 <li><a href="/{{ current_lang }}/ui/{{ i.namespace.1 }}.html">{{ auto_zhcn_gen(i.name) }}</a>&nbsp;-&nbsp;{{ i.name.zh_cn }}</li>
             {% endif %}
@@ -139,7 +139,7 @@
 
             <!--Special case for UiInfoEvent-->
             {% if i.filetype == 32 %}
-                <li><a href="/{{ current_lang }}/event/{{ i.event_id }}/ui/{{ i.id }}.html">{{ auto_zhcn_gen(value.name) }}</a>&nbsp;-&nbsp;{{ value.name.zh_cn }}</li>
+                <li><a href="/{{ current_lang }}/event/{{ i.event_id }}/ui/{{ i.id }}.html">{{ auto_zhcn_gen(i.name) }}</a>&nbsp;-&nbsp;{{ i.name.zh_cn }}</li>
             {% else %}
                 <li><a href="/{{ current_lang }}/ui/{{ i.namespace.1 }}.html">{{ auto_zhcn_gen(i.name) }}</a>&nbsp;-&nbsp;{{ i.name.zh_cn }}</li>
             {% endif %}

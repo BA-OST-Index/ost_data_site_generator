@@ -1,13 +1,13 @@
 {% extends "template/zh_cn/base.html" %}
 {% from 'template/zh_cn/_macro.html' import output_usedby_story, output_usedby_track, auto_zhcn_gen, nothing_to_do %}
 
-{% block title %}Student/{{ char.student.name.personal_name.zh_cn_jp }}{% endblock title %}
+{% block title %}学生/{{ char.student.name.name.zh_cn_jp }}{% endblock title %}
 {% block article_content %}
-    <h1>学生/{{ auto_zhcn_gen(char.student.name.personal_name) }}</h1>
+    <h1>学生/{{ auto_zhcn_gen(char.student.name.name) }}</h1>
     {% include "template/zh_cn/infobox/student.html" %}
 
     {% set student = char.student %}
-    <p><b>{{ auto_zhcn_gen(student.name.family_name) }} {{ auto_zhcn_gen(student.name.personal_name) }}</b> (JP: {{ student.name.family_name.jp }} {{ student.name.personal_name.jp }}) 是一位{{ auto_zhcn_gen(student.age) }}的学生，来自{{ auto_zhcn_gen(student.school.long) }}的社团{{ auto_zhcn_gen(student.club) }}。她的爱好有{{ auto_zhcn_gen(student.hobby) }}。</p>
+    <p><b>{{ auto_zhcn_gen(student.name.family_name) }} {{ auto_zhcn_gen(student.name.personal_name) }}</b> <span lang="jp">(JP: {{ student.name.family_name.jp }} {{ student.name.personal_name.jp }})</span> 是一位{{ auto_zhcn_gen(student.age) }}的学生，来自{{ auto_zhcn_gen(student.school.long) }}的社团{{ auto_zhcn_gen(student.club) }}。她的爱好有{{ auto_zhcn_gen(student.hobby) }}。</p>
     <h2>羁绊剧情故事</h2>
     {% set bond = char.include.0.1.include %}
     {% for i in bond %}

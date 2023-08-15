@@ -5,7 +5,7 @@
     {% from "template/en/_macro.html" import output_usedby_ui_for_all_ui, output_usedby_ui_list %}
     <h1>{{ ui.name.en }}</h1>
     <p>{{ ui.desc.en }}</p>
-    {% if ui.filetype == -61 %}
+    {% if ui.filetype == -61 or ui.filetype == -45 %}
         {{ output_usedby_ui_for_all_ui(ui.include) }}
     {% else %}
         {{ output_usedby_ui_list(ui.include) }}

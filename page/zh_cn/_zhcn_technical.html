@@ -1,0 +1,40 @@
+{% extends "template/zh_cn/base.html" %}
+{% block title %}关于简体中文翻译的问题 {% endblock title %}
+
+{% block article_content %}
+    <h1>关于简体中文翻译的问题</h1>
+    <h2>太长不看版</h2>
+    <p>简体中文除UI等部分数据外，故事与人物等数据均采用三版数据：<code>zh_cn_jp</code>（日服玩家翻译版）、<code>zh_cn_tw</code>（台服繁中转简中版）与<code>zh_cn_cn</code>（国服官中）版。</p>
+    <p>由于个人原因及本站建站历史不长，目前只有 <code>zh_cn_tw</code> 支持较完善。</p>
+    <br />
+    <h2>现状</h2>
+    <p>由于各种众所周知的原因，关于蔚蓝档案相关内容的中文翻译（尤其是简体中文方面）一直没有统一。究其原因，其本质在于国际服与日服慢了半年进度，形成了“民间翻译版”（尤其以威威为主要）和“官方繁中”两个版本，以及国内审核造成的删减问题，而独自成形的“国服官中版”。</p>
+    <p>有鉴于以上简体中文“三版并立”的局面，在BA OST Index项目中，除了基础的<code>zh_cn</code>语言（此部分主要为网页UI语言）外，对于故事等部分内容的文本，数据库中实际上细分成了三个小语种：<code>zh_cn_jp</code>、<code>zh_cn_tw</code>与<code>zh_cn_cn</code>，分别对应上述三个版本的简体版内容。</p>
+    <h2>各版本解释</h2>
+    <p>三版的代码具体解释如下：</p>
+    <ul>
+        <li><code>zh_cn_jp</code> - 威威字幕君等翻译的民间版本</li>
+        <li><code>zh_cn_tw</code> - 由国际服官方繁中转换为简体后得到的版本</li>
+        <li><code>zh_cn_cn</code> - 国服官方简体中文版本</li>
+    </ul>
+    <p>由于各种原因，本站目前支持最完善的版本为<code>zh_cn_tw</code>即官方繁中转简中版。国服官中由于防沉迷问题不好操作，威威字幕君方面则尚未取得授权不便使用。</p>
+    <h2>Fallback机制</h2>
+    <p>对语言字符串的读取和导出工作均由 <a href="https://github.com/BA-OST-Index/ost_data_parser/blob/main/data_model/types/lang_string.py">lang_string.py</a> 进行。对于使用了三版字符串的语言字符串，其具体行为由 <code>ZhLangStringModel</code> 进行控制。</p>
+    <p>由于本站在建站初期无法将所有简体中文版本一并纳入数据库，因而其中必定会出现内容缺失的问题。为了使访问体验尽可能保持一致，<code>ZhLangStringModel</code> 在导出时内设Fallback机制，按照一定规则尽量找到非空白的语言字符串来填充。这也就是为什么即便<code>zh_cn_jp</code>的数据几乎不存在，浏览时却几乎不会遇到无内容显示的情况。</p>
+    <p>Fallback时，其顺序为：<code>zh_cn_tw</code> &gt; <code>zh_cn_jp</code> &gt; <code>zh_cn_cn</code>。</p>
+    <h2>受到影响的数据项</h2>
+    <p>当前会受到此影响的数据有以下几个。</p>
+    <p>以下数据为 SchaleDB 数据。</p>
+    <ul>
+        <p>学生信息：名字、社团、学院等</p>
+        <p>BOSS名字及其信息</p>
+    </ul>
+    <p>其中 <code>zh_cn_jp</code> 直接来自SchaleDB的“简体中文”版本，而 <code>zh_cn_tw</code> 为人工转换 <code>zh_tw</code> 版数据得到。</p>
+    <p>以下数据来自游戏内提取的数据（人工提取）。</p>
+    <ul>
+        <p>活动名</p>
+        <p>NPC信息</p>
+        <p>故事及其情节</p>
+    </ul>
+    <p>其中“故事及其情节”部分仅影响带有人物名的部分，如“宁瑠”被替换成了“尼禄”。</p>
+{% endblock article_content %}

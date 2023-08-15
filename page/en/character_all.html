@@ -19,7 +19,7 @@
                 {% set curr = i.1 %}
                 <li>
                     <a href="/en/character/student/{{ curr.student.name.path_name|lower }}/">
-                        <img src="/static/images/student/icon/{{ curr.student.image.collection_texture }}.png" class="icon-stu"/>{{ curr.student.name.name.en }}
+                        <img src="/static/images/student/icon/{{ curr.student.image.collection_texture }}.png" class="icon-stu"/>{{ curr.student.name.name.en }} <span lang="jp">({{ curr.student.name.name.jp }})</span>
                     </a>
                 </li>
             {% else %}
@@ -27,7 +27,7 @@
             {% endfor %}
         </ul>
     {% elif char.filetype == -52 %}
-        <h1>All of the {{ char.name }}s</h1>
+        <h1>{{ char.name.en }}</h1>
         <ul class="stu-list">
             {% for i in char.include %}
                 {% set curr = i.1 %}
@@ -35,7 +35,7 @@
                     {% set curr = curr.student %}
                     <li>
                         <a href="/en/character/student/{{ curr.name.path_name|lower }}/">
-                            <img src="/static/images/student/icon/{{ curr.image.collection_texture }}.png" class="icon-stu"/>{{ curr.name.name.en }}
+                            <img src="/static/images/student/icon/{{ curr.image.collection_texture }}.png" class="icon-stu"/>{{ curr.name.name.en }} <span lang="jp">({{ curr.name.name.jp }})</span>
                         </a>
                     </li>
                 {% else %}

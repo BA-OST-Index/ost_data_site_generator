@@ -17,6 +17,7 @@ filename_to_filetype = {
     "event_all.html": [-41, -42],
     "event_battle_all.html": [-44],
     "event_story_all.html": [-43],
+    "event_ui_all.html": [-45],
     "npc.html": [52],
     "story.html": [11, 12, 13, 14, 15, 16],
     "story_all.html": [-22, -23, -24, -25, -54],
@@ -26,19 +27,23 @@ filename_to_filetype = {
     "track.html": [1, 2, 3, 4],
     "track_all.html": [-11, -12],
     "ui.html": [31, 32],
-    "ui_all.html": [-45, -61, -62],
+    "ui_all.html": [-61, -62],
     "video.html": [41],
     "video_all.html": [-71]
 }
 
+# Common pages for every language
 page_path_and_name = {
     "page/{lang}/main_all.html": "main/index.html",
-    "page/{lang}/_index.html": "index.html"
+    "page/{lang}/_index.html": "index.html",
+    "page/{lang}/_about.html": "about.html"
 }
 
+# Special pages
 page_path_and_name2 = {
     "page/index.html": "index.html",
-    # "page/404.html": "404.html"
+    "page/404.html": "404.html",
+    "page/zh_cn/_zhcn_technical.html": "zh_cn/zhcn_technical.html"
 }
 
 environment = Environment(loader=FileSystemLoader(os.path.split(__file__)[0]), extensions=["jinja2.ext.loopcontrols"])
@@ -91,6 +96,10 @@ def traverse_path(namespace: list, lang: str = "en"):
     all_path = list(os.listdir(current_path))
     all_file = list(filter(lambda i: os.path.isfile(os.path.join(*namespace, i)), all_path))
     all_folder = list(filter(lambda i: os.path.isdir(os.path.join(*namespace, i)), all_path))
+    try:
+        all_folder.remove(".git")
+    except ValueError:
+        pass
 
     for i in all_file:
         try:
@@ -112,12 +121,26 @@ def traverse_path(namespace: list, lang: str = "en"):
                 target_path = "/".join(["data_html", lang, *namespace[1:], "index.html"])
             elif content["filetype"] == 52:
                 # for npc
-                target_path = "/".join(["data_html", lang, *namespace[1:], "index.html"])
+                target_path = "/".join(["data_html", lang, *namespace[1:-1], namespace[-1].lower(), "index.html"])
             else:
                 target_path = "/".join(["data_html", lang, *namespace[1:], change_extension_name(i, "html")])
-
             if "_all" in i:
                 target_path = "/".join(["data_html", lang, *namespace[1:], "index.html"])
+
+            # 对 target_path 作处理，若html文件名为数据，放弃前导0
+            # 因为直接读的 segment 是 int 并不会带前导0
+            # 前导0是后端给故事排序时所需要的
+            temp = os.path.split(target_path)
+            if "story" in temp[0]:
+                # 只针对故事进行处理，其他不进行
+                try:
+                    temp2 = int(temp[1][:-5])
+                except Exception:
+                    # not a number
+                    pass
+                else:
+                    if temp2 < 10:
+                        target_path = os.path.join(temp[0], temp[1][1:])
 
             template_content = return_template(template_name, template, content)
 
@@ -137,6 +160,7 @@ for lang in ALL_LANGS:
     for path, name in page_path_and_name.items():
         template = environment.get_template(path.format(lang=lang))
         result = template.render()
+        os.makedirs("data_html/" + lang + "/", exist_ok=True)
         with open(os.path.join("data_html/" + lang + "/", name), mode="w", encoding="UTF-8") as file:
             file.write(result)
 for path, name in page_path_and_name2.items():

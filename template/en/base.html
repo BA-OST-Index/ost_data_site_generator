@@ -29,6 +29,9 @@
             {% if _prev.name != "[NO_PREV]" %}
                 {% if 1 <= entry_.filetype <= 5 %}
                     <p class="navi-p"><a href="/en/{{ _prev.namespace|join('/') }}.html">&lt;-- Previous page: {{ _prev.name.realname.en }}</a></p>
+                {% elif entry_.filetype == 52 %}
+                    {# why am i doing this #}
+                    <p class="navi-p"><a href="/en/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|lower }}">&lt;-- Previous page: {{ _prev.name.en }}</a></p>
                 {% else %}
                     <p class="navi-p"><a href="/en/{{ _prev.namespace|join('/') }}.html">&lt;-- Previous page: {{ _prev.name.en }}</a></p>
                 {% endif %}
@@ -41,6 +44,9 @@
             {% if _next.name != "[NO_NEXT]" %}
                 {% if 1 <= entry_.filetype <= 5 %}
                     <p class="navi-p"><a href="/en/{{ _next.namespace|join('/') }}.html">--&gt; Next page: {{ _next.name.realname.en }}</a></p>
+                {% elif entry_.filetype == 52 %}
+                    {# why am i doing this #}
+                    <p class="navi-p"><a href="/en/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|lower }}">--&gt; Next page: {{ _next.name.en }}</a></p>
                 {% else %}
                     <p class="navi-p"><a href="/en/{{ _next.namespace|join('/') }}.html">--&gt; Next page: {{ _next.name.en }}</a></p>
                 {% endif %}

@@ -1,12 +1,12 @@
 {% extends "template/en/base.html" %}
 {% from 'template/en/_macro.html' import output_usedby_story, output_usedby_track %}
 
-{% block title %}Student/{{ char.student.name.personal_name.en }}{% endblock title %}
+{% block title %}Student/{{ char.student.name.name.en }}{% endblock title %}
 {% block article_content %}
-    <h1>Student/{{ char.student.name.personal_name.en }}</h1>
+    <h1>Student/{{ char.student.name.name.en }}</h1>
     {% include "template/en/infobox/student.html" %}
     {% set student = char.student %}
-    <p><b>{{ student.name.family_name.en }} {{ student.name.personal_name.en }}</b> (JP: {{ student.name.family_name.jp }} {{ student.name.personal_name.jp }}) is a {{ student.age.en }} student from {{ student.club.en }} of {{ student.school.long.en }}. She enjoys {{ student.hobby.en }}.</p>
+    <p><b>{{ student.name.family_name.en }} {{ student.name.personal_name.en }}</b> <span lang="jp">(JP: {{ student.name.family_name.jp }} {{ student.name.personal_name.jp }})</span> is a {{ student.age.en }} student from {{ student.club.en }} of {{ student.school.long.en }}. She enjoys {{ student.hobby.en }}.</p>
     <h2>Relationship/Bond Story</h2>
     {% set bond = char.include.0.1.include %}
     {% for i in bond %}

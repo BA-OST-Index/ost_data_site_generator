@@ -7,7 +7,7 @@
     <h1>NPC/{{ auto_zhcn_gen(char.name) }}</h1>
     {% include "template/zh_cn/infobox/npc.html" %}
 
-    <p><b>{{ auto_zhcn_gen(char.name) }} ({{ char.name.jp }}) 是一名在游戏里的NPC。</b></p>
+    <p><b>{{ auto_zhcn_gen(char.name) }} <span lang="jp">({{ char.name.jp }})</span> 是一名在游戏里的NPC。</b></p>
 
     <h2>简介</h2>
     <p>{{ auto_zhcn_gen(char.desc) }}</p>

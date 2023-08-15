@@ -1,12 +1,12 @@
 {% extends "template/en/base.html" %}
 
-{% block title %}Event/{{ event.name.en }}/Battles{% endblock title %}
+{% block title %}Event/{{ event.parent_data.last_parent.name.en }}/Battles{% endblock title %}
 {% block article_content %}
-    <h1>Event/{{ event.name.en }}/Battles</h1>
-    <p>{{ event.desc.en }}</p>
+    <h1>Event/{{ event.parent_data.last_parent.name.en }}/Battles</h1>
+    <p>This page lists all the battles of the event <i>{{ event.parent_data.last_parent.name.en }}</i>.</p>
     <h2>All Battles</h2>
     <ul>
-        {% for i in include %}
+        {% for i in event.include %}
             {% set i = i.1 %}
 
             {% if i.no[0] == "N" %}
@@ -15,7 +15,7 @@
                 {% set mission_type = "Challenge" %}
             {% endif %}
 
-            <li><a href="/en/event/{{ i.event_id }}/battle/{{ i.no }}.html">Battle {{ i.no[1:] }} ({{ mission_type }})</a></li>
+            <li><a href="/en/event/{{ i.event_id }}/battle/{{ i.no }}.html">Battle {{ i.no[1:] }} ({{ mission_type }})</a> {{ i.name.en }}</li>
         {% endfor %}
     </ul>
 {% endblock %}
