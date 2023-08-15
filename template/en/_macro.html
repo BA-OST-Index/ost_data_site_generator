@@ -56,7 +56,7 @@
                     {% set mission_type = "Hard" %}
                 {% endif %}
                 <li>
-                    <a href="/en/battle/main/{{ value.chapter }}/{{ value.no }}.html">Main Battle Chapter {{ value.chapter }} Mission {{ value.no[1] }} ({{ mission_type }}, Sub {{ value.no[2] }})</a>
+                    <a href="/en/main/battle/main/{{ value.chapter }}/{{ value.no }}.html">Main Battle Chapter {{ value.chapter }} Mission {{ value.no[1] }} ({{ mission_type }}, Sub {{ value.no[2] }})</a>
                 </li>
             {% elif value.filetype == 22 %}
                 {% if value.no[0] == "N" %}
@@ -78,7 +78,7 @@
                     {% set mission_type = "special_commision" %}
                 {% endif %}
                 <li>
-                    <a href="/en/battle/{{ mission_type }}/{{ value.id }}.html">{{ value.name.en }}</a>
+                    <a href="/en/main/battle/{{ mission_type }}/{{ value.id }}.html">{{ value.name.en }}</a>
                 </li>
             {% endif %}
         {% else %}

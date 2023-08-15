@@ -67,7 +67,7 @@
                     {% set mission_type_trans = "困难" %}
                 {% endif %}
                 <li>
-                    <a href="/{{ current_lang }}/battle/main/{{ value.chapter }}/{{ value.no }}.html">主线任务 第{{ value.chapter }}章 第{{ value.no[1] }}个任务 ({{ mission_type_trans }}, 第{{ value.no[2] }}个子任务)：{{ value.name.zh_cn }}</a>
+                    <a href="/{{ current_lang }}/main/battle/main/{{ value.chapter }}/{{ value.no }}.html">主线任务 第{{ value.chapter }}章 第{{ value.no[1] }}个任务 ({{ mission_type_trans }}, 第{{ value.no[2] }}个子任务)：{{ value.name.zh_cn }}</a>
                 </li>
             {% elif value.filetype == 22 %}
                 {% if value.no[0] == "N" %}
@@ -91,7 +91,7 @@
                     {% set mission_type = "special_commision" %}
                 {% endif %}
                 <li>
-                    <a href="/{{ current_lang }}/battle/{{ mission_type }}/{{ value.id }}.html">{{ value.name.zh_cn }}</a>
+                    <a href="/{{ current_lang }}/main/battle/{{ mission_type }}/{{ value.id }}.html">{{ value.name.zh_cn }}</a>
                 </li>
             {% endif %}
         {% else %}
