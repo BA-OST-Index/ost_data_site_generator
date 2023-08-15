@@ -139,7 +139,7 @@ def traverse_path(namespace: list, lang: str = "en"):
                     # not a number
                     pass
                 else:
-                    if temp2 < 10:
+                    if temp2 < 10 and temp2 != 0 and temp[1].startswith("0"):
                         target_path = os.path.join(temp[0], temp[1][1:])
 
             template_content = return_template(template_name, template, content)
