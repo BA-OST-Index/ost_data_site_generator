@@ -144,7 +144,19 @@ def traverse_path(namespace: list, lang: str = "en"):
 
             template_content = return_template(template_name, template, content)
 
-            os.makedirs("/".join(["data_html", lang, *namespace[1:]]), exist_ok=True)
+            # Normalize the path
+            target_path = target_path.replace("\\", "/")
+            # For my and for Windows' fuck sake, I didn't realize that Windows is non-case-sensitive
+            # when it comes to the directory/folder naming, which it would cause some confusing bugs
+            # like the NPC path is never accessible due to I didn't put NPC names in all lower cases.
+            relative_path = target_path.split("/")[1:]
+            print(relative_path)
+            if relative_path[-1].endswith(".html"):
+                relative_path = "/".join(relative_path[1:-1])
+            else:
+                relative_path = "/".join(relative_path)
+            # ok now you're gonna do it in my expected way you little
+            os.makedirs("/".join(["data_html", lang, relative_path]), exist_ok=True)
             with open(target_path, mode="w", encoding="UTF-8") as file:
                 file.write(template_content)
         except Exception:
