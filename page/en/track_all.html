@@ -6,7 +6,7 @@
     <p>This page lists all the {% if track.filetype == -12 %}tracks{% else %}track types{% endif %} available to view.</p>
     <ul>
         {% for i in track.include %}
-            {% if i.1.filetype == 1 %}
+            {% if 1 <= i.1.filetype <= 4 %}
                 <li><a href="{{ i.1.no }}.html">{{ i.1.no }}. {{ i.1.name.realname.en }}</a>&nbsp;-&nbsp;{{ i.1.desc.en }}</li>
             {% else %}
                 <li><a href="{{ i.1.namespace.1 }}/index.html">{{ i.1.name.en }}</a>&nbsp;-&nbsp;{{ i.1.desc.en }}</li>

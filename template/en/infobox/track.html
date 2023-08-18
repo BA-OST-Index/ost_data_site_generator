@@ -44,7 +44,7 @@
     {% for version in track.version %}
         <tr>
             <td class="infobox-col-title">{{ version.desc.en }}</td>
-            <td class="infobox-col-value">{% for i in version.url %}<a href="{{ i.value }}"><img src="/static/images/social/{{ i.platform.en }}.png" class="social-logo">{{ i.platform.en }}</a>&nbsp;&nbsp;{% endfor %}</td>
+            <td class="infobox-col-value">{% for i in version.url %}<a href="{{ i.value }}"><img src="/static/images/social/{{ i.platform.en }}.png" class="social-logo">{{ i.platform.en }}</a> ({{ i.short_desc.en }})<br/>{% endfor %}</td>
         </tr>
     {% endfor %}
     <tr><td colspan="2" class="infobox-subtitle">Special Usage Information</td></tr>

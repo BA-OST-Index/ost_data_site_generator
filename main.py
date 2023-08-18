@@ -150,7 +150,6 @@ def traverse_path(namespace: list, lang: str = "en"):
             # when it comes to the directory/folder naming, which it would cause some confusing bugs
             # like the NPC path is never accessible due to I didn't put NPC names in all lower cases.
             relative_path = target_path.split("/")[1:]
-            print(relative_path)
             if relative_path[-1].endswith(".html"):
                 relative_path = "/".join(relative_path[1:-1])
             else:
