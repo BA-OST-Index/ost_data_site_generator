@@ -102,6 +102,10 @@ def traverse_path(namespace: list, lang: str = "en"):
     all_folder = list(filter(lambda i: os.path.isdir(os.path.join(*namespace, i)), all_path))
     try:
         all_folder.remove(".git")
+    except ValueError:
+        pass
+    # i freaking knew it!
+    try:
         all_folder.remove(".github")
     except ValueError:
         pass
