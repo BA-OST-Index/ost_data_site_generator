@@ -22,7 +22,7 @@
         {% set track = battle.track %}
     {% endif %}
     <ul>
-        <li>名称：<a href="/zh_cn/track/{{ track.namespace.1 }}/{{ track.no }}.html">{{ track.name.realname.zh_cn }} ({{ track.name.realname.en }})</a> (No.{{ track.no }})</li>
+        <li>名称：<a href="/zh_cn/track/{{ track.namespace.1 }}/{{ track.no }}.html">{{ track.name.realname.en }} ({{ track.name.realname.zh_cn }})</a> (No.{{ track.no }})</li>
         <li>简介：{{ track.desc.zh_cn }}</li>
         <li>作曲家：{{ track.composer.nickname }} ({{ get_social_for_composer(track.composer) }})</li>
     </ul>

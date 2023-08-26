@@ -24,14 +24,17 @@
 
     <h2>战斗/羁绊曲目信息</h2>
     {% if story.is_battle or story.is_memory %}
-        {% set track = story.bgm_battle or story.bgm_bond %}
-        <p>曲子：<a href="/zh_cn/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}.html">{{ track.name.realname.zh_cn }} ({{ track.name.realname.en }})</a> (No. {{ track.no }})</p>
+        <ul>
+            {% for track in story.bgm_special %}
+                <li><a href="/zh_cn/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}.html">{{ track.name.realname.zh_cn }} ({{ track.name.realname.en }})</a> (No. {{ track.no }})</li>
+            {% endfor %}
+        </ul>
     {% else %}
         <p>此故事无战斗/羁绊剧情部分，因而这里没有相关曲目信息。</p>
     {% endif %}
     <h2>故事部分</h2>
     {% for part in story.part %}
-        <h3>{{ auto_zhcn_gen(part.name) }}</h3>
+        {% if part.is_memory %}<h3 class="text-momo"{% elif part.is_battle %}<h3 class="text-danger"{% else %}<h3 class="text-primary"{% endif %} id="story-part-{{ loop.index }}">{{ auto_zhcn_gen(part.name) }}</h3>
         <p>描述：{{ auto_zhcn_gen(part.desc) }}</p>
         <h4>人物</h4>
         {{ output_usedby_character(part) }}

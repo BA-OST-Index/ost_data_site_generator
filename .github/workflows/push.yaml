@@ -1,0 +1,40 @@
+name: Push
+
+on:
+  push:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [ost-data-export-update-event]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: 'recursive'
+        fetch-depth: 0
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - name: Install necessary Python packages
+      run: |
+        pip install -r requirements.txt
+    - name: Update submodules
+      run: |
+        git submodule update --remote
+    - name: Run main.py
+      run: python main.py
+    - name: Push changes
+      run: |
+        git config --global user.email "github-actions@github.com"
+        git config --global user.name "github-actions[bot]"
+        cd data_html
+        git add .
+        git commit -m "Update: ost_data_export SHA ${{ github.event.after }}"
+        git config -l | grep 'http\..*\.extraheader' | cut -d= -f1 | xargs -L1 git config --unset-all
+        git push https://github-actions[bot]:$REPO_KEY@github.com/BA-OST-Index/ost_data_site.git
+      env:
+        REPO_KEY: ${{secrets.ACTION_SCRIPT}}

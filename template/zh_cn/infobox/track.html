@@ -1,7 +1,7 @@
 {% from "template/zh_cn/_macro.html" import tag_altogether, get_social_for_composer %}
 <table id="infobox">
     <tr>
-        <td colspan="2" class="infobox-title">{{ track.no }}. {{ track.name.realname.zh_cn }}</td>
+        <td colspan="2" class="infobox-title">{{ track.no }}. {{ track.name.realname.en }}</td>
     </tr>
     <tr>
         <td colspan="2" class="infobox-icon"><img src="{{ track.image.value }}" /></td>
@@ -9,7 +9,7 @@
     <tr><td colspan="2" class="infobox-subtitle">基本信息</td></tr>
     <tr>
         <td class="infobox-col-title">曲目名称（编号）</td>
-        <td class="infobox-col-value">{{ track.name.realname.zh_cn }} ({{ track.name.realname.en }})<br />No. {{ track.no }}</td>
+        <td class="infobox-col-value">{{ track.name.realname.en }} ({{ track.name.realname.zh_cn }})<br />No. {{ track.no }}</td>
     </tr>
     <tr>
         <td class="infobox-col-title">别名</td>
@@ -25,12 +25,13 @@
     </tr>
     <tr>
         <td class="infobox-col-title">标签</td>
-        <td class="infobox-col-value">{{ tag_altogether(track.tag) }}</td>
+        <td class="infobox-col-value">{{ tag_altogether(track.tags) }}</td>
     </tr>
     <tr>
         <td class="infobox-col-title">曲目类型</td>
         <td class="infobox-col-value">{{ track_type_for_show(track) }}</td>
     </tr>
+    {% if track.composer.composer_id == "0" %}
     <tr><td colspan="2" class="infobox-subtitle">作曲家信息</td></tr>
     <tr>
         <td class="infobox-col-title">昵称</td>
@@ -40,6 +41,7 @@
         <td class="infobox-col-title">联系</td>
         <td class="infobox-col-value">{{ get_social_for_composer(track.composer) }}</td>
     </tr>
+    {% endif %}
     <tr><td colspan="2" class="infobox-subtitle">版本信息</td></tr>
     {% for version in track.version %}
         <tr>

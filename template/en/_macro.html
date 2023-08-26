@@ -3,27 +3,28 @@
 {% endmacro %}
 
 {% macro tag_altogether(tags) %}
-    {% for tag in tags %}<a href="/en/tag/{{ tag.namespace[-1] }}.html"><span class="badge badge-{{ tag.color_css }}">{{ tag.name.zh_cn }}</span></a>&nbsp;{% endfor %}
+    {% for tag in tags %}<a href="/en/tag/{{ tag.namespace[-1] }}.html"><span class="badge badge-{{ tag.color_css }} badge-tag">{{ tag.name.en }}</span></a>&nbsp;{% endfor %}
 {% endmacro %}
 
 {% macro track_type_for_show(track) %}
     {% if track.track_type == 0 %}OST{% elif track.track_type == 1 %}Short Animation{% elif track.track_type == 2 %}Animation{% else %}Other{% endif %}
 {% endmacro %}
 
-{% macro output_usedby_story(data_story) %}
+{% macro output_usedby_story(data_story, track_instance_id) %}
     <ul>
         {% for key, value in data_story.items() %}
             {% set value = value[0] %}
             {% if value.filetype == 15 %}
             <li>
-                <a href="/en/character/student/{{ value.pos.student }}/bond/{{ value.pos.no }}.html">
+                {% set target_url = "/en/character/student/" + value.pos.student|string + "/bond/" + value.pos.no|string + ".html" %}
+                <a href="{{ target_url }}">
                     <img src="/static/images/student/icon/{{ value.student.image.collection_texture }}.png" class="icon-stu"/>{{ value.student.name.personal_name.en }} Bond Story {{ value.pos.no }}: {{ value.name.en }}
                 </a>
-            </li>
             {% elif value.filetype == 14 %}
             <li>
-                <a href="/en/event/{{ value.pos.event_id }}/story/{{ value.pos.segment }}.html">Event {{ value.parent_data.0.name.en }} Story {{ value.pos.segment }}: {{ value.name.en }}
-                </a></li>
+                {% set target_url = "/en/event/" + value.pos.event_id|string + "/story/" + value.pos.segment|string + ".html" %}
+                <a href="{{ target_url }}">Event {{ value.parent_data.0.name.en }} Story {{ value.pos.segment }}: {{ value.name.en }}
+                </a>
             {% else %}
             <li>
                 {% if value.filetype == 11 %}
@@ -35,10 +36,27 @@
                 {% else %}
                     {% set story_type = "other" %}
                 {% endif %}
-                <a href="/en/main/story/{{ story_type }}/{{ value.pos.volume }}/{{ value.pos.chapter }}/{{ value.pos.segment }}.html">
+                {% set target_url = "/en/main/story/" + story_type|string + "/" + value.pos.volume|string + "/" + value.pos.chapter|string + "/" + value.pos.segment|string + ".html" %}
+                <a href="{{ target_url }}">
                     {{ word_case(story_type) }}Story Volume {{ value.pos.volume }} Chapter {{ value.pos.chapter }} Episode {{ value.pos.segment }}: {{ value.name.en }}
-                </a></li>
+                </a>
             {% endif %}
+            {% if track_instance_id %}
+                {% set _search_flag = 1 %}
+                {% for part in value.part %}
+                    {% set _loop_index = loop.index %}
+                    {% if _search_flag == 1 %}
+                        {% for part_track in part.track %}
+                            {% if part_track.instance_id == track_instance_id %}
+                                <span>&nbsp;(first appeared at <a href="{{ target_url }}#story-part-{{ _loop_index }}"><i>{{ part.name.en }}</i></a>)</span>
+                                {% set _search_flag = 0 %}
+                                {% break %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            </li>
         {% else %}
             <li>Nothing to show!</li>
         {% endfor %}
@@ -208,9 +226,11 @@
             </li>
             {% else %}
             <li>
+                <img src="/static/images/schoolicon/School_Icon_{{ char.school_id|upper }}_W.png" class="invert-light schoolicon-p">
                 <a href="/en/character/student/{{ char.name.path_name|lower }}/">
                     <img src="/static/images/student/icon/{{ char.image.collection_texture }}.png" class="icon-stu"/>{{ char.name.personal_name.en }}
                 </a>
+                &nbsp;<span>[{{ char.club.en }}]</span>
             </li>
             {% endif %}
         {% else %}

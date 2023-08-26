@@ -13,8 +13,8 @@
         {% set value = i.1 %}
         <h3><a href="bond/{{ value.pos.no }}.html">{{ value.pos.no }}. {{ value.name.en }}</a></h3>
         {% if value.is_memory %}
-            {% set track = value.bgm_bond %}
-            <big><p>Recollection Lobby can be collected from this story. Lobby BGM: <a href="/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}">{{ track.name.realname.en }}</a> (No. {{ track.no }})</p></big>
+            {% set track = value.bgm_special[0] %}
+            <big><p>Recollection Lobby can be collected from this story. Lobby BGM: <a href="/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}">{{ track.no }}. {{ track.name.realname.en }}</a></p></big>
         {% endif %}
         <p>{{ value.desc.en }}</p>
         <h4>Story Parts</h4>

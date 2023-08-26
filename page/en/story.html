@@ -24,14 +24,17 @@
 
     <h2>Battle/Bond Track Info</h2>
     {% if story.is_battle or story.is_memory %}
-        {% set track = story.bgm_battle or story.bgm_bond %}
-        <p>Track: <a href="/en/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}.html">{{ track.name.realname.en }}</a> (No. {{ track.no }})</p>
+        <ul>
+            {% for track in story.bgm_special %}
+                <li><a href="/en/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}.html">{{ track.name.realname.en }}</a> (No. {{ track.no }})</li>
+            {% endfor %}
+        </ul>
     {% else %}
         <p>This story contains no battle/recollection lobby part, therefore there's no such track information.</p>
     {% endif %}
     <h2>Story Parts</h2>
     {% for part in story.part %}
-        <h3>{{ part.name.en }}</h3>
+        {% if part.is_memory %}<h3 class="text-momo"{% elif part.is_battle %}<h3 class="text-danger"{% else %}<h3 class="text-primary"{% endif %} id="story-part-{{ loop.index }}">{{ part.name.en }}</h3>
         <p>Description: {{ part.desc.en }}</p>
         <h4>Characters</h4>
         {{ output_usedby_character(part) }}

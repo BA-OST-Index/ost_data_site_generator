@@ -14,8 +14,8 @@
         {% set value = i.1 %}
         <h3><a href="bond/{{ value.pos.no }}.html">{{ value.pos.no }}. {{ auto_zhcn_gen(value.name) }}</a></h3>
         {% if value.is_memory %}
-            {% set track = value.bgm_bond %}
-            <big><p>可在该故事中收集到回忆大厅。大厅BGM：<a href="/zh_cn/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}.html">{{ track.name.realname.zh_cn }}</a> (No. {{ track.no }})</p></big>
+            {% set track = value.bgm_special[0] %}
+            <big><p>可在该故事中收集到回忆大厅。大厅BGM：<a href="/zh_cn/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}.html">{{ track.no }}. {{ track.name.realname.en }} ({{ track.name.realname.zh_cn }})</a></p></big>
         {% endif %}
         <p>{{ auto_zhcn_gen(value.desc) }}</p>
         <h4>故事部分</h4>

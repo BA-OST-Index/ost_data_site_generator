@@ -4,14 +4,10 @@
 {% block title %}All Stories of {{ story.name.en }}{% endblock title %}
 {% block article_content %}
     <h1>All Stories of {{ story.name.en }}</h1>
-    <p>{{ story.desc.en }}</p>
     {% if 'image' in story and story.image.value != "" %}
-        <h2>Related Image</h2>
-        {% if story.image.short_desc.en != "" %}
-            <p>Description: {{ story.image.short_desc.en }}</p>
-        {% endif %}
-        <img src="{{ story.image.value }}" width="30em">
+        <img src="{{ story.image.value }}" id="all-story-image">
     {% endif %}
+    <p>{{ story.desc.en }}</p>
     <ul>
         {% for i in story.include %}
             {% set i = i.1 %}

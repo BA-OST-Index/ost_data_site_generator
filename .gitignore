@@ -1,7 +1,3 @@
-exported_data/
-exported_data
-data_export/
-data_export
 .idea/
 test*.py
 

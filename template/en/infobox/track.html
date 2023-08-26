@@ -25,12 +25,13 @@
     </tr>
     <tr>
         <td class="infobox-col-title">Tags</td>
-        <td class="infobox-col-value">{{ tag_altogether(track.tag) }}</td>
+        <td class="infobox-col-value">{{ tag_altogether(track.tags) }}</td>
     </tr>
     <tr>
         <td class="infobox-col-title">Track Type</td>
         <td class="infobox-col-value">{{ track_type_for_show(track) }}</td>
     </tr>
+    {% if track.composer.composer_id == "0" %}
     <tr><td colspan="2" class="infobox-subtitle">Composer Information</td></tr>
     <tr>
         <td class="infobox-col-title">Nickname</td>
@@ -40,6 +41,7 @@
         <td class="infobox-col-title">Contact</td>
         <td class="infobox-col-value">{{ get_social_for_composer(track.composer) }}</td>
     </tr>
+    {% endif %}
     <tr><td colspan="2" class="infobox-subtitle">Version Information</td></tr>
     {% for version in track.version %}
         <tr>

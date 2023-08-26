@@ -4,7 +4,10 @@ import webbrowser
 import shutil
 import subprocess
 import time
+import datetime
+import sys
 from jinja2 import Environment, FileSystemLoader
+from functools import partial
 
 ALL_LANGS = ["en", "zh_cn"]
 
@@ -69,25 +72,26 @@ def find_template(filetype):
 
 
 def return_template(template_name, template, content):
+    template = partial(template.render, generated_time=datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"))
     if "background" in template_name:
-        return template.render(background=content)
+        return template(background=content)
     elif "event" in template_name:
-        return template.render(event=content)
+        return template(event=content)
     elif "battle" in template_name:
-        return template.render(battle=content)
+        return template(battle=content)
     elif "npc" in template_name or "character" in template_name \
             or "student" in template_name:
-        return template.render(char=content)
+        return template(char=content)
     elif "story" in template_name:
-        return template.render(story=content)
+        return template(story=content)
     elif "tag" in template_name:
-        return template.render(tag=content)
+        return template(tag=content)
     elif "track" in template_name:
-        return template.render(track=content)
+        return template(track=content)
     elif "ui" in template_name:
-        return template.render(ui=content)
+        return template(ui=content)
     elif "video" in template_name:
-        return template.render(video=content)
+        return template(video=content)
 
 
 def traverse_path(namespace: list, lang: str = "en"):
@@ -166,6 +170,17 @@ def traverse_path(namespace: list, lang: str = "en"):
         traverse_path([*namespace, i], lang)
 
 
+# Deleting old files
+folders_to_remove = ["en", "static", "zh_cn"]
+for i in folders_to_remove:
+    try: shutil.rmtree(f"data_html/{i}")
+    except FileNotFoundError: pass
+files_to_remove = ["404.html", "index.html"]
+for i in files_to_remove:
+    try: os.remove(f"data_html/{i}")
+    except FileNotFoundError: pass
+print("Deletion completed")
+
 for lang in ALL_LANGS:
     traverse_path(["exported_data"], lang)
     for path, name in page_path_and_name.items():
@@ -184,7 +199,9 @@ print("Generation completed")
 shutil.copytree("static", "data_html/static", dirs_exist_ok=True, copy_function=shutil.copy)
 print("Copying completed")
 
-process = subprocess.Popen("py -m http.server 9000 --directory data_html", shell=True)
-time.sleep(2)
-webbrowser.open("http://localhost:9000/en/index.html")
-process.wait()
+if len(sys.argv) == 1:
+    # running locally, because GitHub Action will have two args.
+    process = subprocess.Popen("py -m http.server 9000 --directory data_html", shell=True)
+    time.sleep(2)
+    webbrowser.open("http://localhost:9000/en/index.html")
+    process.wait()
