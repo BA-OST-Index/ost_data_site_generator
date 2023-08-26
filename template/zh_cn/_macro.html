@@ -15,7 +15,7 @@
 
 {% macro track_type_for_show(track) %}{% if track.track_type == 0 %}OST{% elif track.track_type == 1 %}短篇动画{% elif track.track_type == 2 %}官方动画{% else %}其它{% endif %}{% endmacro %}
 
-{% macro output_usedby_story(data_story, track_id) %}
+{% macro output_usedby_story(data_story, track_instance_id) %}
     <ul>
         {% for key, value in data_story.items() %}
             {% set value = value[0] %}
