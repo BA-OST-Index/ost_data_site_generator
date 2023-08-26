@@ -107,6 +107,10 @@ def traverse_path(namespace: list, lang: str = "en"):
         pass
 
     for i in all_file:
+        if i.startswith("."):
+            # avoid weird bug occurred in GitHub Action
+            continue
+
         try:
             target_path = "/".join(["exported_data", *namespace[1:], change_extension_name(i, "json")])
 
