@@ -35,6 +35,6 @@ jobs:
         git add .
         git commit -m "Update: ost_data_export SHA ${{ github.event.after }}"
         git config -l | grep 'http\..*\.extraheader' | cut -d= -f1 | xargs -L1 git config --unset-all
-        git push https://github-actions[bot]:$REPO_KEY@github.com/BA-OST-Index/ost_data_site.git
+        git push https://github-actions[bot]:$REPO_KEY@github.com/BA-OST-Index/ost_data_site.git HEAD:main
       env:
         REPO_KEY: ${{secrets.ACTION_SCRIPT}}
