@@ -54,7 +54,7 @@
                     {% if _search_flag == 1 %}
                         {% for part_track in part.track %}
                             {% if part_track.instance_id == track_instance_id %}
-                                <span>&nbsp;(第一次出现于 <a href="{{ target_url }}#story-part-{{ _loop_index }}"><i>{{ part.name }}</i></a>)</span>
+                                <span>&nbsp;(第一次出现于 <a href="{{ target_url }}#story-part-{{ _loop_index }}"><i>{{ auto_zhcn_gen(part.name) }}</i></a>)</span>
                                 {% set _search_flag = 0 %}
                                 {% break %}
                             {% endif %}
