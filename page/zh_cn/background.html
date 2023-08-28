@@ -7,7 +7,7 @@
     {% include "template/zh_cn/infobox/background.html" %}
     <h2>用途信息</h2>
     <h3>故事</h3>
-    {{ output_usedby_story(background.used_by.data_story) }}
+    {{ output_usedby_story(background.used_by.data_story, background.uuid, "background") }}
     <h3>曲目</h3>
-    {{ output_usedby_track(background.used_by.data_track) }}
+    {{ output_usedby_track(background.used_by.data_track, 1, background.uuid) }}
 {% endblock %}

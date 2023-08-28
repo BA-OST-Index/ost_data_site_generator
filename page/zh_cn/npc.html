@@ -14,7 +14,7 @@
 
     <h2>使用详情</h2>
     <h3>故事</h3>
-    {{ output_usedby_story(char.used_by.data_story) }}
+    {{ output_usedby_story(char.used_by.data_story, char.uuid, "character") }}
     <h3>曲目</h3>
-    {{ output_usedby_track(char.used_by.data_track) }}
+    {{ output_usedby_track(char.used_by.data_track, 1, char.uuid) }}
 {% endblock %}

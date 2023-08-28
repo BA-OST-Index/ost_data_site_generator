@@ -2,14 +2,27 @@
 {% from 'template/zh_cn/_macro.html' import auto_zhcn_gen, nothing_to_show %}
 
 {% block title %}{{ char.name.zh_cn }}{% endblock title %}
+{% block other_head %}
+    <script src="/static/js/char_lang_display.js"></script>
+{% endblock other_head %}
 {% block article_content %}
+    <h1>{{ char.name.zh_cn }}</h1>
+    <div>
+        <p>选择显示角色名字的模式：</p>
+        <select id="char_lang_display" onchange="set_char_lang_display_status('zh', this)">
+            <option value="0">仅中文</option>
+            <option value="1">中文+英文</option>
+            <option value="2">中文+日语</option>
+            <option value="3">中文+英文+日语</option>
+        </select>
+        <script>display_char_lang_element('zh'); document.getElementById("char_lang_display").value = localStorage.getItem("char_lang_zh");</script>
+    </div>
     {% if char.filetype == -51 %}
-        <h1>{{ char.name.zh_cn }}</h1>
         <h2>NPC</h2>
         <ul class="stu-list">
             {% for i in char.include.0.1.include %}
                 {% set curr = i.1 %}
-                <li><a href="/zh_cn/character/npc/{{ curr.namespace[-1]|lower }}/">{{ auto_zhcn_gen(curr.name) }}</a></li>
+                <li><a href="/zh_cn/character/npc/{{ curr.namespace[-1]|lower }}/">{{ auto_zhcn_gen(curr.name) }}</a><span class="char-lang-en">&nbsp;/&nbsp;{{ curr.name.en }}</span><span class="char-lang-jp">&nbsp;/&nbsp;{{ curr.name.jp }}</span></li>
             {% else %}
                 <li>{{ nothing_to_show }}</li>
             {% endfor %}
@@ -20,7 +33,7 @@
                 {% set curr = i.1 %}
                 <li>
                     <a href="/zh_cn/character/student/{{ curr.student.name.path_name|lower }}/">
-                        <img src="/static/images/student/icon/{{ curr.student.image.collection_texture }}.png" class="icon-stu"/>{{ auto_zhcn_gen(curr.student.name.name) }} <span lang="jp">({{ curr.student.name.name.jp }})</span>
+                        <img src="/static/images/student/icon/{{ curr.student.image.collection_texture }}.png" class="icon-stu"/>{{ auto_zhcn_gen(curr.student.name.name) }}<span lang="en" class="char-lang-en">&nbsp;/&nbsp;{{ curr.student.name.name.en }}</span><span lang="jp" class="char-lang-jp">&nbsp;/&nbsp;{{ curr.student.name.name.jp }}</span>
                     </a>
                 </li>
             {% else %}
@@ -37,11 +50,11 @@
                     {% set curr = curr.student %}
                     <li>
                         <a href="/zh_cn/character/student/{{ curr.name.path_name|lower }}/">
-                            <img src="/static/images/student/icon/{{ curr.image.collection_texture }}.png" class="icon-stu"/>{{ auto_zhcn_gen(curr.name.name) }} <span lang="jp">({{ curr.name.name.jp }})</span>
+                            <img src="/static/images/student/icon/{{ curr.image.collection_texture }}.png" class="icon-stu"/>{{ auto_zhcn_gen(curr.name.name) }}<span lang="en" class="char-lang-en">&nbsp;/&nbsp;{{ curr.name.name.en }}</span><span lang="jp" class="char-lang-jp">&nbsp;/&nbsp;{{ curr.name.name.jp }}</span>
                         </a>
                     </li>
                 {% else %}
-                    <li><a href="/zh_cn/character/npc/{{ curr.namespace[-1]|lower }}/">{{ auto_zhcn_gen(curr.name) }}</a></li>
+                    <li><a href="/zh_cn/character/npc/{{ curr.namespace[-1]|lower }}/">{{ auto_zhcn_gen(curr.name) }}</a><span class="char-lang-en">&nbsp;/&nbsp;{{ curr.name.en }}</span><span class="char-lang-jp">&nbsp;/&nbsp;{{ curr.name.jp }}</span></li>
                 {% endif %}
             {% else %}
                 <li>{{ nothing_to_show }}</li>

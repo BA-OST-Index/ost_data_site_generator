@@ -7,5 +7,5 @@
     {% include "template/en/infobox/video.html" %}
     <p><b>{{ video.name.en }}</b> is a video related to Blue Archive.</p>
     <h2>Track Information</h2>
-    {{ output_usedby_track_list(video.track) }}
+    {{ output_usedby_track_list(video.track, video.uuid) }}
 {% endblock %}

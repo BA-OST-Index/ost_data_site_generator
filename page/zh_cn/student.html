@@ -34,7 +34,7 @@
         <p>{{ nothing_to_show }}</p>
     {% endfor %}
     <h2>其它故事</h2>
-    {{ output_usedby_story(char.student.used_by.data_story) }}
+    {{ output_usedby_story(char.student.used_by.data_story, char.student.uuid, "character") }}
     <h2>曲目</h2>
-    {{ output_usedby_track(char.student.used_by.data_track) }}
+    {{ output_usedby_track(char.student.used_by.data_track, 1, char.student.uuid) }}
 {% endblock %}

@@ -37,11 +37,11 @@
         {% if part.is_memory %}<h3 class="text-momo"{% elif part.is_battle %}<h3 class="text-danger"{% else %}<h3 class="text-primary"{% endif %} id="story-part-{{ loop.index }}">{{ part.name.en }}</h3>
         <p>Description: {{ part.desc.en }}</p>
         <h4>Characters</h4>
-        {{ output_usedby_character(part) }}
+        {{ output_usedby_character(part, "story-" + story.instance_id) }}
         <h4>Tracks</h4>
-        {{ output_usedby_track_list(part.track) }}
+        {{ output_usedby_track_list(part.track, "story-" + story.instance_id) }}
         <h4>Backgrounds</h4>
-        {{ output_usedby_background_list(part.background) }}
+        {{ output_usedby_background_list(part.background, "story-" + story.instance_id) }}
     {% else %}
         <p>Nothing to show!</p>
     {% endfor %}

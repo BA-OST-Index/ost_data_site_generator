@@ -10,23 +10,21 @@
     {% if track.track_type == 0 %}OST{% elif track.track_type == 1 %}Short Animation{% elif track.track_type == 2 %}Animation{% else %}Other{% endif %}
 {% endmacro %}
 
-{% macro output_usedby_story(data_story, track_instance_id) %}
+{% macro output_usedby_story(data_story, instance_uuid, instance_key) %}
     <ul>
         {% for key, value in data_story.items() %}
+            <li id="story-{{ value.0.instance_id }}">
             {% set value = value[0] %}
             {% if value.filetype == 15 %}
-            <li>
                 {% set target_url = "/en/character/student/" + value.pos.student|string + "/bond/" + value.pos.no|string + ".html" %}
                 <a href="{{ target_url }}">
                     <img src="/static/images/student/icon/{{ value.student.image.collection_texture }}.png" class="icon-stu"/>{{ value.student.name.personal_name.en }} Bond Story {{ value.pos.no }}: {{ value.name.en }}
                 </a>
             {% elif value.filetype == 14 %}
-            <li>
                 {% set target_url = "/en/event/" + value.pos.event_id|string + "/story/" + value.pos.segment|string + ".html" %}
                 <a href="{{ target_url }}">Event {{ value.parent_data.0.name.en }} Story {{ value.pos.segment }}: {{ value.name.en }}
                 </a>
             {% else %}
-            <li>
                 {% if value.filetype == 11 %}
                     {% set story_type = "main" %}
                 {% elif value.filetype == 12 %}
@@ -41,20 +39,25 @@
                     {{ word_case(story_type) }}Story Volume {{ value.pos.volume }} Chapter {{ value.pos.chapter }} Episode {{ value.pos.segment }}: {{ value.name.en }}
                 </a>
             {% endif %}
-            {% if track_instance_id %}
-                {% set _search_flag = 1 %}
+
+            {# appearedAt snippet #}
+            {% if instance_uuid %}
+                {% set _part_track_html = [] %}
                 {% for part in value.part %}
                     {% set _loop_index = loop.index %}
-                    {% if _search_flag == 1 %}
-                        {% for part_track in part.track %}
-                            {% if part_track.instance_id == track_instance_id %}
-                                <span>&nbsp;(first appeared at <a href="{{ target_url }}#story-part-{{ _loop_index }}"><i>{{ part.name.en }}</i></a>)</span>
-                                {% set _search_flag = 0 %}
-                                {% break %}
+                    {% for part2 in part[instance_key] %}
+                        {% if part2.uuid == instance_uuid %}
+                            {% if _part_track_html|length == 0 %}
+                                {% do _part_track_html.append('<span>&nbsp;(appeared at <a href="' + target_url + '#story-part-' + _loop_index|string + '"><i>' + part.name.en + '</i></a>') %}
+                            {% else %}
+                                {% do _part_track_html.append(',&nbsp;<a href="' + target_url + '#story-part-' + _loop_index|string + '"><i>' + part.name.en + '</i></a>') %}
                             {% endif %}
-                        {% endfor %}
-                    {% endif %}
+                            {% break %}
+                        {% endif %}
+                    {% endfor %}
                 {% endfor %}
+                {% do _part_track_html.append(")</span>") %}
+                {{ _part_track_html|join("") }}
             {% endif %}
             </li>
         {% else %}
@@ -67,24 +70,21 @@
     <ul>
         {% for key, value in data_battle.items() %}
             {% set value = value[0] %}
+            <li id="{{ value.uuid }}">
             {% if value.filetype == 21 %}
                 {% if value.no[0] == "N" %}
                     {% set mission_type = "Normal" %}
                 {% else %}
                     {% set mission_type = "Hard" %}
                 {% endif %}
-                <li>
-                    <a href="/en/main/battle/main/{{ value.chapter }}/{{ value.no }}.html">Main Battle Chapter {{ value.chapter }} Mission {{ value.no[1] }} ({{ mission_type }}, Sub {{ value.no[2] }})</a>
-                </li>
+                    <a href="/en/main/battle/main/{{ value.chapter }}/{{ value.no }}.html#track">Main Battle Chapter {{ value.chapter }} Mission {{ value.no[1] }} ({{ mission_type }}, Sub {{ value.no[2] }})</a>
             {% elif value.filetype == 22 %}
                 {% if value.no[0] == "N" %}
                     {% set mission_type = "Normal" %}
                 {% else %}
                     {% set mission_type = "Hard" %}
                 {% endif %}
-                <li>
-                    <a href="/en/event/{{ value.event_id }}/{{ value.no }}.html">Event {{ value.parent_data.0.name.en }} Battle No.{{ value.no[1:] }} ({{ mission_type }}): {{ value.name.en }}</a>
-                </li>
+                    <a href="/en/event/{{ value.event_id }}/{{ value.no }}.html#track">Event {{ value.parent_data.0.name.en }} Battle No.{{ value.no[1:] }} ({{ mission_type }}): {{ value.name.en }}</a>
             {% else %}
                 {% if value.filetype == 24 %}
                     {% set mission_type = "total_assault" %}
@@ -95,10 +95,9 @@
                 {% else %}
                     {% set mission_type = "special_commision" %}
                 {% endif %}
-                <li>
-                    <a href="/en/main/battle/{{ mission_type }}/{{ value.id }}.html">{{ value.name.en }}</a>
-                </li>
+                    <a href="/en/main/battle/{{ mission_type }}/{{ value.id }}.html#track">{{ value.name.en }}</a>
             {% endif %}
+            </li>
         {% else %}
             <li>Nothing to show!</li>
         {% endfor %}
@@ -111,11 +110,13 @@
             {% set i = value.0 %}
 
             <!--Special case for UiInfoEvent-->
+            <li id="{{ i.uuid }}">
             {% if i.filetype == 32 %}
-                <li><a href="/en/event/{{ i.event_id }}/ui/{{ i.id }}.html">{{ i.name.en }}</a>&nbsp;-&nbsp;{{ i.desc.en }}</li>
+                <a href="/en/event/{{ i.event_id }}/ui/{{ i.id }}.html#track">{{ i.name.en }}</a>&nbsp;-&nbsp;{{ i.desc.en }}
             {% else %}
-                <li><a href="/en/ui/{{ i.namespace.1 }}.html">{{ i.name.en }}</a>&nbsp;-&nbsp;{{ i.desc.en }}</li>
+                <a href="/en/ui/{{ i.namespace.1 }}.html#track">{{ i.name.en }}</a>&nbsp;-&nbsp;{{ i.desc.en }}
             {% endif %}
+            </li>
         {% else %}
             <li>Nothing to show!</li>
         {% endfor %}
@@ -154,11 +155,11 @@
     </ul>
 {% endmacro %}
 
-{% macro output_usedby_background(data_background) %}
+{% macro output_usedby_background(data_background, instance_id) %}
     <table class="gallery">
         <tr>
             {% for key, value in data_background.items() %}
-                <td class="gallery-img"><img src="{{ value.0.image.value }}"><p class="gallery-caption"><a href="/en/background/{{ value.0.filename }}.html">{% if value.0.desc.en != "" %}{{ value.0.desc.en }}{% else %}{{ value.0.filename }}{% endif %}</a></p></td>
+                <td class="gallery-img" id="{{ value.0.uuid }}"><img src="{{ value.0.image.value }}"><p class="gallery-caption"><a href="/en/background/{{ value.0.filename }}.html{% if instance_id %}#{{ instance_id }}{% endif %}">{% if value.0.desc.en != "" %}{{ value.0.desc.en }}{% else %}{{ value.0.filename }}{% endif %}</a></p></td>
             {% else %}
                 <td>Nothing to show!</td>
             {% endfor %}
@@ -166,11 +167,11 @@
     </table>
 {% endmacro %}
 
-{% macro output_usedby_background_list(data_background) %}
+{% macro output_usedby_background_list(data_background, instance_id) %}
     <table class="gallery">
         <tr>
             {% for value in data_background %}
-                <td class="gallery-img"><img src="{{ value.image.value }}"><p class="gallery-caption"><a href="/en/background/{{ value.filename }}.html">{% if value.desc.en != "" %}{{ value.desc.en }}{% else %}{{ value.filename }}{% endif %}</a></p></td>
+                <td class="gallery-img"><img src="{{ value.image.value }}"><p class="gallery-caption"><a href="/en/background/{{ value.filename }}.html#{{ instance_id }}">{% if value.desc.en != "" %}{{ value.desc.en }}{% else %}{{ value.filename }}{% endif %}</a></p></td>
             {% else %}
                 <td>Nothing to show!</td>
             {% endfor %}
@@ -178,61 +179,88 @@
     </table>
 {% endmacro %}
 
-{% macro output_usedby_track(data_track) %}
+{% macro output_usedby_track(data_track, with_counter, instance_uuid) %}
+    {% set _with_counter = with_counter or 0 %}
     <ul>
         {% for key, value in data_track.items() %}
-            {% set value = value.0 %}
-            {% set track_type = track_type_for_show(value) %}
+            {% set track = value.0 %}
+            {% set track_type = track_type_for_show(track) %}
 
-            <li><a href="/en/track/{{ value.namespace.1 }}/{{ value.namespace.2 }}.html">{{ track_type }} No.{{ value.no }}: {{ value.name.realname.en }}</a> by {{ value.composer.nickname }}</li>
+            <li id="track-{{ track.instance_id }}"><a href="/en/track/{{ track.namespace.1 }}/{{track.namespace.2 }}.html{% if instance_uuid %}#{{ instance_uuid }}{% endif %}">{% if _with_counter != 0 %}【{{ value.1 }}】{% endif %}{{ track_type }} {{ track.no }}. {{ track.name.realname.en }}</a> by {{ track.composer.nickname }}</li>
         {% else %}
             <li>Nothing to show!</li>
         {% endfor %}
     </ul>
 {% endmacro %}
 
-{% macro output_usedby_track_list(data_track) %}
+{% macro output_usedby_track_list(data_track, instance_id) %}
     <ul>
         {% for value in data_track %}
             {% set track_type = track_type_for_show(value) %}
 
-            <li><a href="/en/track/{{ value.namespace.1 }}/{{ value.namespace.2 }}.html">{{ track_type }} No.{{ value.no }}: {{ value.name.realname.en }}</a> by {{ value.composer.nickname }}</li>
+            <li id="track-{{ value.instance_id }}"><a href="/en/track/{{ value.namespace.1 }}/{{ value.namespace.2 }}.html{% if instance_id %}#{{ instance_id }}{% endif %}">{{ track_type }} No.{{ value.no }}: {{ value.name.realname.en }}</a> by {{ value.composer.nickname }}</li>
         {% else %}
             <li>Nothing to show!</li>
         {% endfor %}
     </ul>
 {% endmacro %}
 
-{% macro output_usedby_video(data_video) %}
+{% macro output_usedby_video(data_video, instance_id) %}
     <ul>
         {% for key, value in data_video.items() %}
             {% set value = value.0 %}
 
-            <li><a href="/en/video/{{ value.namespace.1 }}.html">Video <i>{{ value.name.en }}</i></a>: {{ value.desc.en }}</li>
+            <li id="{{ value.uuid }}"><a href="/en/video/{{ value.namespace.1 }}.html{% if instance_id %}#{{ instance_id }}{% endif %}">Video <i>{{ value.name.en }}</i></a>: {{ value.desc.en }}</li>
         {% else %}
             <li>Nothing to show!</li>
         {% endfor %}
     </ul>
 {% endmacro %}
 
-{% macro output_usedby_character(data_character) %}
+{% macro output_usedby_character(data_character, instance_id) %}
     <ul>
         {% for char in data_character.character %}
             {% if char.filetype == 52 %}
             <li>
-                <a href="/en/character/npc/{{ char.namespace[-1]|lower }}/">
+                <a href="/en/character/npc/{{ char.namespace[-1]|lower }}/{% if instance_id %}#{{ instance_id }}{% endif %}">
                     {{ char.name.en }}
                 </a>
             </li>
             {% else %}
             <li>
                 <img src="/static/images/schoolicon/School_Icon_{{ char.school_id|upper }}_W.png" class="invert-light schoolicon-p">
-                <a href="/en/character/student/{{ char.name.path_name|lower }}/">
+                <a href="/en/character/student/{{ char.name.path_name|lower }}/{% if instance_id %}#{{ instance_id }}{% endif %}">
                     <img src="/static/images/student/icon/{{ char.image.collection_texture }}.png" class="icon-stu"/>{{ char.name.personal_name.en }}
                 </a>
                 &nbsp;<span>[{{ char.club.en }}]</span>
             </li>
             {% endif %}
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro output_usedby_character_dict(data_character, instance_id) %}
+    {# used for track.html for exporting track-character relationship #}
+    <ul>
+        {% for key, value in data_character.items() %}
+            {% set ref_counter = value.1 %}
+            {% set char = value.0 %}
+
+            <li id="{{ char.uuid }}"><span>【{{ ref_counter }}】</span>
+            {% if "NPC_" in key %}
+                <a href="/en/character/npc/{{ char.namespace[-1]|lower }}/{% if instance_id %}#{{ instance_id }}{% endif %}">
+                    {{ char.name.en }}
+                </a>
+            {% else %}
+                <img src="/static/images/schoolicon/School_Icon_{{ char.school_id|upper }}_W.png" class="invert-light schoolicon-p">
+                <a href="/en/character/student/{{ char.name.path_name|lower }}/{% if instance_id %}#{{ instance_id }}{% endif %}">
+                    <img src="/static/images/student/icon/{{ char.image.collection_texture }}.png" class="icon-stu"/>{{ char.name.personal_name.en }}
+                </a>
+                &nbsp;<span>[{{ char.club.en }}]</span>
+            {% endif %}
+            </li>
         {% else %}
             <li>Nothing to show!</li>
         {% endfor %}

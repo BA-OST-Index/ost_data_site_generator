@@ -49,7 +49,8 @@ page_path_and_name2 = {
     "page/zh_cn/_zhcn_technical.html": "zh_cn/zhcn_technical.html"
 }
 
-environment = Environment(loader=FileSystemLoader(os.path.split(__file__)[0]), extensions=["jinja2.ext.loopcontrols"])
+environment = Environment(loader=FileSystemLoader(os.path.split(__file__)[0]), extensions=["jinja2.ext.loopcontrols",
+                                                                                           "jinja2.ext.do"])
 
 
 def change_extension_name(filename: str, extension: str = 'html'):

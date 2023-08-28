@@ -1,8 +1,11 @@
 {% extends "template/zh_cn/base.html" %}
 
 {% block title %}曲子/{{ track.no }}. {{ track.name.realname.en }} ({{ track.name.realname.zh_cn }}){% endblock title %}
+{% block other_head %}
+    <script src="/static/js/track_player.js"></script>
+{% endblock other_head %}
 {% block article_content %}
-    {% from "template/zh_cn/_macro.html" import track_type_for_show, output_usedby_background, output_usedby_story, output_usedby_battle, output_usedby_ui, output_usedby_video, nothing_to_show %}
+    {% from "template/zh_cn/_macro.html" import track_type_for_show, output_usedby_background, output_usedby_story, output_usedby_battle, output_usedby_ui, output_usedby_video, nothing_to_show, output_usedby_character_dict %}
 
     <h1>曲子/{{ track.no }}. {{ track.name.realname.en }} ({{ track.name.realname.zh_cn }})</h1>
     {% include "template/zh_cn/infobox/track.html" %}
@@ -23,16 +26,32 @@
             <li>{{ nothing_to_show }}</li>
         {% endfor %}
     </ul>
+    <h2>在线播放音乐</h2>
+    <p>提示：为避免潜在版权侵犯风险，我们此处使用的<b>第三方嵌入式网页播放器</b>来提供服务。你也可以在信息栏（infobox）中手动访问它们。</p>
+    {% for version in track.version %}
+        {% set _version_index = loop.index %}
+
+        <h3>{{ version.desc.zh_cn }}</h3>
+        {% for url in version.url %}
+            <div onclick="play_video('{{ url.value }}', 'track-video-{{ _version_index }}-{{ loop.index }}')" id="track-video-{{ _version_index }}-{{ loop.index }}" class="track-video-div">
+                <p><img src="/static/images/social/{{ url.platform.en }}.png" class="social-logo">{{ url.platform.zh_cn }} ({{ url.value }})</p>
+            </div>
+            <div id="track-video-{{ _version_index }}-{{ loop.index }}-container"></div>
+        {% endfor %}
+    {% endfor %}
     <h2>使用信息</h2>
     <p>此处显示引用了这首曲子的实例。</p>
     <h3>背景</h3>
-    {{ output_usedby_background(track.used_by.data_background) }}
+    {{ output_usedby_background(track.used_by.data_background, "track-" + track.instance_id) }}
     <h3>故事</h3>
-    {{ output_usedby_story(track.used_by.data_story, track.instance_id) }}
+    {{ output_usedby_story(track.used_by.data_story, track.uuid, "track") }}
     <h3>战斗</h3>
     {{ output_usedby_battle(track.used_by.data_battle) }}
     <h3>UI</h3>
     {{ output_usedby_ui(track.used_by.data_ui) }}
     <h3>视频</h3>
-    {{ output_usedby_video(track.used_by.data_video) }}
+    {{ output_usedby_video(track.used_by.data_video, "track-" + track.instance_id) }}
+    <h3>人物角色</h3>
+    <p>注意：以下列表主要基于引用次数（见下表的数字）进行排序。</p>
+    {{ output_usedby_character_dict(track.used_by.data_character, "track-" + track.instance_id) }}
 {% endblock article_content %}

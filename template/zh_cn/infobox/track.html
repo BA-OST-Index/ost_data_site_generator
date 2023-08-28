@@ -46,7 +46,7 @@
     {% for version in track.version %}
         <tr>
             <td class="infobox-col-title">{{ version.desc.zh_cn }}</td>
-            <td class="infobox-col-value">{% for i in version.url %}<a href="{{ i.value }}"><img src="/static/images/social/{{ i.platform.en }}.png" class="social-logo">{{ i.platform.zh_cn }}</a> ({{ i.short_desc.zh_cn }})<br/>{% endfor %}</td>
+            <td class="infobox-col-value">{% for i in version.url %}<a href="{{ i.value }}" target="_blank"><img src="/static/images/social/{{ i.platform.en }}.png" class="social-logo">{{ i.platform.zh_cn }}</a> ({{ i.short_desc.zh_cn }})<br/>{% endfor %}</td>
         </tr>
     {% endfor %}
     <tr><td colspan="2" class="infobox-subtitle">特殊信息</td></tr>

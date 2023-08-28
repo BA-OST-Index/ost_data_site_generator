@@ -15,14 +15,14 @@
         </ul>
     {% endif %}
 
-    <h2>曲目信息</h2>
+    <h2 id="track">曲目信息</h2>
     {% if battle.filetype in [21, 22] %}
         {% set track = battle.track.0 %}
     {% else %}
         {% set track = battle.track %}
     {% endif %}
     <ul>
-        <li>名称：<a href="/zh_cn/track/{{ track.namespace.1 }}/{{ track.no }}.html">{{ track.name.realname.en }} ({{ track.name.realname.zh_cn }})</a> (No.{{ track.no }})</li>
+        <li>曲子：<a href="/zh_cn/track/{{ track.namespace.1 }}/{{ track.no }}.html#{{ battle.uuid }}">{{ track.name.realname.en }} ({{ track.name.realname.zh_cn }})</a> (No.{{ track.no }})</li>
         <li>简介：{{ track.desc.zh_cn }}</li>
         <li>作曲家：{{ track.composer.nickname }} ({{ get_social_for_composer(track.composer) }})</li>
     </ul>

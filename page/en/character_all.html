@@ -1,14 +1,25 @@
 {% extends "template/en/base.html" %}
 
 {% block title %}{{ char.name.en }}{% endblock title %}
+{% block other_head %}
+    <script src="/static/js/char_lang_display.js"></script>
+{% endblock other_head %}
 {% block article_content %}
+    <h1>{{ char.name.en }}</h1>
+    <div>
+        <p>Select the mode you want to display character names: </p>
+        <select id="char_lang_display" onchange="set_char_lang_display_status('en', this)">
+            <option value="0">English Only</option>
+            <option value="1">English + Japanese</option>
+        </select>
+        <script>display_char_lang_element('en'); document.getElementById("char_lang_display").value = localStorage.getItem("char_lang_en");</script>
+    </div>
     {% if char.filetype == -51 %}
-        <h1>{{ char.name.en }}</h1>
         <h2>NPC</h2>
         <ul class="stu-list">
             {% for i in char.include.0.1.include %}
                 {% set curr = i.1 %}
-                <li><a href="/en/character/npc/{{ curr.namespace[-1]|lower }}/">{{ curr.name.en }}</a></li>
+                <li><a href="/en/character/npc/{{ curr.namespace[-1]|lower }}/">{{ curr.name.en }}</a><span class="char-lang-jp">&nbsp;/&nbsp;{{ curr.name.jp }}</span></li>
             {% else %}
                 <li>Nothing to show!</li>
             {% endfor %}
@@ -19,7 +30,7 @@
                 {% set curr = i.1 %}
                 <li>
                     <a href="/en/character/student/{{ curr.student.name.path_name|lower }}/">
-                        <img src="/static/images/student/icon/{{ curr.student.image.collection_texture }}.png" class="icon-stu"/>{{ curr.student.name.name.en }} <span lang="jp">({{ curr.student.name.name.jp }})</span>
+                        <img src="/static/images/student/icon/{{ curr.student.image.collection_texture }}.png" class="icon-stu"/>{{ curr.student.name.name.en }}<span lang="jp" class="char-lang-jp">&nbsp;/&nbsp;{{ curr.student.name.name.jp }}</span>
                     </a>
                 </li>
             {% else %}
@@ -27,7 +38,6 @@
             {% endfor %}
         </ul>
     {% elif char.filetype == -52 %}
-        <h1>{{ char.name.en }}</h1>
         <ul class="stu-list">
             {% for i in char.include %}
                 {% set curr = i.1 %}
@@ -35,11 +45,11 @@
                     {% set curr = curr.student %}
                     <li>
                         <a href="/en/character/student/{{ curr.name.path_name|lower }}/">
-                            <img src="/static/images/student/icon/{{ curr.image.collection_texture }}.png" class="icon-stu"/>{{ curr.name.name.en }} <span lang="jp">({{ curr.name.name.jp }})</span>
+                            <img src="/static/images/student/icon/{{ curr.image.collection_texture }}.png" class="icon-stu"/>{{ curr.name.name.en }}<span lang="jp" class="char-lang-jp">&nbsp;/&nbsp;{{ curr.name.name.jp }})</span>
                         </a>
                     </li>
                 {% else %}
-                    <li><a href="/en/character/npc/{{ curr.namespace[-1]|lower }}/">{{ curr.name.en }}</a></li>
+                    <li><a href="/en/character/npc/{{ curr.namespace[-1]|lower }}/">{{ curr.name.en }}</a><span class="char-lang-jp">&nbsp;/&nbsp;{{ curr.name.jp }}</span></li>
                 {% endif %}
             {% else %}
                 <li>Nothing to show!</li>
