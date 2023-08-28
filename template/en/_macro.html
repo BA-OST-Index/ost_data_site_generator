@@ -16,7 +16,7 @@
             <li id="story-{{ value.0.instance_id }}">
             {% set value = value[0] %}
             {% if value.filetype == 15 %}
-                {% set target_url = "/en/character/student/" + value.pos.student|string + "/bond/" + value.pos.no|string + ".html" %}
+                {% set target_url = "/en/character/student/" + value.pos.student|string|lower + "/bond/" + value.pos.no|string + ".html" %}
                 <a href="{{ target_url }}">
                     <img src="/static/images/student/icon/{{ value.student.image.collection_texture }}.png" class="icon-stu"/>{{ value.student.name.personal_name.en }} Bond Story {{ value.pos.no }}: {{ value.name.en }}
                 </a>

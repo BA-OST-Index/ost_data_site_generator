@@ -21,7 +21,7 @@
             <li id="story-{{ value.0.instance_id }}">
             {% set value = value[0] %}
             {% if value.filetype == 15 %}
-                {% set target_url = "/" + current_lang + "/character/student/" + value.pos.student + "/bond/" + value.pos.no|string + ".html" %}
+                {% set target_url = "/" + current_lang + "/character/student/" + value.pos.student|string|lower + "/bond/" + value.pos.no|string + ".html" %}
                 <a href="{{ target_url }}">
                     <img src="/static/images/student/icon/{{ value.student.image.collection_texture }}.png" class="icon-stu"/>{{ auto_zhcn_gen(value.student.name.personal_name) }}的第{{ value.pos.no }}个羁绊故事：{{ auto_zhcn_gen(value.name) }}
                 </a>

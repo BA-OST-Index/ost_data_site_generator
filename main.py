@@ -48,9 +48,11 @@ page_path_and_name2 = {
     "page/zh_cn/_zhcn_technical.html": "zh_cn/zhcn_technical.html"
 }
 
+
 # get current utc
 def get_current_utc(value, fmt="%Y-%m-%d %H:%M:%S"):
     return datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+
 
 environment = Environment(loader=FileSystemLoader(os.path.split(__file__)[0]), extensions=["jinja2.ext.loopcontrols",
                                                                                            "jinja2.ext.do"])
