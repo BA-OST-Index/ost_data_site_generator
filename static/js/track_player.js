@@ -59,14 +59,17 @@ var resize_all_players = function() {
 function play_video(video_url, element_id) {
     document.getElementById(element_id).style.display = "none";
     var container = document.getElementById(element_id + "-container");
+    var video_id;
     if (video_url.includes("youtu")) {
-        var video_id = getYoutubeIDfromURL(video_url);
+        video_id = getYoutubeIDfromURL(video_url);
         container.innerHTML = "<iframe src=\"https://www.youtube-nocookie.com/embed/" + video_id + "\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen class=\"track-video-player\"></iframe>";
     }
     else {
         if (video_url.includes("bilibili")) {
-            var video_id = getBilibiliIDfromURL(video_url);
-            container.innerHTML = "<iframe src=\"https://player.bilibili.com/player.html?bvid=" + video_id + "&page=1\" scrolling=\"no\" border=\"0\" frameborder=\"no\" framespacing=\"0\" allowfullscreen=\"true\" class=\"track-video-player\"> </iframe>";
+            video_id = getBilibiliIDfromURL(video_url);
+            let video_page_id = getParameterByName("p", video_url);
+            if (video_page_id === null) {video_page_id = "1";}
+            container.innerHTML = "<iframe src=\"https://player.bilibili.com/player.html?bvid=" + video_id + "&page=" + video_page_id + "\" scrolling=\"no\" border=\"0\" frameborder=\"no\" framespacing=\"0\" allowfullscreen=\"true\" class=\"track-video-player\"> </iframe>";
         }
     }
     resize_all_players();
