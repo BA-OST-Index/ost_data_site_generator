@@ -7,7 +7,6 @@ import time
 import datetime
 import sys
 from jinja2 import Environment, FileSystemLoader
-from functools import partial
 
 ALL_LANGS = ["en", "zh_cn"]
 
@@ -49,8 +48,13 @@ page_path_and_name2 = {
     "page/zh_cn/_zhcn_technical.html": "zh_cn/zhcn_technical.html"
 }
 
+# get current utc
+def get_current_utc(value, fmt="%Y-%m-%d %H:%M:%S"):
+    return datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+
 environment = Environment(loader=FileSystemLoader(os.path.split(__file__)[0]), extensions=["jinja2.ext.loopcontrols",
                                                                                            "jinja2.ext.do"])
+environment.filters["get_current_utc"] = get_current_utc
 
 
 def change_extension_name(filename: str, extension: str = 'html'):
@@ -73,26 +77,25 @@ def find_template(filetype):
 
 
 def return_template(template_name, template, content):
-    template = partial(template.render, generated_time=datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"))
     if "background" in template_name:
-        return template(background=content)
+        return template.render(background=content)
     elif "event" in template_name:
-        return template(event=content)
+        return template.render(event=content)
     elif "battle" in template_name:
-        return template(battle=content)
+        return template.render(battle=content)
     elif "npc" in template_name or "character" in template_name \
             or "student" in template_name:
-        return template(char=content)
+        return template.render(char=content)
     elif "story" in template_name:
-        return template(story=content)
+        return template.render(story=content)
     elif "tag" in template_name:
-        return template(tag=content)
+        return template.render(tag=content)
     elif "track" in template_name:
-        return template(track=content)
+        return template.render(track=content)
     elif "ui" in template_name:
-        return template(ui=content)
+        return template.render(ui=content)
     elif "video" in template_name:
-        return template(video=content)
+        return template.render(video=content)
 
 
 def traverse_path(namespace: list, lang: str = "en"):
