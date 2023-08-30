@@ -4,18 +4,26 @@
 {% block title %}{{ char.name.zh_cn }}{% endblock title %}
 {% block other_head %}
     <script src="/static/js/char_lang_display.js"></script>
+    <script src="/static/js/char_desc_display.js"></script>
 {% endblock other_head %}
 {% block article_content %}
     <h1>{{ char.name.zh_cn }}</h1>
+    <p>{{ char.desc.zh_cn }}</p>
     <div>
-        <p>选择显示角色名字的模式：</p>
-        <select id="char_lang_display" onchange="set_char_lang_display_status('zh', this)">
-            <option value="0">仅中文</option>
-            <option value="1">中文+英文</option>
-            <option value="2">中文+日语</option>
-            <option value="3">中文+英文+日语</option>
-        </select>
+        <p>选择显示角色名字的模式：
+            <select id="char_lang_display" onchange="set_char_lang_display_status('zh', this)">
+                <option value="0">仅中文</option>
+                <option value="1">中文+英文</option>
+                <option value="2">中文+日语</option>
+                <option value="3">中文+英文+日语</option>
+            </select>
+        </p>
         <script>display_char_lang_element('zh'); document.getElementById("char_lang_display").value = localStorage.getItem("char_lang_zh");</script>
+        <p>是否启用显示学生详细信息？&nbsp;
+            <input type="radio" name="desc_enable" value="enable" id="char_desc_radio_1">&nbsp;启用&nbsp;
+            <input type="radio" name="desc_enable" value="disable" id="char_desc_radio_0">&nbsp;禁用
+        </p>
+        <script>set_listen_char_desc_preference(); check_char_desc_radio();</script>
     </div>
     {% if char.filetype == -51 %}
         <h2>NPC</h2>
@@ -35,14 +43,18 @@
                     <a href="/zh_cn/character/student/{{ curr.student.name.path_name|lower }}/">
                         <img src="/static/images/student/icon/{{ curr.student.image.collection_texture }}.png" class="icon-stu"/>{{ auto_zhcn_gen(curr.student.name.name) }}<span lang="en" class="char-lang-en">&nbsp;/&nbsp;{{ curr.student.name.name.en }}</span><span lang="jp" class="char-lang-jp">&nbsp;/&nbsp;{{ curr.student.name.name.jp }}</span>
                     </a>
+                    <br/>
+                    <div class="stu-list-desc">
+                        <span>
+                            <img src="/static/images/schoolicon/School_Icon_{{ curr.student.school_id|upper }}_W.png" class="invert-light schoolicon-p"><span>{{ auto_zhcn_gen(curr.student.school.long) }}</span>&nbsp;/&nbsp;<span>{{ auto_zhcn_gen(curr.student.club) }}</span>&nbsp;/&nbsp;<span>{{ auto_zhcn_gen(curr.student.birthday.localized) }}</span>
+                        </span>
+                    </div>
                 </li>
             {% else %}
                 <li>{{ nothing_to_show }}</li>
             {% endfor %}
         </ul>
     {% elif char.filetype == -52 %}
-        <h1>{{ char.name.zh_cn }}</h1>
-        <p>{{ char.desc.zh_cn }}</p>
         <ul class="stu-list">
             {% for i in char.include %}
                 {% set curr = i.1 %}
@@ -52,6 +64,12 @@
                         <a href="/zh_cn/character/student/{{ curr.name.path_name|lower }}/">
                             <img src="/static/images/student/icon/{{ curr.image.collection_texture }}.png" class="icon-stu"/>{{ auto_zhcn_gen(curr.name.name) }}<span lang="en" class="char-lang-en">&nbsp;/&nbsp;{{ curr.name.name.en }}</span><span lang="jp" class="char-lang-jp">&nbsp;/&nbsp;{{ curr.name.name.jp }}</span>
                         </a>
+                        <br/>
+                        <div class="stu-list-desc">
+                            <span>
+                                <img src="/static/images/schoolicon/School_Icon_{{ curr.school_id|upper }}_W.png" class="invert-light schoolicon-p"><span>{{ auto_zhcn_gen(curr.school.long) }}</span>&nbsp;/&nbsp;<span>{{ auto_zhcn_gen(curr.club) }}</span>&nbsp;/&nbsp;<span>{{ auto_zhcn_gen(curr.birthday.localized) }}</span>
+                            </span>
+                        </div>
                     </li>
                 {% else %}
                     <li><a href="/zh_cn/character/npc/{{ curr.namespace[-1]|lower }}/">{{ auto_zhcn_gen(curr.name) }}</a><span class="char-lang-en">&nbsp;/&nbsp;{{ curr.name.en }}</span><span class="char-lang-jp">&nbsp;/&nbsp;{{ curr.name.jp }}</span></li>
@@ -62,4 +80,5 @@
         </ul>
     {% else %}
     {% endif %}
+    <script>display_char_desc_element();</script>
 {% endblock %}

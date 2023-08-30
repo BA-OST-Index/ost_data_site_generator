@@ -51,7 +51,7 @@ page_path_and_name2 = {
 
 # get current utc
 def get_current_utc(value, fmt="%Y-%m-%d %H:%M:%S"):
-    return datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.datetime.utcnow().strftime(fmt)
 
 
 environment = Environment(loader=FileSystemLoader(os.path.split(__file__)[0]), extensions=["jinja2.ext.loopcontrols",
@@ -100,7 +100,7 @@ def return_template(template_name, template, content):
         return template.render(video=content)
 
 
-def traverse_path(namespace: list, lang: str = "en"):
+def traverse_path(namespace: list, lang: str):
     current_path = "/".join(namespace)
 
     all_path = list(os.listdir(current_path))
@@ -186,6 +186,7 @@ def traverse_path(namespace: list, lang: str = "en"):
 
 
 # Deleting old files
+start_time = time.time()
 folders_to_remove = ["en", "static", "zh_cn"]
 for i in folders_to_remove:
     try: shutil.rmtree(f"data_html/{i}")
@@ -194,8 +195,9 @@ files_to_remove = ["404.html", "index.html"]
 for i in files_to_remove:
     try: os.remove(f"data_html/{i}")
     except FileNotFoundError: pass
-print("Deletion completed")
+print(f"Deletion completed: {time.time() - start_time:0.2f}")
 
+start_time = time.time()
 for lang in ALL_LANGS:
     traverse_path(["exported_data"], lang)
     for path, name in page_path_and_name.items():
@@ -209,10 +211,11 @@ for path, name in page_path_and_name2.items():
     result = template.render()
     with open(os.path.join("data_html/", name), mode="w", encoding="UTF-8") as file:
         file.write(result)
-print("Generation completed")
+print(f"Generation completed: {time.time() - start_time:0.2f}")
 
+start_time = time.time()
 shutil.copytree("static", "data_html/static", dirs_exist_ok=True, copy_function=shutil.copy)
-print("Copying completed")
+print(f"Copying completed: {time.time() - start_time:0.2f}")
 
 if len(sys.argv) == 1:
     # running locally, because GitHub Action will have two args.

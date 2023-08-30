@@ -2,8 +2,8 @@
         {{text[0]|upper}}{{text[1:]}}
 {% endmacro %}
 
-{% macro tag_altogether(tags) %}
-    {% for tag in tags %}<a href="/en/tag/{{ tag.namespace[-1] }}.html"><span class="badge badge-{{ tag.color_css }} badge-tag">{{ tag.name.en }}</span></a>&nbsp;{% endfor %}
+{% macro tag_altogether(tags, instance_id) %}
+    {% for tag in tags %}<a href="/en/tag/{{ tag.namespace[-1] }}.html{% if instance_id %}#{{ instance_id }}{% endif %}"><span class="badge badge-{{ tag.color_css }} badge-tag">{{ tag.name.en }}</span></a>&nbsp;{% endfor %}
 {% endmacro %}
 
 {% macro track_type_for_show(track) %}

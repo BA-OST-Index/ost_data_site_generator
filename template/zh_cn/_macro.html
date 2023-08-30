@@ -9,8 +9,8 @@
     {{text[0]|upper}}{{text[1:]}}
 {% endmacro %}
 
-{% macro tag_altogether(tags) %}
-    {% for tag in tags %}<a href="/{{ current_lang }}/tag/{{ tag.namespace[-1] }}.html"><span class="badge badge-{{ tag.color_css }} badge-tag">{{ tag.name.zh_cn }}</span></a>&nbsp;{% endfor %}
+{% macro tag_altogether(tags, instance_id) %}
+    {% for tag in tags %}<a href="/{{ current_lang }}/tag/{{ tag.namespace[-1] }}.html{% if instance_id %}#{{ instance_id }}{% endif %}"><span class="badge badge-{{ tag.color_css }} badge-tag">{{ tag.name.zh_cn }}</span></a>&nbsp;{% endfor %}
 {% endmacro %}
 
 {% macro track_type_for_show(track) %}{% if track.track_type == 0 %}OST{% elif track.track_type == 1 %}短篇动画{% elif track.track_type == 2 %}官方动画{% else %}其它{% endif %}{% endmacro %}
@@ -172,7 +172,7 @@
     <table class="gallery">
         <tr>
             {% for key, value in data_background.items() %}
-                <td class="gallery-img" id="{{ value.0.uuid }}"><img src="{{ value.0.image.value }}"><p class="gallery-caption"><a href="/{{ current_lang }}/background/{{ value.0.filename }}.html">{% if value.0.desc.zh_cn != "" %}{{ value.0.desc.zh_cn }}{% else %}{{ value.0.filename }}{% endif %}</a></p></td>
+                <td class="gallery-img" id="{{ value.0.uuid }}"><img src="{{ value.0.image.value }}"><p class="gallery-caption"><a href="/{{ current_lang }}/background/{{ value.0.filename }}.html{% if instance_id %}#{{ instance_id }}{% endif %}">{% if value.0.desc.zh_cn != "" %}{{ value.0.desc.zh_cn }}{% else %}{{ value.0.filename }}{% endif %}</a></p></td>
             {% else %}
                 <td>{{ nothing_to_show }}</td>
             {% endfor %}

@@ -3,16 +3,24 @@
 {% block title %}{{ char.name.en }}{% endblock title %}
 {% block other_head %}
     <script src="/static/js/char_lang_display.js"></script>
+    <script src="/static/js/char_desc_display.js"></script>
 {% endblock other_head %}
 {% block article_content %}
     <h1>{{ char.name.en }}</h1>
+    <p>{{ char.desc.en }}</p>
     <div>
-        <p>Select the mode you want to display character names: </p>
-        <select id="char_lang_display" onchange="set_char_lang_display_status('en', this)">
-            <option value="0">English Only</option>
-            <option value="1">English + Japanese</option>
-        </select>
+        <p>Select the mode you want to display character names:&nbsp;
+            <select id="char_lang_display" onchange="set_char_lang_display_status('en', this)">
+                <option value="0">English Only</option>
+                <option value="1">English + Japanese</option>
+            </select>
+        </p>
         <script>display_char_lang_element('en'); document.getElementById("char_lang_display").value = localStorage.getItem("char_lang_en");</script>
+        <p>Enable student's detailed description?&nbsp;
+            <input type="radio" name="desc_enable" value="enable" id="char_desc_radio_1">&nbsp;Enable&nbsp;
+            <input type="radio" name="desc_enable" value="disable" id="char_desc_radio_0">&nbsp;Disable
+        </p>
+        <script>set_listen_char_desc_preference(); check_char_desc_radio();</script>
     </div>
     {% if char.filetype == -51 %}
         <h2>NPC</h2>
@@ -32,6 +40,12 @@
                     <a href="/en/character/student/{{ curr.student.name.path_name|lower }}/">
                         <img src="/static/images/student/icon/{{ curr.student.image.collection_texture }}.png" class="icon-stu"/>{{ curr.student.name.name.en }}<span lang="jp" class="char-lang-jp">&nbsp;/&nbsp;{{ curr.student.name.name.jp }}</span>
                     </a>
+                    <br/>
+                    <div class="stu-list-desc">
+                        <span>
+                            <img src="/static/images/schoolicon/School_Icon_{{ curr.student.school_id|upper }}_W.png" class="invert-light schoolicon-p"><span>{{ curr.student.school.long.en }}</span>&nbsp;/&nbsp;<span>{{ curr.student.club.en }}</span>&nbsp;/&nbsp;<span>{{ curr.student.birthday.localized.en }}</span>
+                        </span>
+                    </div>
                 </li>
             {% else %}
                 <li>Nothing to show!</li>
@@ -47,6 +61,12 @@
                         <a href="/en/character/student/{{ curr.name.path_name|lower }}/">
                             <img src="/static/images/student/icon/{{ curr.image.collection_texture }}.png" class="icon-stu"/>{{ curr.name.name.en }}<span lang="jp" class="char-lang-jp">&nbsp;/&nbsp;{{ curr.name.name.jp }})</span>
                         </a>
+                        <br/>
+                        <div class="stu-list-desc">
+                            <span>
+                                <img src="/static/images/schoolicon/School_Icon_{{ curr.school_id|upper }}_W.png" class="invert-light schoolicon-p"><span>{{ curr.school.long.en }}</span>&nbsp;/&nbsp;<span>{{ curr.club.en }}</span>&nbsp;/&nbsp;<span>{{ curr.birthday.localized.en }}</span>
+                            </span>
+                        </div>
                     </li>
                 {% else %}
                     <li><a href="/en/character/npc/{{ curr.namespace[-1]|lower }}/">{{ curr.name.en }}</a><span class="char-lang-jp">&nbsp;/&nbsp;{{ curr.name.jp }}</span></li>
@@ -57,4 +77,5 @@
         </ul>
     {% else %}
     {% endif %}
+    <script>display_char_desc_element();</script>
 {% endblock %}
