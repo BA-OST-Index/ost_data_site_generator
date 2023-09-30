@@ -18,7 +18,9 @@
             {% elif story.filetype == -24 %}
                 <li><a href="{{ i.namespace[-1] }}">第{{ i.namespace[-1] }}章：{{ auto_zhcn_gen(i.name) }}</a><br/>{{ auto_zhcn_gen(i.desc) }}</li>
             {% elif story.filetype == -25 %}
-                <li><a href="{{ i.pos.segment }}.html">第{{ i.pos.segment }}话：{{ auto_zhcn_gen(i.name) }}</a></li>
+                <li>
+                    <a href="{{ i.pos.segment }}.html" class="{% if i.is_battle %}text-danger{% elif i.is_memory %}text-momo{% endif %}">第{{ i.pos.segment }}话：{{ auto_zhcn_gen(i.name) }}</a>
+                </li>
             {% elif story.filetype == -54 %}
                 <li><a href="{{ i.pos.segment }}.html">第{{ i.pos.segment }}话故事: {{ auto_zhcn_gen(i.name) }}</a></li>
             {% else %}

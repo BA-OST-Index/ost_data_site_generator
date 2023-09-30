@@ -125,43 +125,57 @@ def traverse_path(namespace: list, lang: str):
             target_path = "/".join(["exported_data", *namespace[1:], change_extension_name(i, "json")])
 
             content = load_file(target_path)
-            template_name = find_template(content["filetype"])
 
-            if template_name == -1 and __debug__:
-                print("Not worked", i)
-                continue
+            if content["filetype"] != 81:
+                template_name = find_template(content["filetype"])
 
-            template = environment.get_template(f"page/{lang}/{template_name}")
+                if template_name == -1 and __debug__:
+                    print("Not worked", i)
+                    continue
 
-            if content["filetype"] in filename_to_filetype["ui.html"]:
-                target_path = "/".join(["data_html", lang, *namespace[1:], change_extension_name(i, "html")])
-            elif content["filetype"] == -53:
-                # for single student
-                target_path = "/".join(["data_html", lang, *namespace[1:], "index.html"])
-            elif content["filetype"] == 52:
-                # for npc
-                target_path = "/".join(["data_html", lang, *namespace[1:-1], namespace[-1].lower(), "index.html"])
-            else:
-                target_path = "/".join(["data_html", lang, *namespace[1:], change_extension_name(i, "html")])
-            if "_all" in i:
-                target_path = "/".join(["data_html", lang, *namespace[1:], "index.html"])
+                template = environment.get_template(f"page/{lang}/{template_name}")
 
-            # 对 target_path 作处理，若html文件名为数据，放弃前导0
-            # 因为直接读的 segment 是 int 并不会带前导0
-            # 前导0是后端给故事排序时所需要的
-            temp = os.path.split(target_path)
-            if "story" in temp[0]:
-                # 只针对故事进行处理，其他不进行
-                try:
-                    temp2 = int(temp[1][:-5])
-                except Exception:
-                    # not a number
-                    pass
+                if content["filetype"] in filename_to_filetype["ui.html"]:
+                    target_path = "/".join(["data_html", lang, *namespace[1:], change_extension_name(i, "html")])
+                elif content["filetype"] == -53:
+                    # for single student
+                    target_path = "/".join(["data_html", lang, *namespace[1:], "index.html"])
+                elif content["filetype"] == 52:
+                    # for npc
+                    target_path = "/".join(["data_html", lang, *namespace[1:-1], namespace[-1].lower(), "index.html"])
                 else:
-                    if temp2 < 10 and temp2 != 0 and temp[1].startswith("0"):
-                        target_path = os.path.join(temp[0], temp[1][1:])
+                    target_path = "/".join(["data_html", lang, *namespace[1:], change_extension_name(i, "html")])
+                if "_all" in i:
+                    target_path = "/".join(["data_html", lang, *namespace[1:], "index.html"])
 
-            template_content = return_template(template_name, template, content)
+                # 对 target_path 作处理，若html文件名为数据，放弃前导0
+                # 因为直接读的 segment 是 int 并不会带前导0
+                # 前导0是后端给故事排序时所需要的
+                temp = os.path.split(target_path)
+                if "story" in temp[0]:
+                    # 只针对故事进行处理，其他不进行
+                    try:
+                        temp2 = int(temp[1][:-5])
+                    except Exception:
+                        # not a number
+                        pass
+                    else:
+                        if temp2 < 10 and temp2 != 0 and temp[1].startswith("0"):
+                            target_path = os.path.join(temp[0], temp[1][1:])
+
+                template_content = return_template(template_name, template, content)
+            else:
+                # for virtual data
+
+                # load specific template file
+                template_path = content["template_path"]
+                template = environment.get_template(os.path.join(f"page/{lang}", template_path))
+
+                template_content = template.render(obj=content)
+
+                # export to current location
+                page_path = content["page_path"]
+                target_path = os.path.join(f"data_html/{lang}", page_path)
 
             # Normalize the path
             target_path = target_path.replace("\\", "/")

@@ -19,7 +19,7 @@
         {% if story.filetype == 14 %}
             <td class="infobox-col-value">Event {{ story.parent_data.0.name.en }} (ID {{ story.pos.event_id }})<br/>Story {{ story.pos.segment }}</td>
         {% elif story.filetype == 15 %}
-            <td class="infobox-col-value"><img src="/static/images/student/icon/{{ story.student.image.collection_texture }}.png" class="icon-stu"/>{{ story.student.name.personal_name.en }}<br/>Bond Story {{ story.pos.no }}</td>
+            <td class="infobox-col-value"><img src="/static/images/student/icon/{{ story.student.image.collection_texture }}.webp" class="icon-stu"/>{{ story.student.name.personal_name.en }}<br/>Bond Story {{ story.pos.no }}</td>
         {% else %}
             {% if story.filetype == 11 %}
                 {% set story_type = "main" %}

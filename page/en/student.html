@@ -1,34 +1,31 @@
 {% extends "template/en/base.html" %}
-{% from 'template/en/_macro.html' import output_usedby_story, output_usedby_track %}
+{% from 'template/en/_macro.html' import output_usedby_story, output_usedby_track, replace_newline_for_p %}
 
 {% block title %}Student/{{ char.student.name.name.en }}{% endblock title %}
 {% block article_content %}
     <h1>Student/{{ char.student.name.name.en }}</h1>
     {% include "template/en/infobox/student.html" %}
     {% set student = char.student %}
+    <div id="char_intro">
+        <svg xmlns="http://www.w3.org/2000/svg" height="2.5em" viewBox="0 0 448 512"><path d="M0 216C0 149.7 53.7 96 120 96h8c17.7 0 32 14.3 32 32s-14.3 32-32 32h-8c-30.9 0-56 25.1-56 56v8h64c35.3 0 64 28.7 64 64v64c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V320 288 216zm256 0c0-66.3 53.7-120 120-120h8c17.7 0 32 14.3 32 32s-14.3 32-32 32h-8c-30.9 0-56 25.1-56 56v8h64c35.3 0 64 28.7 64 64v64c0 35.3-28.7 64-64 64H320c-35.3 0-64-28.7-64-64V320 288 216z"></path></svg>
+        <div id="char_intro_text">
+            <p>{{ replace_newline_for_p(student.profile.profile.en) }}</p>
+            {% if student.profile.gacha.en != "None" %}
+                <br /><b><p>{{ replace_newline_for_p(student.profile.gacha.en) }}</p></b>
+            {% endif %}
+        </div>
+    </div>
     <p><b>{{ student.name.family_name.en }} {{ student.name.personal_name.en }}</b> <span lang="jp">(JP: {{ student.name.family_name.jp }} {{ student.name.personal_name.jp }})</span> is a {{ student.age.en }} student from {{ student.club.en }} of {{ student.school.long.en }}. She enjoys {{ student.hobby.en }}.</p>
     <h2>Relationship/Bond Story</h2>
     {% set bond = char.include.0.1.include %}
     {% for i in bond %}
         {% set value = i.1 %}
-        <h3><a href="bond/{{ value.pos.no }}.html">{{ value.pos.no }}. {{ value.name.en }}</a></h3>
+
+        <h3><a {% if i.is_memory %}class="text-momo"{% endif %} href="bond/{{ value.pos.no }}.html">{{ value.pos.no }}. {{ value.name.en }}</a></h3>
         {% if value.is_memory %}
             {% set track = value.bgm_special[0] %}
             <big><p>Recollection Lobby can be collected from this story. Lobby BGM: <a href="/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}">{{ track.no }}. {{ track.name.realname.en }}</a></p></big>
         {% endif %}
-        <p>{{ value.desc.en }}</p>
-        <h4>Story Parts</h4>
-        <ul>
-            {% for part in i.part %}
-                <li>{{ part.name.en }} - {{ part.desc.en }}</li>
-            {% endfor %}
-        </ul>
-        <h4>Gallery</h4>
-        <table class="gallery">
-            <tr>
-                <td class="gallery-img"><img src="{{ value.image.value }}"><p class="gallery-caption"><a href="/en/background/{{ value.filename }}.html">{% if value.desc.en != "" %}{{ value.desc.en }}{% else %}{{ value.filename }}{% endif %}</a></p></td>
-            </tr>
-        </table>
     {% else %}
         <p>Nothing to show!</p>
     {% endfor %}

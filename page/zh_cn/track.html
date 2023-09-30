@@ -5,11 +5,11 @@
     <script src="/static/js/track_player.js"></script>
 {% endblock other_head %}
 {% block article_content %}
-    {% from "template/zh_cn/_macro.html" import track_type_for_show, output_usedby_background, output_usedby_story, output_usedby_battle, output_usedby_ui, output_usedby_video, nothing_to_show, output_usedby_character_dict %}
+    {% from "template/zh_cn/_macro.html" import track_type_for_show, output_usedby_background, output_usedby_story, output_usedby_battle, output_usedby_ui, output_usedby_video, nothing_to_show, output_usedby_character_dict, track_version_video_player %}
 
-    <h1>曲子/{{ track.no }}. {{ track.name.realname.en }} ({{ track.name.realname.zh_cn }})</h1>
+    <h1>曲子/{{ track.no }}. {{ track.name.realname.en }} {% if track.name.realname.zh_cn %}({{ track.name.realname.zh_cn }}){% endif %}</h1>
     {% include "template/zh_cn/infobox/track.html" %}
-    <p><b>{{ track.name.realname.en }}</b> (<b>{{ track.name.realname.zh_cn }}</b>) 是{{ track_type_for_show(track) }}中的第{{ track.no }}首曲子。</p>
+    <p><b>{{ track.name.realname.en }}</b> {% if track.name.realname.zh_cn %}(<b>{{ track.name.realname.zh_cn }}</b>){% endif %} 是{{ track_type_for_show(track) }}中的第{{ track.no }}首曲子。</p>
     <p>{{ track.desc.zh_cn }}</p>
     <h2>名称翻译</h2>
     <h3>原始名称</h3>
@@ -28,17 +28,8 @@
     </ul>
     <h2>在线播放音乐</h2>
     <p>提示：为避免潜在版权侵犯风险，我们此处使用的<b>第三方嵌入式网页播放器</b>来提供服务。你也可以在信息栏（infobox）中手动访问它们。</p>
-    {% for version in track.version %}
-        {% set _version_index = loop.index %}
-
-        <h3>{{ version.desc.zh_cn }}</h3>
-        {% for url in version.url %}
-            <div onclick="play_video('{{ url.value }}', 'track-video-{{ _version_index }}-{{ loop.index }}')" id="track-video-{{ _version_index }}-{{ loop.index }}" class="track-video-div">
-                <p><img src="/static/images/social/{{ url.platform.en }}.png" class="social-logo">{{ url.platform.zh_cn }} ({{ url.value }})</p>
-            </div>
-            <div id="track-video-{{ _version_index }}-{{ loop.index }}-container"></div>
-        {% endfor %}
-    {% endfor %}
+    <p>单击下列链接时，您也同时同意各平台/服务提供商的对应服务条款。</p>
+    {{ track_version_video_player(track.version) }}
     <h2>使用信息</h2>
     <p>此处显示引用了这首曲子的实例。</p>
     <h3>背景</h3>

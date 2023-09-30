@@ -10,59 +10,91 @@
     {% if track.track_type == 0 %}OST{% elif track.track_type == 1 %}Short Animation{% elif track.track_type == 2 %}Animation{% else %}Other{% endif %}
 {% endmacro %}
 
-{% macro output_usedby_story(data_story, instance_uuid, instance_key) %}
-    <ul>
-        {% for key, value in data_story.items() %}
-            <li id="story-{{ value.0.instance_id }}">
-            {% set value = value[0] %}
-            {% if value.filetype == 15 %}
-                {% set target_url = "/en/character/student/" + value.pos.student|string|lower + "/bond/" + value.pos.no|string + ".html" %}
-                <a href="{{ target_url }}">
-                    <img src="/static/images/student/icon/{{ value.student.image.collection_texture }}.png" class="icon-stu"/>{{ value.student.name.personal_name.en }} Bond Story {{ value.pos.no }}: {{ value.name.en }}
-                </a>
-            {% elif value.filetype == 14 %}
-                {% set target_url = "/en/event/" + value.pos.event_id|string + "/story/" + value.pos.segment|string + ".html" %}
-                <a href="{{ target_url }}">Event {{ value.parent_data.0.name.en }} Story {{ value.pos.segment }}: {{ value.name.en }}
-                </a>
-            {% else %}
-                {% if value.filetype == 11 %}
-                    {% set story_type = "main" %}
-                {% elif value.filetype == 12 %}
-                    {% set story_type = "side" %}
-                {% elif value.filetype == 13 %}
-                    {% set story_type = "short" %}
-                {% else %}
-                    {% set story_type = "other" %}
-                {% endif %}
-                {% set target_url = "/en/main/story/" + story_type|string + "/" + value.pos.volume|string + "/" + value.pos.chapter|string + "/" + value.pos.segment|string + ".html" %}
-                <a href="{{ target_url }}">
-                    {{ word_case(story_type) }}Story Volume {{ value.pos.volume }} Chapter {{ value.pos.chapter }} Episode {{ value.pos.segment }}: {{ value.name.en }}
-                </a>
-            {% endif %}
+{% macro filetype_to_name(filetype) %}{% set filetype = filetype|int %}{% if filetype == 11 %}Main{% elif filetype == 12 %}Side{% elif filetype == 13 %}Short{% elif filetype == 14 %}Event{% elif filetype == 15 %}Bond{% elif filetype == 16 %}Other{% endif %}{% endmacro %}
 
-            {# appearedAt snippet #}
-            {% if instance_uuid %}
-                {% set _part_track_html = [] %}
-                {% for part in value.part %}
-                    {% set _loop_index = loop.index %}
-                    {% for part2 in part[instance_key] %}
-                        {% if part2.uuid == instance_uuid %}
-                            {% if _part_track_html|length == 0 %}
-                                {% do _part_track_html.append('<span>&nbsp;(appeared at <a href="' + target_url + '#story-part-' + _loop_index|string + '"><i>' + part.name.en + '</i></a>') %}
-                            {% else %}
-                                {% do _part_track_html.append(',&nbsp;<a href="' + target_url + '#story-part-' + _loop_index|string + '"><i>' + part.name.en + '</i></a>') %}
-                            {% endif %}
-                            {% break %}
-                        {% endif %}
-                    {% endfor %}
-                {% endfor %}
-                {% do _part_track_html.append(")</span>") %}
-                {{ _part_track_html|join("") }}
-            {% endif %}
-            </li>
+{% macro get_ordinal_number(number) %}{% if number == 1 %}1st{% elif number == 2 %}2nd{% elif number == 3 %}3rd{% else %}{{ number }}th{% endif %}{% endmacro %}
+
+{% macro replace_newline_for_p(text) %}{{ text|replace("\n\n", "</p><br /><p>")|replace("\n", "</p><p>") }}{% endmacro %}
+
+{% macro get_stu_type_text_color_css(text) %}{% if text == "Explosion" or text == "LightArmor" %}text-damage-explosive{% elif text == "Pierce" or text == "HeavyArmor" %}text-damage-piercing{% elif text == "Mystic" or text == "Unarmed" %}text-damage-mystic{% elif text == "Main" %}text-role-striker{% elif text == "Support" %}text-role-special{% else %}text-damage-sonic{% endif %}{% endmacro %}
+
+{% macro output_usedby_story(data_story, instance_uuid, instance_key) %}
+    {% set _curr_filetype = namespace(filetype=0) %}
+
+    {% for key, value in data_story.items() %}
+        {# 记录当前的filetype，稍后用于切割不同故事 #}
+        {% if _curr_filetype.filetype == 0 %}
+            {# 循环刚刚开始，加上<ul> #}
+            {% set _curr_filetype.filetype = value.0.filetype %}
+            <h4>{{ filetype_to_name(_curr_filetype.filetype) }}</h4><ul>
         {% else %}
-            <li>Nothing to show!</li>
-        {% endfor %}
+            {% if _curr_filetype.filetype != value.0.filetype %}
+                {# 如果当前文件已经不再是之前的 #}
+                {% set _curr_filetype.filetype = value.0.filetype %}
+                </ul><h4>{{ filetype_to_name(_curr_filetype.filetype) }}</h4><ul>
+            {% endif %}
+        {% endif %}
+
+        <li id="story-{{ value.0.instance_id }}">
+        {% set value = value[0] %}
+        {% if value.filetype == 15 %}
+            {% set target_url = "/en/character/student/" + value.pos.student|string|lower + "/bond/" + value.pos.no|string + ".html" %}
+            <a href="{{ target_url }}">
+                <img src="/static/images/student/icon/{{ value.student.image.collection_texture }}.webp" class="icon-stu"/>{{ value.student.name.personal_name.en }} Bond Story {{ value.pos.no }}: {{ value.name.en }}
+            </a>
+        {% elif value.filetype == 14 %}
+            {% set target_url = "/en/event/" + value.pos.event_id|string + "/story/" + value.pos.segment|string + ".html" %}
+            <a href="{{ target_url }}">Event {{ value.parent_data.0.name.en }} Story {{ value.pos.segment }}: {{ value.name.en }}
+            </a>
+        {% else %}
+            {% if value.filetype == 11 %}
+                {% set story_type = "main" %}
+            {% elif value.filetype == 12 %}
+                {% set story_type = "side" %}
+            {% elif value.filetype == 13 %}
+                {% set story_type = "short" %}
+            {% else %}
+                {% set story_type = "other" %}
+            {% endif %}
+            {% set target_url = "/en/main/story/" + story_type|string + "/" + value.pos.volume|string + "/" + value.pos.chapter|string + "/" + value.pos.segment|string + ".html" %}
+            <a href="{{ target_url }}">
+                {{ word_case(story_type) }}Story Volume {{ value.pos.volume }} Chapter {{ value.pos.chapter }} Episode {{ value.pos.segment }}: {{ value.name.en }}
+            </a>
+        {% endif %}
+
+        {# appearedAt snippet #}
+        {% if instance_uuid %}
+            {% set _part_track_html = [] %}
+            {% for part in value.part %}
+                {% set _loop_index = loop.index %}
+                {% for part2 in part[instance_key] %}
+                    {% if part2.uuid == instance_uuid %}
+                        {% if part.is_memory %}
+                            {% set ele_class = 'class="text-momo"' %}
+                        {% elif part.is_battle %}
+                            {% set ele_class = 'class="text-danger"' %}
+                        {% elif part.is_momotalk %}
+                            {% set ele_class = 'class="text-black"' %}
+                        {% else %}
+                            {% set ele_class = 'class="text-primary"' %}
+                        {% endif %}
+
+                        {% if _part_track_html|length == 0 %}
+                            {% do _part_track_html.append('<span>&nbsp;(appeared at <a href="' + target_url + '#story-part-' + _loop_index|string + '" ' + ele_class + '><i>[' + _loop_index|string + '] ' + part.name.en + '</i></a>') %}
+                        {% else %}
+                            {% do _part_track_html.append(',&nbsp;<a href="' + target_url + '#story-part-' + _loop_index|string + '" ' + ele_class + '><i>[' + _loop_index|string + '] ' + part.name.en + '</i></a>') %}
+                        {% endif %}
+                        {% break %}
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+            {% do _part_track_html.append(")</span>") %}
+            {{ _part_track_html|join("") }}
+        {% endif %}
+        </li>
+    {% else %}
+        <li>Nothing to show!</li>
+    {% endfor %}
     </ul>
 {% endmacro %}
 
@@ -186,7 +218,7 @@
             {% set track = value.0 %}
             {% set track_type = track_type_for_show(track) %}
 
-            <li id="track-{{ track.instance_id }}"><a href="/en/track/{{ track.namespace.1 }}/{{track.namespace.2 }}.html{% if instance_uuid %}#{{ instance_uuid }}{% endif %}">{% if _with_counter != 0 %}【{{ value.1 }}】{% endif %}{{ track_type }} {{ track.no }}. {{ track.name.realname.en }}</a> by {{ track.composer.nickname }}</li>
+            <li id="track-{{ track.instance_id }}"><a href="/en/track/{{ track.namespace.1 }}/{{track.namespace.2 }}.html{% if instance_uuid %}#{{ instance_uuid }}{% endif %}">{% if _with_counter != 0 or _with_counter %}【{{ value.1 }}】{% endif %}{{ track_type }} {{ track.no }}. {{ track.name.realname.en }}</a> by {{ track.composer.nickname }}</li>
         {% else %}
             <li>Nothing to show!</li>
         {% endfor %}
@@ -217,7 +249,7 @@
     </ul>
 {% endmacro %}
 
-{% macro output_usedby_character(data_character, instance_id) %}
+{% macro output_usedby_character(data_character, instance_id, output_combat_info, combat_leader_pos) %}
     <ul>
         {% for char in data_character.character %}
             {% if char.filetype == 52 %}
@@ -228,11 +260,23 @@
             </li>
             {% else %}
             <li>
+                {% if output_combat_info and output_combat_info == "True" %}
+                    {% if loop.index - 1 == combat_leader_pos %}<img src="/static/images/ui/Image_Conquest_Leader.png" class="story-battle-leader" />{% endif %}
+                    <span><b class="{{ get_stu_type_text_color_css(char.combatant_info.squad_type.type) }}">{{ char.combatant_info.squad_type.lang.en }}</b>&nbsp;&#124;</span>
+                {% endif %}
                 <img src="/static/images/schoolicon/School_Icon_{{ char.school_id|upper }}_W.png" class="invert-light schoolicon-p">
-                <a href="/en/character/student/{{ char.name.path_name|lower }}/{% if instance_id %}#{{ instance_id }}{% endif %}">
-                    <img src="/static/images/student/icon/{{ char.image.collection_texture }}.png" class="icon-stu"/>{{ char.name.personal_name.en }}
-                </a>
-                &nbsp;<span>[{{ char.club.en }}]</span>
+                <span>
+                    <a href="/en/character/student/{{ char.name.path_name|lower }}/{% if instance_id %}#{{ instance_id }}{% endif %}">
+                        <img src="/static/images/student/icon/{{ char.image.collection_texture }}.webp" class="icon-stu"/>{{ char.name.personal_name.en }}
+                    </a>
+                </span>
+                {% if output_combat_info and output_combat_info == "True" %}
+                    <span>&nbsp;
+                        <span class="{{ get_stu_type_text_color_css(char.combatant_info.attack_type.type) }}">{{ char.combatant_info.attack_type.lang.en }}</span>/<span class="{{ get_stu_type_text_color_css(char.combatant_info.armor_type.type) }}">{{ char.combatant_info.armor_type.lang.en }}</span>
+                    </span>
+                {% else %}
+                    <span>&nbsp;[{{ char.club.en }}]</span>
+                {% endif %}
             </li>
             {% endif %}
         {% else %}
@@ -256,7 +300,7 @@
             {% else %}
                 <img src="/static/images/schoolicon/School_Icon_{{ char.school_id|upper }}_W.png" class="invert-light schoolicon-p">
                 <a href="/en/character/student/{{ char.name.path_name|lower }}/{% if instance_id %}#{{ instance_id }}{% endif %}">
-                    <img src="/static/images/student/icon/{{ char.image.collection_texture }}.png" class="icon-stu"/>{{ char.name.personal_name.en }}
+                    <img src="/static/images/student/icon/{{ char.image.collection_texture }}.webp" class="icon-stu"/>{{ char.name.personal_name.en }}
                 </a>
                 &nbsp;<span>[{{ char.club.en }}]</span>
             {% endif %}
@@ -267,8 +311,20 @@
     </ul>
 {% endmacro %}
 
-{% macro get_ordinal_number(number) %}{% if number == 1 %}1st{% elif number == 2 %}2nd{% elif number == 3 %}3rd{% else %}{{ number }}th{% endif %}{% endmacro %}
-
 {% macro get_social_for_composer(composer) %}
     <a href="{{ composer.contact.url.value }}"><img src="/static/images/social/{{ composer.contact.platform.en }}.png" class="social-logo">{{ composer.contact.url.platform.en }}: {{ composer.nickname }}</a>
+{% endmacro %}
+
+{% macro track_version_video_player(versions) %}
+    {% for version in versions %}
+        {% set _version_index = loop.index %}
+
+        <h3>{{ version.desc.en }}</h3>
+        {% for url in version.url %}
+            <div onclick="play_video('{{ url.value }}', 'track-video-{{ _version_index }}-{{ loop.index }}')" id="track-video-{{ _version_index }}-{{ loop.index }}" class="track-video-div">
+                <p><img src="/static/images/social/{{ url.platform.en }}.png" class="social-logo">{{ url.platform.en }} ({{ url.value }})</p>
+            </div>
+            <div id="track-video-{{ _version_index }}-{{ loop.index }}-container"></div>
+        {% endfor %}
+    {% endfor %}
 {% endmacro %}

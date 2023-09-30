@@ -4,6 +4,11 @@
 {% block title %}全部任务{% endblock title %}
 {% block article_content %}
     <h2>{{ battle.name.zh_cn }}</h2>
+    {% if battle.image[0].value != "" %}
+        {# assume that everything's filled up once the first is filled #}
+        <img src="{{ battle.image[0].value }}" class="all-battle-image">
+        <img src="{{ battle.image[0].value }}" class="all-battle-image">
+    {% endif %}
     {% if battle.filetype == -44 %}
         {# For Event Battle #}
         <p>此页显示所有 活动“{{ auto_zhcn_gen(battle.parent_data.last_parent.name) }}” 的所有任务</p>

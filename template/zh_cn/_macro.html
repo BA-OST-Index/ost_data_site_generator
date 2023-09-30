@@ -2,6 +2,8 @@
 
 {%- macro auto_zhcn_gen(data) -%}{%- if "zh_cn" in data -%}{{ data.zh_cn }}{%- else -%}{{ multi_zhcn_gen(data) }}{%- endif -%}{%- endmacro -%}
 
+{% macro get_stu_type_text_color_css(text) %}{% if text == "Explosion" or text == "LightArmor" %}text-damage-explosive{% elif text == "Pierce" or text == "HeavyArmor" %}text-damage-piercing{% elif text == "Mystic" or text == "Unarmed" %}text-damage-mystic{% elif text == "Main" %}text-role-striker{% elif text == "Support" %}text-role-special{% else %}text-damage-sonic{% endif %}{% endmacro %}
+
 {% set nothing_to_show = "无内容可显示！" %}
 {% set current_lang = "zh_cn" %}
 
@@ -15,6 +17,10 @@
 
 {% macro track_type_for_show(track) %}{% if track.track_type == 0 %}OST{% elif track.track_type == 1 %}短篇动画{% elif track.track_type == 2 %}官方动画{% else %}其它{% endif %}{% endmacro %}
 
+{% macro get_ordinal_number(number) %}{% if number == 1 %}1st{% elif number == 2 %}2nd{% elif number == 3 %}3rd{% else %}{{ number }}th{% endif %}{% endmacro %}
+
+{% macro replace_newline_for_p(text, class_name) %}{{ text|replace("\n\n", '</p><br class="' + class_name + '-br"/><p class="' + class_name + '">')|replace("\n", '</p><p class="' + class_name + '">') }}{% endmacro %}
+
 {% macro output_usedby_story(data_story, instance_uuid, instance_key) %}
     <ul>
         {% for key, value in data_story.items() %}
@@ -23,7 +29,7 @@
             {% if value.filetype == 15 %}
                 {% set target_url = "/" + current_lang + "/character/student/" + value.pos.student|string|lower + "/bond/" + value.pos.no|string + ".html" %}
                 <a href="{{ target_url }}">
-                    <img src="/static/images/student/icon/{{ value.student.image.collection_texture }}.png" class="icon-stu"/>{{ auto_zhcn_gen(value.student.name.personal_name) }}的第{{ value.pos.no }}个羁绊故事：{{ auto_zhcn_gen(value.name) }}
+                    <img src="/static/images/student/icon/{{ value.student.image.collection_texture }}.webp" class="icon-stu"/>{{ auto_zhcn_gen(value.student.name.personal_name) }}的第{{ value.pos.no }}个羁绊故事：{{ auto_zhcn_gen(value.name) }}
                 </a>
             {% elif value.filetype == 14 %}
                 {% set target_url = "/" + current_lang + "/event/" + value.pos.event_id|string + "/story/" + value.pos.segment|string + ".html" %}
@@ -56,10 +62,20 @@
                     {% set _loop_index = loop.index %}
                     {% for part2 in part[instance_key] %}
                         {% if part2.uuid == instance_uuid %}
-                            {% if _part_track_html|length == 0 %}
-                                {% do _part_track_html.append('<span>&nbsp;(出现于<a href="' + target_url + '#story-part-' + _loop_index|string + '"><i>' + auto_zhcn_gen(part.name) + '</i></a>') %}
+                            {% if part.is_memory %}
+                                {% set ele_class = 'class="text-momo"' %}
+                            {% elif part.is_battle %}
+                                {% set ele_class = 'class="text-danger"' %}
+                            {% elif part.is_momotalk %}
+                                {% set ele_class = 'class="text-black"' %}
                             {% else %}
-                                {% do _part_track_html.append('，<a href="' + target_url + '#story-part-' + _loop_index|string + '"><i>' + auto_zhcn_gen(part.name) + '</i></a>') %}
+                                {% set ele_class = 'class="text-primary"' %}
+                            {% endif %}
+
+                            {% if _part_track_html|length == 0 %}
+                                {% do _part_track_html.append('<span>&nbsp;(出现于<a href="' + target_url + '#story-part-' + _loop_index|string + '" ' + ele_class + '><i>[' + _loop_index|string + '] ' + auto_zhcn_gen(part.name) + '</i></a>') %}
+                            {% else %}
+                                {% do _part_track_html.append('，<a href="' + target_url + '#story-part-' + _loop_index|string + '" ' + ele_class + '><i>[' + _loop_index|string + '] ' + auto_zhcn_gen(part.name) + '</i></a>') %}
                             {% endif %}
                             {% break %}
                         {% endif %}
@@ -198,7 +214,7 @@
             {% set track = value.0 %}
             {% set track_type = track_type_for_show(track) %}
 
-            <li id="track-{{ track.instance_id }}"><a href="/{{ current_lang }}/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}.html{% if instance_uuid %}#{{ instance_uuid }}{% endif %}">{% if _with_counter != 0 %}【{{ value.1 }}】{% endif %}{{ track_type }} {{ track.no }}. {{ track.name.realname.en }} ({{ track.name.realname.zh_cn }})</a> by {{ track.composer.nickname }}</li>
+            <li id="track-{{ track.instance_id }}"><a href="/{{ current_lang }}/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}.html{% if instance_uuid %}#{{ instance_uuid }}{% endif %}">{% if _with_counter != 0 or _with_counter %}【{{ value.1 }}】{% endif %}{{ track_type }} {{ track.no }}. {{ track.name.realname.en }} {% if track.name.realname.zh_cn %}({{ track.name.realname.zh_cn }}){% endif %}</a> by {{ track.composer.nickname }}</li>
         {% else %}
             <li>{{ nothing_to_show }}</li>
         {% endfor %}
@@ -210,7 +226,7 @@
         {% for value in data_track %}
             {% set track_type = track_type_for_show(value) %}
 
-            <li id="track-{{ value.instance_id }}"><a href="/{{ current_lang }}/track/{{ value.namespace.1 }}/{{ value.namespace.2 }}.html{% if instance_id %}#{{ instance_id }}{% endif %}">{{ track_type }} {{ value.no }}. {{ value.name.realname.en }} ({{ value.name.realname.zh_cn }})</a> by {{ value.composer.nickname }}</li>
+            <li id="track-{{ value.instance_id }}"><a href="/{{ current_lang }}/track/{{ value.namespace.1 }}/{{ value.namespace.2 }}.html{% if instance_id %}#{{ instance_id }}{% endif %}">{{ track_type }} {{ value.no }}. {{ value.name.realname.en }} {% if value.name.realname.zh_cn %}({{ value.name.realname.zh_cn }}){% endif %}</a> by {{ value.composer.nickname }}</li>
         {% else %}
             <li>{{ nothing_to_show }}</li>
         {% endfor %}
@@ -229,7 +245,7 @@
     </ul>
 {% endmacro %}
 
-{% macro output_usedby_character(data_character, instance_id) %}
+{% macro output_usedby_character(data_character, instance_id, output_combat_info, combat_leader_pos) %}
     <ul>
         {% for char in data_character.character %}
             {% if char.filetype == 52 %}
@@ -240,11 +256,21 @@
             </li>
             {% else %}
             <li>
+                {% if output_combat_info and output_combat_info == "True" %}
+                    {% if loop.index - 1 == combat_leader_pos %}<img src="/static/images/ui/Image_Conquest_Leader.png" class="story-battle-leader" />{% endif %}
+                    <span><b class="{{ get_stu_type_text_color_css(char.combatant_info.squad_type.type) }}">{{ auto_zhcn_gen(char.combatant_info.squad_type.lang) }}</b>&nbsp;&#124;</span>
+                {% endif %}
                 <img src="/static/images/schoolicon/School_Icon_{{ char.school_id|upper }}_W.png" class="invert-light schoolicon-p">
                 <a href="/{{ current_lang }}/character/student/{{ char.name.path_name|lower }}/{% if instance_id %}#{{ instance_id }}{% endif %}">
-                    <img src="/static/images/student/icon/{{ char.image.collection_texture }}.png" class="icon-stu"/>{{ auto_zhcn_gen(char.name.personal_name) }}
+                    <img src="/static/images/student/icon/{{ char.image.collection_texture }}.webp" class="icon-stu"/>{{ auto_zhcn_gen(char.name.personal_name) }}
                 </a>
-                &nbsp;<span>[{{ auto_zhcn_gen(char.club) }}]</span>
+                {% if output_combat_info and output_combat_info == "True" %}
+                    <span>&nbsp;
+                        <span class="{{ get_stu_type_text_color_css(char.combatant_info.attack_type.type) }}">{{ auto_zhcn_gen(char.combatant_info.attack_type.lang) }}</span>/<span class="{{ get_stu_type_text_color_css(char.combatant_info.armor_type.type) }}">{{ auto_zhcn_gen(char.combatant_info.armor_type.lang) }}</span>
+                    </span>
+                {% else %}
+                    <span>&nbsp;[{{ auto_zhcn_gen(char.club) }}]</span>
+                {% endif %}
             </li>
             {% endif %}
         {% else %}
@@ -268,7 +294,7 @@
             {% else %}
                 <img src="/static/images/schoolicon/School_Icon_{{ char.school_id|upper }}_W.png" class="invert-light schoolicon-p">
                 <a href="/{{ current_lang }}/character/student/{{ char.name.path_name|lower }}/{% if instance_id %}#{{ instance_id }}{% endif %}">
-                    <img src="/static/images/student/icon/{{ char.image.collection_texture }}.png" class="icon-stu"/>{{ auto_zhcn_gen(char.name.personal_name) }}
+                    <img src="/static/images/student/icon/{{ char.image.collection_texture }}.webp" class="icon-stu"/>{{ auto_zhcn_gen(char.name.personal_name) }}
                 </a>
                 &nbsp;<span>[{{ auto_zhcn_gen(char.club) }}]</span>
             {% endif %}
@@ -279,8 +305,20 @@
     </ul>
 {% endmacro %}
 
-{% macro get_ordinal_number(number) %}{% if number == 1 %}1st{% elif number == 2 %}2nd{% elif number == 3 %}3rd{% else %}{{ number }}th{% endif %}{% endmacro %}
-
 {% macro get_social_for_composer(composer) %}
     <a href="{{ composer.contact.url.value }}"><img src="/static/images/social/{{ composer.contact.platform.en }}.png" class="social-logo">{{ composer.contact.url.platform.zh_cn }}: {{ composer.nickname }}</a>
+{% endmacro %}
+
+{% macro track_version_video_player(versions) %}
+    {% for version in versions %}
+        {% set _version_index = loop.index %}
+
+        <h3>{{ version.desc.zh_cn }}</h3>
+        {% for url in version.url %}
+            <div onclick="play_video('{{ url.value }}', 'track-video-{{ _version_index }}-{{ loop.index }}')" id="track-video-{{ _version_index }}-{{ loop.index }}" class="track-video-div">
+                <p><img src="/static/images/social/{{ url.platform.en }}.png" class="social-logo">{{ url.platform.zh_cn }} ({{ url.value }})</p>
+            </div>
+            <div id="track-video-{{ _version_index }}-{{ loop.index }}-container"></div>
+        {% endfor %}
+    {% endfor %}
 {% endmacro %}

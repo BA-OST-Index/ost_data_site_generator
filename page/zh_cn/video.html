@@ -1,11 +1,18 @@
 {% extends "template/zh_cn/base.html" %}
-{% from 'template/zh_cn/_macro.html' import output_usedby_track_list %}
+{% from 'template/zh_cn/_macro.html' import output_usedby_track_list, track_version_video_player %}
 
 {% block title %}视频/{{ video.name.zh_cn }}{% endblock title %}
+{% block other_head %}
+    <script src="/static/js/track_player.js"></script>
+{% endblock other_head %}
 {% block article_content %}
     <h1>视频/{{ video.name.zh_cn }}</h1>
     {% include "template/zh_cn/infobox/video.html" %}
     <p><b>{{ video.name.zh_cn }}</b> 是一个与蔚蓝档案相关的视频。</p>
     <h2>曲目信息</h2>
     {{ output_usedby_track_list(video.track, video.uuid) }}
+    <h2>在线播放视频</h2>
+    <p>提示：为避免潜在版权侵犯风险，我们此处使用的<b>第三方嵌入式网页播放器</b>来提供服务。你也可以在信息栏（infobox）中手动访问它们。</p>
+    <p>单击下列链接时，您也同时同意各平台/服务提供商的对应服务条款。</p>
+    {{ track_version_video_player(video.version) }}
 {% endblock %}

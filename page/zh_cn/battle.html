@@ -22,7 +22,7 @@
         {% set track = battle.track %}
     {% endif %}
     <ul>
-        <li>曲子：<a href="/zh_cn/track/{{ track.namespace.1 }}/{{ track.no }}.html#{{ battle.uuid }}">{{ track.name.realname.en }} ({{ track.name.realname.zh_cn }})</a> (No.{{ track.no }})</li>
+        <li>曲子：<a href="/zh_cn/track/{{ track.namespace.1 }}/{{ track.no }}.html#{{ battle.uuid }}">{{ track.no }}. {{ track.name.realname.en }} {% if track.name.realname.zh_cn %}({{ track.name.realname.zh_cn }}){% endif %}</a></li>
         <li>简介：{{ track.desc.zh_cn }}</li>
         <li>作曲家：{{ track.composer.nickname }} ({{ get_social_for_composer(track.composer) }})</li>
     </ul>

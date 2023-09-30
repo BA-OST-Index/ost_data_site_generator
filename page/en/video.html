@@ -1,11 +1,18 @@
 {% extends "template/en/base.html" %}
-{% from 'template/en/_macro.html' import output_usedby_track_list %}
+{% from 'template/en/_macro.html' import output_usedby_track_list, track_version_video_player %}
 
 {% block title %}Video/{{ video.name.en }}{% endblock title %}
+{% block other_head %}
+    <script src="/static/js/track_player.js"></script>
+{% endblock other_head %}
 {% block article_content %}
     <h1>Video/{{ video.name.en }}</h1>
     {% include "template/en/infobox/video.html" %}
     <p><b>{{ video.name.en }}</b> is a video related to Blue Archive.</p>
     <h2>Track Information</h2>
     {{ output_usedby_track_list(video.track, video.uuid) }}
+    <h2>Play Video Here</h2>
+    <p>Tips: In order to avoid potential copyright infringement, we're using <b>third-party embedded web players</b> to provide services. You can also manually visit them by clicking the links in the infobox.</p>
+    <p>By clicking the links below, you agree to the Terms of Services of the corresponding platforms/service providers.</p>
+    {{ track_version_video_player(video.version) }}
 {% endblock %}

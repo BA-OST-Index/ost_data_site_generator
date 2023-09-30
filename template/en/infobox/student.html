@@ -3,7 +3,7 @@
         <td colspan="2" class="infobox-title">{{ char.student.name.family_name.en }} {{ char.student.name.personal_name.en }}</td>
     </tr>
     <tr>
-        <td colspan="2" class="infobox-icon"><img width="95%" src="/static/images/student/portrait/Portrait_{{ char.student.name.dev_name }}.webp"><br/><br/><img width="50%" src="/static/images/student/icon/{{ char.student.image.collection_texture }}.png" /></td>
+        <td colspan="2" class="infobox-icon"><img width="95%" src="/static/images/student/portrait/{{ char.student.image.collection_texture }}.webp"><br/><br/><img width="50%" src="/static/images/student/icon/{{ char.student.image.collection_texture }}.webp" /></td>
     </tr>
     <tr><td colspan="2" class="infobox-subtitle">General Information</td></tr>
     <tr>
@@ -16,7 +16,7 @@
     </tr>
     <tr>
         <td class="infobox-col-title">Birthday</td>
-        <td class="infobox-col-value">{{ char.student.birthday.en }}</td>
+        <td class="infobox-col-value">{{ char.student.birthday.localized.en }}</td>
     </tr>
     <tr>
         <td class="infobox-col-title">School/Club Info</td>
