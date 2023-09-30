@@ -17,7 +17,7 @@
     {% elif video %}{% set entry_ = video %}
     {% endif %}
 
-    {% if entry_ and entry_.filetype > 0 and entry_.filetype not in [52, 16] %}
+    {% if entry_ and entry_.filetype > 0 and entry_.filetype not in [52, 15] %}
         <p class="navi-p"><a href=".">&lt;-- Return to the previous directory</a></p>
     {% else %}
         <p class="navi-p"><a href="..">&lt;-- Return to the previous directory</a></p>

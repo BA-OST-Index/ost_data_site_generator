@@ -3,9 +3,11 @@
     <tr>
         <td colspan="2" class="infobox-title">{{ auto_zhcn_gen(story.name) }}</td>
     </tr>
+    {% if story.image.value != "" %}
     <tr>
         <td colspan="2" class="infobox-icon"><img src="{{ story.image.value }}" /></td>
     </tr>
+    {% endif %}
     <tr><td colspan="2" class="infobox-subtitle">基本信息</td></tr>
     <tr>
         <td class="infobox-col-title">名称</td>

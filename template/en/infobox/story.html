@@ -6,9 +6,11 @@
     <tr>
         <td colspan="2" class="infobox-title">{{ story.name.en }}</td>
     </tr>
+    {% if story.image.value != "" %}
     <tr>
         <td colspan="2" class="infobox-icon"><img src="{{ story.image.value }}" /></td>
     </tr>
+    {% endif %}
     <tr><td colspan="2" class="infobox-subtitle">General Information</td></tr>
     <tr>
         <td class="infobox-col-title">Story Name</td>
