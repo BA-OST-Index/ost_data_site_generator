@@ -356,7 +356,7 @@
 
             {% if char.filetype == 52 %}
             <li>
-                <a href="/{{ current_lang }}/character/npc/{{ char.namespace[-1]|lower }}/{% if html_id %}#{{ html_id }}{% endif %}">{{ auto_zhcn_gen(char.name) }}</a>
+                <a href="/{{ current_lang }}/character/npc/{{ char.namespace[-1]|lower }}/{% if html_id %}#{{ html_id }}{% endif %}" {% if enable_tooltip == 1 %}onmouseover="showTooltip(this, '{{ tooltip_id }}')"{% endif %}>{{ auto_zhcn_gen(char.name) }}</a>
             </li>
             {% else %}
             <li>
