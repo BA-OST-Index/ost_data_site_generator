@@ -1,5 +1,5 @@
 {% extends "template/zh_cn/base.html" %}
-{% from 'template/zh_cn/_macro.html' import output_usedby_story, output_usedby_track, auto_zhcn_gen, nothing_to_do, replace_newline_for_p %}
+{% from 'template/zh_cn/_macro.html' import output_usedby_story, output_usedby_track, auto_zhcn_gen, nothing_to_do, replace_newline_for_p, output_relatedto_character %}
 
 {% block title %}学生/{{ char.student.name.name.zh_cn_jp }}{% endblock title %}
 {% block article_content %}
@@ -41,5 +41,11 @@
     <h2>其它故事</h2>
     {{ output_usedby_story(char.student.used_by.data_story, char.student.uuid, "character") }}
     <h2>曲目</h2>
-    {{ output_usedby_track(char.student.used_by.data_track, 1, char.student.uuid) }}
+    {{ output_usedby_track(char.student.used_by.data_track, 1, char.student.uuid, char.student.uuid, "character") }}
+
+    <h2>相关人物</h2>
+    <h3>其它版本</h3>
+    {{ output_relatedto_character({"character": char.student.related_to.character_variant}, "True") }}
+    <h3>其它人物</h3>
+    {{ output_relatedto_character({"character": char.student.related_to.character_other}, "True") }}
 {% endblock %}

@@ -9,5 +9,5 @@
     <h3>Stories</h3>
     {{ output_usedby_story(background.used_by.data_story, background.uuid, "background") }}
     <h3>Tracks</h3>
-    {{ output_usedby_track(background.used_by.data_track, 1, background.uuid) }}
+    {{ output_usedby_track(background.used_by.data_track, 1, background.uuid, background.uuid, "background") }}
 {% endblock %}

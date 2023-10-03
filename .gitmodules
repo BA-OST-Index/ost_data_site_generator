@@ -6,3 +6,7 @@
 	path = data_html
 	url = https://github.com/BA-OST-Index/ost_data_site.git
 	branch = main
+[submodule "static"]
+	path = static
+	url = https://github.com/BA-OST-Index/ost_data_site_static.git
+	branch = main

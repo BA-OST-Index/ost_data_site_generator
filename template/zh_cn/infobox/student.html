@@ -1,4 +1,4 @@
-{% from 'template/zh_cn/_macro.html' import auto_zhcn_gen %}
+{% from 'template/zh_cn/_macro.html' import auto_zhcn_gen, output_relatedto_character %}
 
 <table id="infobox">
     <tr>
@@ -27,5 +27,14 @@
     <tr>
         <td class="infobox-col-title">爱好</td>
         <td class="infobox-col-value">{{ auto_zhcn_gen(char.student.hobby) }}</td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">相关人物</td></tr>
+    <tr>
+        <td class="infobox-col-title">其它版本</td>
+        <td class="infobox-col-value">{{ output_relatedto_character({"character": char.student.related_to.character_variant}, "False") }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">其它人物</td>
+        <td class="infobox-col-value">{{ output_relatedto_character({"character": char.student.related_to.character_other}, "False") }}</td>
     </tr>
 </table>

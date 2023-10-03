@@ -1,3 +1,4 @@
+{% from "template/en/_macro.html" import output_relatedto_character %}
 <table id="infobox">
     <tr>
         <td colspan="2" class="infobox-title">{{ char.student.name.family_name.en }} {{ char.student.name.personal_name.en }}</td>
@@ -25,5 +26,14 @@
     <tr>
         <td class="infobox-col-title">Hobby</td>
         <td class="infobox-col-value">{{ char.student.hobby.en }}</td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">Related Characters</td></tr>
+    <tr>
+        <td class="infobox-col-title">Variants</td>
+        <td class="infobox-col-value">{{ output_relatedto_character({"character": char.student.related_to.character_variant}, "False") }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">Other Characters</td>
+        <td class="infobox-col-value">{{ output_relatedto_character({"character": char.student.related_to.character_other}, "False") }}</td>
     </tr>
 </table>

@@ -20,8 +20,14 @@
         </div>
 
         <div>
-            <span>Choose another language? Click <a href="/">here</a>.</span>
-            <br />
+            <span>You can switch page language here:</span>
+            <select id="lang_switcher" onchange="lang_switch()">
+                <option value="en"><span lang="en">English</span></option>
+                <option value="zh_cn" lang="zh-Hans">中文(简体)</option>
+                <option value="zh_tw" lang="zh-Hant">中文(繁體)</option>
+            </select>
+            <script>lang_switch_show();</script>
+            <br /><br />
         </div>
 
         <div class="git-wiki-page-list">

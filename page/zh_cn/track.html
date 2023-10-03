@@ -33,7 +33,7 @@
     <h2>使用信息</h2>
     <p>此处显示引用了这首曲子的实例。</p>
     <h3>背景</h3>
-    {{ output_usedby_background(track.used_by.data_background, "track-" + track.instance_id) }}
+    {{ output_usedby_background(track.used_by.data_background, "track-" + track.instance_id, track.instance_id, "track") }}
     <h3>故事</h3>
     {{ output_usedby_story(track.used_by.data_story, track.uuid, "track") }}
     <h3>战斗</h3>
@@ -44,5 +44,5 @@
     {{ output_usedby_video(track.used_by.data_video, "track-" + track.instance_id) }}
     <h3>人物角色</h3>
     <p>注意：以下列表主要基于引用次数（见下表的数字）进行排序。</p>
-    {{ output_usedby_character_dict(track.used_by.data_character, "track-" + track.instance_id) }}
+    {{ output_usedby_character_dict(track.used_by.data_character, "track-" + track.instance_id, track.instance_id, "track") }}
 {% endblock article_content %}

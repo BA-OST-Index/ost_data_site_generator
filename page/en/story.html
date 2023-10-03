@@ -39,14 +39,14 @@
         <p>{{ part.desc.en }}</p>
         <h4>Characters</h4>
         {% if part.is_battle %}
-            {{ output_usedby_character(part, "story-" + story.instance_id, "True", part.battle_leader_pos) }}
+            {{ output_usedby_character(part, "story-" + story.instance_id, story.instance_id, "story", "True", part.battle_leader_pos) }}
         {% else %}
-            {{ output_usedby_character(part, "story-" + story.instance_id) }}
+            {{ output_usedby_character(part, "story-" + story.instance_id, story.instance_id, "story") }}
         {% endif %}
         <h4>Tracks</h4>
-        {{ output_usedby_track_list(part.track, "story-" + story.instance_id) }}
+        {{ output_usedby_track_list(part.track, "story-" + story.instance_id, "story", story.instance_id) }}
         <h4>Backgrounds</h4>
-        {{ output_usedby_background_list(part.background, "story-" + story.instance_id) }}
+        {{ output_usedby_background_list(part.background, "story-" + story.instance_id, story.instance_id, "story") }}
     {% else %}
         <p>Nothing to show!</p>
     {% endfor %}

@@ -1,0 +1,359 @@
+{# JS代码生成 #}
+{% macro tooltip_add_data_js(data) %}
+    <script>
+        add_tooltip_data({ {% for key, value in data.items() %}'{{ key }}': '{{ value|page_minify_html|js_html_string_safe }}',{% endfor %} });
+    </script>
+{% endmacro %}
+
+{# 中文多语言输出 #}
+{# 魔改自相同函数代码（基本上就是加了个js_string_safe） #}
+{% macro multi_zhcn_gen(data) %}<span class="lang-zh-cn-cn">{{ data.zh_cn_cn|js_string_safe }}</span><span class="lang-zh-cn-splitter">(zh_cn_cn)&nbsp;/&nbsp;</span><span class="lang-zh-cn-tw">{{ data.zh_cn_tw|js_string_safe }}</span><span class="lang-zh-cn-splitter">(zh_cn_tw)&nbsp;/&nbsp;</span><span class="lang-zh-cn-jp">{{ data.zh_cn_jp|js_string_safe }}</span><span class="lang-zh-cn-splitter">(zh_cn_jp)&nbsp;</span>{% endmacro %}
+{%- macro auto_zhcn_gen(data) -%}{%- if "zh_cn" in data -%}{{ data.zh_cn }}{%- else -%}{{ multi_zhcn_gen(data) }}{%- endif -%}{%- endmacro -%}
+
+{# ----------------------------------------------------------------------------------------------------- #}
+{# ----------------------------------------------------------------------------------------------------- #}
+{# ----------------------------------------------------------------------------------------------------- #}
+
+{# 常量 #}
+{% set MAX_CHAR_DISPLAY = 11 %} {# one-indexed, total 10 #}
+{% set MAX_CHAR_DISPLAY_FOR_TRACK = 6 %} {# one-indexed, total 5 (for track usage) #}
+{% set MAX_TRACK_DISPLAY = 6 %} {# one-indexed, total 5 #}
+{% set MAX_STORY_DISPLAY = 6 %} {# one-indexed, total 6 #}
+{% set nothing_to_show = "无内容可显示！" %}
+
+{# 英语首字母大写 #}
+{% macro word_case(text) %}{{text[0]|upper}}{{text[1:]}}{% endmacro %}
+
+{# 曲子类型显示 #}
+{# 复制自同名macro #}
+{% macro track_type_for_show(track_type) %}{% if track_type == 0 %}OST{% elif track_type == 1 %}短篇动画{% elif track_type == 2 %}动画{% else %}其它{% endif %}{% endmacro %}
+
+{# 统一人物<a>生成逻辑 #}
+{# 改自 output_usedby_character #}
+{% macro gen_char_anchor(char, with_school) %}
+    {% if with_school and with_school != 0 %}
+        {% set enable_school = 1 %}
+    {% else %}
+        {% set enable_school = 0 %}
+    {% endif %}
+
+    {% if char.filetype == 52 %}
+        <a href="/zh_cn/character/npc/{{ char.namespace[-1]|lower }}/">{{ auto_zhcn_gen(char.name) }}</a>
+    {% else %}
+        {% if enable_school == 1 %}
+            <img src="/static/images/schoolicon/School_Icon_{{ char.school_id|upper }}_W.png" class="schoolicon-p">
+        {% endif %}
+        <span>
+            <a href="/zh_cn/character/student/{{ char.name.path_name|lower }}/">
+                <img src="/static/images/student/icon/{{ char.image.collection_texture }}.webp" class="icon-stu"/>{{ auto_zhcn_gen(char.name.name) }}
+            </a>
+        </span>
+    {% endif %}
+{% endmacro %}
+
+{# 统一曲子<a>生成逻辑 #}
+{# 改自 output_usedby_track #}
+{% macro gen_track_anchor(track, enable_author) %}
+    <a href="/zh_cn/track/{{ track.namespace.1 }}/{{track.namespace.2 }}.html{% if instance_uuid %}#{{ instance_uuid }}{% endif %}">{{ track_type_for_show(track.track_type) }} {{ track.no }}. {{ track.name.realname.en }}</a>{% if enable_author and enable_author != 0 %} by {{ track.composer.nickname }}{% endif %}
+{% endmacro %}
+
+{# 统一故事<a>生成逻辑 #}
+{# 改自同名函数 #}
+{% macro gen_story_anchor(story) %}
+    {% set value = story %}
+    {% if value.filetype == 15 %}
+        {% set target_url = "/zh_cn/character/student/" + value.pos.student|string|lower + "/bond/" + value.pos.no|string + ".html" %}
+        <a href="{{ target_url }}">
+            <img src="/static/images/student/icon/{{ value.student.image.collection_texture }}.webp" class="icon-stu"/>{{ auto_zhcn_gen(value.student.name.name) }}的第{{ value.pos.no }}个羁绊故事：{{ auto_zhcn_gen(value.name) }}
+        </a>
+    {% elif value.filetype == 14 %}
+        {% set target_url = "/zh_cn/event/" + value.pos.event_id|string + "/story/" + value.pos.segment|string + ".html" %}
+        <a href="{{ targer_url }}">活动 {{ value.parent_data.0.name.zh_cn }} 的第{{ value.pos.segment }}个故事：{{ auto_zhcn_gen(value.name) }}</a>
+    {% else %}
+        {% if value.filetype == 11 %}
+            {% set story_type = "main" %}
+            {% set story_type_trans = "主线" %}
+        {% elif value.filetype == 12 %}
+            {% set story_type = "side" %}
+            {% set story_type_trans = "支线" %}
+        {% elif value.filetype == 13 %}
+            {% set story_type = "short" %}
+            {% set story_type_trans = "短篇" %}
+        {% else %}
+            {% set story_type = "other" %}
+            {% set story_type_trans = "其它" %}
+        {% endif %}
+        {% set target_url = "/zh_cn/main/story/" + story_type|string + "/" + value.pos.volume|string + "/" + value.pos.chapter|string + "/" + value.pos.segment|string + ".html" %}
+        <a href="{{ target_url }}">{{ story_type_trans }}故事第{{ value.pos.volume }}篇第{{ value.pos.chapter }}章第{{ value.pos.segment }}话：{{ auto_zhcn_gen(value.name) }}</a>
+    {% endif %}
+{% endmacro %}
+
+{# ----------------------------------------------------------------------------------------------------- #}
+{# ----------------------------------------------------------------------------------------------------- #}
+{# ----------------------------------------------------------------------------------------------------- #}
+
+{# 用于StoryInfo（非StoryPartInfo） #}
+{% macro tooltip_storyinfo(story) %}<div class="tooltip-div"><p class="tooltip-title tooltip-ellipsis">{{ auto_zhcn_gen(story.name) }}</p><ul>{% for desc in story.desc %}<li>{{ auto_zhcn_gen(desc) }}</li>{% endfor %}</ul></div>{% endmacro %}
+
+{# 用于Track对StoryPartInfo的显示 #}
+{# 传入的story是StoryInfo，用于显示大故事信息 [Deprecated] #}
+{# 之后的story_part才是用来显示故事小节信息的 #}
+{% macro tooltip_storypart(story, story_part) %}
+    <div class="tooltip-div">
+        <p class="tooltip-title tooltip-ellipsis">{{ auto_zhcn_gen(story_part.name) }}</p>
+        <p>{{ auto_zhcn_gen(story_part.desc) }}</p><hr />
+        <p>{% if story_part.character|length == 0 %}无人物可显示！{% else %}人物：{% for char in story_part.character %}{% if loop.index == MAX_CHAR_DISPLAY %}&nbsp;及更多。{% break %}{% else %}&nbsp;{{ gen_char_anchor(char, 0) }}{% endif %}{% endfor %}{% endif %}</p><hr />
+        <p>{% if story_part.track|length == 0 %}无曲子可显示！{% else %}曲子：{% for track in story_part.track %}{% if loop.index == MAX_TRACK_DISPLAY %}&nbsp;及更多。{% break %}{% else %}&nbsp;{{ gen_track_anchor(track, 0) }}{% endif %}{% endfor %}{% endif %}</p>
+    </div>
+{% endmacro %}
+
+{# 用于Track Story Character对BackgroundInfo的显示 #}
+{# background传入一个由BackgroundInfo #}
+{# instance_id指的是track/story的id(尤指instance_id)，用于过滤 #}
+{# instance_type可选track/story，用于适配不同数据结构 #}
+{# 假设 instance_type="track", instance_id="OST_17" #}
+{# 这一函数应生成使用了这一背景，同时BGM包含（因为不精确到小节）OST_17的故事 #}
+{% macro tooltip_background(background, instance_id, instance_type) %}
+    <div class="tooltip-div">
+        <p class="tooltip-title tooltip-ellipsis">{{ auto_zhcn_gen(background.name) }}</p>
+        <p>{{ auto_zhcn_gen(background.desc) }}</p>
+        <hr />
+        <p class="tooltip-subtitle">故事：</p>
+        <ol class="tooltip-ol">
+            {# 获取数据 #}
+            {% if instance_type != "story" %}
+                {% set loop_data = namespace(data=get_outer_json(instance_id, instance_type), counter=0) %}
+            {% else %}
+                {% set loop_data = namespace(data=get_outer_json(background.filename, "background"), counter=0) %}
+            {% endif %}
+            {# 提取数据 #}
+            {% set outer_data = loop_data.data.used_by.data_story %}
+
+            {# 遍历数据 #}
+            {% for story in outer_data.values() %}
+                {% set story = story.0 %}
+
+                {# 探测各个story的part #}
+                {% for part in story.part %}
+                    {# 确保内层循环终止时，外层也能终止 #}
+                    {% set _end_part_detection = namespace(flag=0) %}
+
+                    {# 探测其background #}
+                    {# 当为story时，直接输出 #}
+                    {# 当为track character时，进行二层探测 #}
+                    {% if instance_type == "story" %}
+                        <li>{{ gen_story_anchor(story) }}</li>
+                        {% set _end_part_detection.flag = 1 %}
+                        {% break %}
+                    {% else %}
+                        {% for bg in part.background %}
+                            {# 如果background的uuid对上了 #}
+                            {% if bg.uuid == background.uuid %}
+                                {# track #}
+                                {% if instance_type == "track" %}
+                                    {% for track in part.track %}
+                                        {% if track.instance_id == instance_id %}
+                                            <li>{{ gen_story_anchor(story) }}</li>
+                                            {% set _end_part_detection.flag = 1 %}
+                                            {% break %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endif %}
+
+                            {% if _end_part_detection.flag == 1 %}
+                                {# 如属实，也提前终止外层 #}
+                                {% break %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+
+                    {# 检测内层循环是否提前终止 #}
+                    {% if _end_part_detection.flag == 1 %}
+                        {# 如属实，也提前终止外层 #}
+                        {% break %}
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </ol>
+    </div>
+{% endmacro %}
+
+{# 用于Background Character对TrackInfo的显示 #}
+{# track传入一个TrackInfo #}
+{# instance_id指的是background/character(实为uuid)/story的instance_id，用于过滤 #}
+{# instance_type可选background/character/story #}
+{% macro tooltip_track(track, instance_id, instance_type) %}
+    <div class="tooltip-div">
+        <p class="tooltip-title tooltip-ellipsis">{{ track_type_for_show(track.track_type) }}&nbsp;{{ track.no }}.&nbsp;{{ track.name.realname.en }}</p><hr />
+
+        <p class="tooltip-subtitle">故事：</p>
+        <ol class="tooltip-ol">
+            {# 获取数据 #}
+            {% set loop_data = namespace(data=get_outer_json(track.instance_id, "track"), counter=0) %}
+
+            {# 提取数据 #}
+            {% set outer_data = loop_data.data.used_by %}
+
+            {# 遍历数据 #}
+            {% for story in outer_data.data_story.values() %}
+                {% set story = story.0 %}
+
+                {# 遍历故事的各part #}
+                {% for part in story.part %}
+                    {% set loop_control = namespace(flag=0) %}
+
+                    {# 先检测音乐 #}
+                    {# 如果instance_type是story的话那就不管 #}
+                    {% if instance_type == "story" %}
+                        <li>{{ gen_story_anchor(story) }}</li>
+                        {% break %}
+                    {% else %}
+                        {% for story_track in part.track %}
+                            {# 检测故事音乐 #}
+                            {% if story_track.instance_id == track.instance_id %}
+                                {# 根据instance的不同显示story #}
+                                {# 检测人物 #}
+                                {% if instance_type == "character" %}
+                                    {% for char in part.character %}
+                                        {# char的uuid == 传入的instance_id #}
+                                        {% if char.filetype != 52 %}
+                                            {# Student #}
+                                            {% if char.uuid == instance_id %}
+                                                <li>{{ gen_story_anchor(story) }}</li>
+                                                {% set loop_control.flag = 1 %}
+                                                {% break %}
+                                            {% endif %}
+                                        {% else %}
+                                            {# NPC #}
+                                            {% if char.namespace[-1] == instance_id %}
+                                                <li>{{ gen_story_anchor(story) }}</li>
+                                                {% set loop_control.flag = 1 %}
+                                                {% break %}
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {# 检测背景 #}
+                                {% elif instance_type == "background" %}
+                                    {% for bg in part.background %}
+                                        {# background的uuid == 传入的instance_id #}
+                                        {% if bg.uuid == instance_id %}
+                                            <li>{{ gen_story_anchor(story) }}</li>
+                                            {% set loop_control.flag = 1 %}
+                                            {% break %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endif %}
+
+                            {% if loop_control.flag == 1 %}
+                                {% break %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if loop_control.flag == 1 %}
+                        {% break %}
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </ol>
+        {% if instance_type == "story" %}
+            <hr />
+            <p class="tooltip-subtitle">人物（前5个最相关）：</p>
+            <ul class="tooltip-ul">
+                {% for char in outer_data.data_character.values() %}
+                    {% if loop.index == MAX_CHAR_DISPLAY_FOR_TRACK %}
+                        {% break %}
+                    {% endif %}
+                    <li>{{ gen_char_anchor(char.0) }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+
+{# 用于Story Track对CharacterInfo的显示 #}
+{# character传入CharacterInfo，应该是dict #}
+{% macro tooltip_character(character, instance_id, instance_type) %}
+    <div class="tooltip-div">
+        {# 获取数据 #}
+        {% if character.filetype == 52 %}
+            {# NPC #}
+            {% set loop_data = namespace(data=get_outer_json(character.namespace[-1], "character")) %}
+        {% else %}
+            {% set loop_data = namespace(data=get_outer_json(character.uuid, "character")) %}
+        {% endif %}
+        {# 提取数据 #}
+        {% if loop_data.data.filetype == 52 %}
+            {# NPC #}
+            {% set char_data = loop_data.data %}
+            {% set char_type = "npc" %}
+        {% else %}
+            {# Student #}
+            {% set char_data = loop_data.data.student %}
+            {% set char_type = "stu" %}
+        {% endif %}
+        {% set outer_data = char_data.used_by %}
+
+        {# 大标题 #}
+        {% if char_type == "npc" %}
+            <p class="tooltip-title tooltip-ellipsis">{{ auto_zhcn_gen(char_data.name) }}</p>
+        {% else %}
+            <p class="tooltip-title tooltip-ellipsis">{{ auto_zhcn_gen(char_data.name.name) }}</p>
+        {% endif %}
+        <hr />
+
+        <p class="tooltip-subtitle">故事：</p>
+        {# 同时关联的故事 #}
+        <ol class="tooltip-ol">
+            {% if instance_type == "story" %}
+                {# 是story的话，单纯显示人物在的Story #}
+                {% for story in outer_data.data_story.values() %}
+                    {% set story = story.0 %}
+                    <li>{{ gen_story_anchor(story) }}</li>
+                {% endfor %}
+            {% elif instance_type == "track" %}
+                {# 非story，需要额外验证 #}
+                {% for story in outer_data.data_story.values() %}
+                    {% set story = story.0 %}
+
+                    {% for story_part in story.part %}
+                        {% set _end_part_detection = namespace(flag=0) %}
+
+                        {% for track in story_part.track %}
+                            {# 如果曲子存在于故事中 #}
+                            {% if instance_id == track.instance_id %}
+                                {# 如果人物也存在于故事中 #}
+                                {% for story_character in story_part.character %}
+                                    {% if char_type == "stu" %}
+                                        {% if story_character.id == char_data.id %}
+                                            <li>{{ gen_story_anchor(story) }}</li>
+                                            {% set _end_part_detection.flag = 1 %}
+                                            {% break %}
+                                        {% endif %}
+                                    {% else %}
+                                        {% if story_character.uuid == char_data.uuid %}
+                                            <li>{{ gen_story_anchor(story) }}</li>
+                                            {% set _end_part_detection.flag = 1 %}
+                                            {% break %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+
+                            {% if _end_part_detection.flag == 1 %}
+                                {% break %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if _end_part_detection.flag == 1 %}
+                            {% break %}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+        </ol>
+    </div>
+{% endmacro %}

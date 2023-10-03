@@ -1,4 +1,5 @@
-{% from "template/zh_cn/_macro.html" import auto_zhcn_gen %}
+{% from "template/zh_cn/_macro.html" import auto_zhcn_gen, output_relatedto_character %}
+
 <table id="infobox">
     <tr>
         <td colspan="2" class="infobox-title">{{ auto_zhcn_gen(char.name) }}</td>
@@ -10,5 +11,10 @@
     <tr>
         <td class="infobox-col-title">全名</td>
         <td class="infobox-col-value">{{ auto_zhcn_gen(char.name) }} <span lang="jp">({{ char.name.jp }})</span></td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">相关人物</td></tr>
+    <tr>
+        <td class="infobox-col-title">其它人物</td>
+        <td class="infobox-col-value">{{ output_relatedto_character({"character": char.related_to.character_other}, "False") }}</td>
     </tr>
 </table>

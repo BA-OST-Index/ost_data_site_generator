@@ -6,7 +6,10 @@ import subprocess
 import time
 import datetime
 import sys
+import minify_html
+from random import choices as ran_choices
 from jinja2 import Environment, FileSystemLoader
+from html import escape as html_escape
 
 ALL_LANGS = ["en", "zh_cn"]
 
@@ -54,9 +57,76 @@ def get_current_utc(value, fmt="%Y-%m-%d %H:%M:%S"):
     return datetime.datetime.utcnow().strftime(fmt)
 
 
+TOOLTIP_ID = set()
+TOOLTIP_CHAR_SET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_"
+
+
+def generate_tooltip_id():
+    global TOOLTIP_ID
+    while True:
+        id = "".join(ran_choices(TOOLTIP_CHAR_SET, k=6))
+        if id not in TOOLTIP_ID:
+            TOOLTIP_ID.add(id)
+            return id
+
+
+def js_string_safe(value):
+    return html_escape(value).replace("&amp;", "&").replace("'", "&#x27")
+
+
+def js_html_string_safe(value):
+    return value.replace("\n", "\\n")
+
+
+def page_minify_html(value):
+    return minify_html.minify(value, keep_closing_tags=True,
+                              remove_processing_instructions=True).\
+        replace("'", "&#x27")
+
+
+def get_outer_json(instance_id: str, instance_type: str):
+    def read_file(filepath):
+        with open(os.path.join("exported_data", filepath), mode="r", encoding="UTF-8") as file:
+            return json.load(file)
+
+    # track
+    if instance_type == "track":
+        instance_id = instance_id.split("_")
+        track_type = instance_id[0]
+        track_no = int(instance_id[1])
+
+        if track_type == "OST":
+            return read_file(f"track/ost/{track_no}.json")
+        elif track_type == "other":
+            return read_file(f"track/other/{track_no}.json")
+        elif track_type == "animation":
+            return read_file(f"track/animation/{track_no}.json")
+        elif track_type == "short":
+            return read_file(f"track/short/{track_no}.json")
+    # background
+    elif instance_type == "background":
+        # instance_id = background filename
+        return read_file(f"background/{instance_id}.json")
+    elif instance_type == "character":
+        # instance_id = character.uuid
+        # 尝试student
+        try:
+            return read_file(f"character/student/{instance_id.lower()}/{instance_id.lower()}.json")
+        except FileNotFoundError:
+            return read_file(f"character/npc/{instance_id}/{instance_id}.json")
+
+    raise ValueError(f"{instance_id}, {instance_type}")
+
+
 environment = Environment(loader=FileSystemLoader(os.path.split(__file__)[0]), extensions=["jinja2.ext.loopcontrols",
                                                                                            "jinja2.ext.do"])
 environment.filters["get_current_utc"] = get_current_utc
+environment.filters["js_string_safe"] = js_string_safe
+environment.filters["js_html_string_safe"] = js_html_string_safe
+environment.filters["is_list"] = lambda obj: isinstance(obj, list)
+environment.filters["page_minify_html"] = page_minify_html
+environment.globals["generate_tooltip_id"] = generate_tooltip_id
+environment.globals["get_outer_json"] = get_outer_json
 
 
 def change_extension_name(filename: str, extension: str = 'html'):
@@ -201,7 +271,7 @@ def traverse_path(namespace: list, lang: str):
 
 # Deleting old files
 start_time = time.time()
-folders_to_remove = ["en", "static", "zh_cn"]
+folders_to_remove = ["en", "zh_cn"]
 for i in folders_to_remove:
     try: shutil.rmtree(f"data_html/{i}")
     except FileNotFoundError: pass
@@ -228,7 +298,7 @@ for path, name in page_path_and_name2.items():
 print(f"Generation completed: {time.time() - start_time:0.2f}")
 
 start_time = time.time()
-shutil.copytree("static", "data_html/static", dirs_exist_ok=True, copy_function=shutil.copy)
+shutil.copytree("static/static", "data_html/static", dirs_exist_ok=True, copy_function=shutil.copy)
 print(f"Copying completed: {time.time() - start_time:0.2f}")
 
 if len(sys.argv) == 1:

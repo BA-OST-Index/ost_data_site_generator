@@ -1,3 +1,5 @@
+{% from 'template/en/_macro_tooltip.html' import tooltip_add_data_js, tooltip_storyinfo, tooltip_storypart, tooltip_background, tooltip_track, tooltip_character %}
+
 {% macro word_case(text) %}
         {{text[0]|upper}}{{text[1:]}}
 {% endmacro %}
@@ -20,31 +22,34 @@
 
 {% macro output_usedby_story(data_story, instance_uuid, instance_key) %}
     {% set _curr_filetype = namespace(filetype=0) %}
+    {% set tooltip_data = {} %}
 
     {% for key, value in data_story.items() %}
         {# 记录当前的filetype，稍后用于切割不同故事 #}
         {% if _curr_filetype.filetype == 0 %}
             {# 循环刚刚开始，加上<ul> #}
             {% set _curr_filetype.filetype = value.0.filetype %}
-            <h4>{{ filetype_to_name(_curr_filetype.filetype) }}</h4><ul>
+            <h4>{{ filetype_to_name(_curr_filetype.filetype) }} Story</h4><ul>
         {% else %}
             {% if _curr_filetype.filetype != value.0.filetype %}
                 {# 如果当前文件已经不再是之前的 #}
                 {% set _curr_filetype.filetype = value.0.filetype %}
-                </ul><h4>{{ filetype_to_name(_curr_filetype.filetype) }}</h4><ul>
+                </ul><h4>{{ filetype_to_name(_curr_filetype.filetype) }} Story</h4><ul>
             {% endif %}
         {% endif %}
+
+        {% set tooltip_id = generate_tooltip_id() %}
 
         <li id="story-{{ value.0.instance_id }}">
         {% set value = value[0] %}
         {% if value.filetype == 15 %}
             {% set target_url = "/en/character/student/" + value.pos.student|string|lower + "/bond/" + value.pos.no|string + ".html" %}
-            <a href="{{ target_url }}">
+            <a href="{{ target_url }}" onmouseover="showTooltip(this, '{{ tooltip_id }}')">
                 <img src="/static/images/student/icon/{{ value.student.image.collection_texture }}.webp" class="icon-stu"/>{{ value.student.name.personal_name.en }} Bond Story {{ value.pos.no }}: {{ value.name.en }}
             </a>
         {% elif value.filetype == 14 %}
             {% set target_url = "/en/event/" + value.pos.event_id|string + "/story/" + value.pos.segment|string + ".html" %}
-            <a href="{{ target_url }}">Event {{ value.parent_data.0.name.en }} Story {{ value.pos.segment }}: {{ value.name.en }}
+            <a href="{{ target_url }}" onmouseover="showTooltip(this, '{{ tooltip_id }}')">Event {{ value.parent_data.0.name.en }} Story {{ value.pos.segment }}: {{ value.name.en }}
             </a>
         {% else %}
             {% if value.filetype == 11 %}
@@ -57,10 +62,11 @@
                 {% set story_type = "other" %}
             {% endif %}
             {% set target_url = "/en/main/story/" + story_type|string + "/" + value.pos.volume|string + "/" + value.pos.chapter|string + "/" + value.pos.segment|string + ".html" %}
-            <a href="{{ target_url }}">
+            <a href="{{ target_url }}" onmouseover="showTooltip(this, '{{ tooltip_id }}')">
                 {{ word_case(story_type) }}Story Volume {{ value.pos.volume }} Chapter {{ value.pos.chapter }} Episode {{ value.pos.segment }}: {{ value.name.en }}
             </a>
         {% endif %}
+        {% do tooltip_data.update({tooltip_id: tooltip_storyinfo(value)}) %}
 
         {# appearedAt snippet #}
         {% if instance_uuid %}
@@ -79,23 +85,29 @@
                             {% set ele_class = 'class="text-primary"' %}
                         {% endif %}
 
+                        {% set tooltip_id = generate_tooltip_id() %}
+
                         {% if _part_track_html|length == 0 %}
-                            {% do _part_track_html.append('<span>&nbsp;(appeared at <a href="' + target_url + '#story-part-' + _loop_index|string + '" ' + ele_class + '><i>[' + _loop_index|string + '] ' + part.name.en + '</i></a>') %}
+                            {% do _part_track_html.append('<span>&nbsp;(appeared at <a href="' + target_url + '#story-part-' + _loop_index|string + '" ' + ele_class + ' onmouseover="showTooltip(this,' + "'" +  tooltip_id + "'" + ')"><i>[' + _loop_index|string + '] ' + part.name.en + '</i></a>') %}
                         {% else %}
-                            {% do _part_track_html.append(',&nbsp;<a href="' + target_url + '#story-part-' + _loop_index|string + '" ' + ele_class + '><i>[' + _loop_index|string + '] ' + part.name.en + '</i></a>') %}
+                            {% do _part_track_html.append(',&nbsp;<a href="' + target_url + '#story-part-' + _loop_index|string + '" ' + ele_class + ' onmouseover="showTooltip(this,' + "'" +  tooltip_id + "'" + ')"><i>[' + _loop_index|string + '] ' + part.name.en + '</i></a>') %}
                         {% endif %}
+
+                        {% do tooltip_data.update({tooltip_id: tooltip_storypart(value, part)}) %}
                         {% break %}
                     {% endif %}
                 {% endfor %}
             {% endfor %}
             {% do _part_track_html.append(")</span>") %}
+
             {{ _part_track_html|join("") }}
         {% endif %}
         </li>
     {% else %}
-        <li>Nothing to show!</li>
+        <p>Nothing to show!</p>
     {% endfor %}
     </ul>
+    {{ tooltip_add_data_js(tooltip_data) }}
 {% endmacro %}
 
 {% macro output_usedby_battle(data_battle) %}
@@ -187,54 +199,122 @@
     </ul>
 {% endmacro %}
 
-{% macro output_usedby_background(data_background, instance_id) %}
+{% macro output_usedby_background(data_background, html_id, instance_id, instance_type) %}
+    {% if instance_type in ["track"] %}
+        {% set tooltip_data = {} %}
+        {% set enable_tooltip = 1 %}
+    {% endif %}
+
     <table class="gallery">
         <tr>
             {% for key, value in data_background.items() %}
-                <td class="gallery-img" id="{{ value.0.uuid }}"><img src="{{ value.0.image.value }}"><p class="gallery-caption"><a href="/en/background/{{ value.0.filename }}.html{% if instance_id %}#{{ instance_id }}{% endif %}">{% if value.0.desc.en != "" %}{{ value.0.desc.en }}{% else %}{{ value.0.filename }}{% endif %}</a></p></td>
+                {% if enable_tooltip == 1 %}
+                    {% set tooltip_id = generate_tooltip_id() %}
+                {% endif %}
+
+                <td class="gallery-img" id="{{ value.0.uuid }}"><img src="{{ value.0.image.value }}"><p class="gallery-caption"><a href="/en/background/{{ value.0.filename }}.html{% if html_id %}#{{ html_id }}{% endif %}" {% if enable_tooltip == 1 %}onmouseover="showTooltip(this, '{{ tooltip_id }}')"{% endif %}>{{ value.0.filename }}</a></p></td>
+
+                {% if enable_tooltip == 1 %}
+                    {% do tooltip_data.update({tooltip_id: tooltip_background(value.0, instance_id, instance_type)}) %}
+                {% endif %}
             {% else %}
                 <td>Nothing to show!</td>
             {% endfor %}
         </tr>
     </table>
+
+    {% if enable_tooltip == 1 %}
+        {{ tooltip_add_data_js(tooltip_data) }}
+    {% endif %}
 {% endmacro %}
 
-{% macro output_usedby_background_list(data_background, instance_id) %}
+{% macro output_usedby_background_list(data_background, html_id, instance_id, instance_type) %}
+    {% if instance_type in ["story"] %}
+        {% set tooltip_data = {} %}
+        {% set enable_tooltip = 1 %}
+    {% endif %}
+
     <table class="gallery">
         <tr>
             {% for value in data_background %}
-                <td class="gallery-img"><img src="{{ value.image.value }}"><p class="gallery-caption"><a href="/en/background/{{ value.filename }}.html#{{ instance_id }}">{% if value.desc.en != "" %}{{ value.desc.en }}{% else %}{{ value.filename }}{% endif %}</a></p></td>
+                {% if enable_tooltip == 1 %}
+                    {% set tooltip_id = generate_tooltip_id() %}
+                {% endif %}
+
+                <td class="gallery-img"><img src="{{ value.image.value }}"><p class="gallery-caption"><a href="/en/background/{{ value.filename }}.html#{{ html_id }}" {% if enable_tooltip == 1 %}onmouseover="showTooltip(this, '{{ tooltip_id }}')"{% endif %}>{{ value.filename }}</a></p></td>
+
+                {% if enable_tooltip == 1 %}
+                    {% do tooltip_data.update({tooltip_id: tooltip_background(value, instance_id, instance_type)}) %}
+                {% endif %}
             {% else %}
                 <td>Nothing to show!</td>
             {% endfor %}
         </tr>
     </table>
+
+    {% if enable_tooltip == 1 %}
+        {{ tooltip_add_data_js(tooltip_data) }}
+    {% endif %}
 {% endmacro %}
 
-{% macro output_usedby_track(data_track, with_counter, instance_uuid) %}
+{% macro output_usedby_track(data_track, with_counter, html_id, instance_id, instance_type) %}
     {% set _with_counter = with_counter or 0 %}
+    {% if instance_type in ["character", "background"] %}
+        {% set tooltip_data = {} %}
+        {% set enable_tooltip = 1 %}
+    {% endif %}
+
     <ul>
         {% for key, value in data_track.items() %}
             {% set track = value.0 %}
             {% set track_type = track_type_for_show(track) %}
 
-            <li id="track-{{ track.instance_id }}"><a href="/en/track/{{ track.namespace.1 }}/{{track.namespace.2 }}.html{% if instance_uuid %}#{{ instance_uuid }}{% endif %}">{% if _with_counter != 0 or _with_counter %}【{{ value.1 }}】{% endif %}{{ track_type }} {{ track.no }}. {{ track.name.realname.en }}</a> by {{ track.composer.nickname }}</li>
+            {% if enable_tooltip == 1 %}
+                {% set tooltip_id = generate_tooltip_id() %}
+            {% endif %}
+
+            <li id="track-{{ track.instance_id }}"><a href="/en/track/{{ track.namespace.1 }}/{{track.namespace.2 }}.html{% if instance_uuid %}#{{ html_id }}{% endif %}" {% if enable_tooltip == 1 %}onmouseover="showTooltip(this, '{{ tooltip_id }}')"{% endif %}>{% if _with_counter != 0 or _with_counter %}【{{ value.1 }}】{% endif %}{{ track_type }} {{ track.no }}. {{ track.name.realname.en }}</a> by {{ track.composer.nickname }}</li>
+
+            {% if enable_tooltip == 1 %}
+                {% do tooltip_data.update({tooltip_id: tooltip_track(track, instance_id, instance_type)}) %}
+            {% endif %}
         {% else %}
             <li>Nothing to show!</li>
         {% endfor %}
     </ul>
+
+    {% if enable_tooltip == 1 %}
+        {{ tooltip_add_data_js(tooltip_data) }}
+    {% endif %}
 {% endmacro %}
 
-{% macro output_usedby_track_list(data_track, instance_id) %}
+{% macro output_usedby_track_list(data_track, html_id, instance_type, instance_id) %}
     <ul>
+        {% if instance_type == "story" %}
+            {% set tooltip_data = {} %}
+            {% set enable_tooltip = 1 %}
+        {% endif %}
+
         {% for value in data_track %}
             {% set track_type = track_type_for_show(value) %}
 
-            <li id="track-{{ value.instance_id }}"><a href="/en/track/{{ value.namespace.1 }}/{{ value.namespace.2 }}.html{% if instance_id %}#{{ instance_id }}{% endif %}">{{ track_type }} No.{{ value.no }}: {{ value.name.realname.en }}</a> by {{ value.composer.nickname }}</li>
+            {% if enable_tooltip == 1 %}
+                {% set tooltip_id = generate_tooltip_id() %}
+            {% endif %}
+
+            <li id="track-{{ value.instance_id }}"><a href="/en/track/{{ value.namespace.1 }}/{{ value.namespace.2 }}.html{% if instance_id %}#{{ html_id }}{% endif %}" {% if enable_tooltip == 1 %}onmouseover="showTooltip(this, '{{ tooltip_id }}')"{% endif %}>{{ track_type }} No.{{ value.no }}: {{ value.name.realname.en }}</a> by {{ value.composer.nickname }}</li>
+
+            {% if enable_tooltip == 1 %}
+                {% do tooltip_data.update({tooltip_id: tooltip_track(value, instance_id, instance_type)}) %}
+            {% endif %}
         {% else %}
             <li>Nothing to show!</li>
         {% endfor %}
     </ul>
+
+    {% if enable_tooltip == 1 %}
+        {{ tooltip_add_data_js(tooltip_data) }}
+    {% endif %}
 {% endmacro %}
 
 {% macro output_usedby_video(data_video, instance_id) %}
@@ -249,14 +329,21 @@
     </ul>
 {% endmacro %}
 
-{% macro output_usedby_character(data_character, instance_id, output_combat_info, combat_leader_pos) %}
+{% macro output_usedby_character(data_character, html_id, instance_id, instance_type, output_combat_info, combat_leader_pos) %}
+    {% if instance_type in ["story", "character"] %}
+        {% set enable_tooltip = 1 %}
+        {% set tooltip_data = {} %}
+    {% endif %}
+
     <ul>
         {% for char in data_character.character %}
+            {% if enable_tooltip == 1 %}
+                {% set tooltip_id = generate_tooltip_id() %}
+            {% endif %}
+
             {% if char.filetype == 52 %}
             <li>
-                <a href="/en/character/npc/{{ char.namespace[-1]|lower }}/{% if instance_id %}#{{ instance_id }}{% endif %}">
-                    {{ char.name.en }}
-                </a>
+                <a href="/en/character/npc/{{ char.namespace[-1]|lower }}/{% if instance_id %}#{{ html_id }}{% endif %}" {% if enable_tooltip == 1 %}onmouseover="showTooltip(this, '{{ tooltip_id }}')"{% endif %}>{{ char.name.en }}</a>
             </li>
             {% else %}
             <li>
@@ -266,7 +353,7 @@
                 {% endif %}
                 <img src="/static/images/schoolicon/School_Icon_{{ char.school_id|upper }}_W.png" class="invert-light schoolicon-p">
                 <span>
-                    <a href="/en/character/student/{{ char.name.path_name|lower }}/{% if instance_id %}#{{ instance_id }}{% endif %}">
+                    <a href="/en/character/student/{{ char.name.path_name|lower }}/{% if instance_id %}#{{ html_id }}{% endif %}" {% if enable_tooltip == 1 %}onmouseover="showTooltip(this, '{{ tooltip_id }}')"{% endif %}>
                         <img src="/static/images/student/icon/{{ char.image.collection_texture }}.webp" class="icon-stu"/>{{ char.name.personal_name.en }}
                     </a>
                 </span>
@@ -279,36 +366,85 @@
                 {% endif %}
             </li>
             {% endif %}
+
+            {% if enable_tooltip == 1 %}
+                {% do tooltip_data.update({tooltip_id: tooltip_character(char, instance_id, instance_type)}) %}
+            {% endif %}
         {% else %}
             <li>Nothing to show!</li>
         {% endfor %}
     </ul>
+
+    {% if enable_tooltip == 1 %}
+        {{ tooltip_add_data_js(tooltip_data) }}
+    {% endif %}
 {% endmacro %}
 
-{% macro output_usedby_character_dict(data_character, instance_id) %}
+{# 魔改自 output_usedby_character #}
+{% macro output_relatedto_character(data_character, use_ul) %}
+    {% if not use_ul or use_ul == "True" %}
+        {% set use_ul = 1 %}
+    {% else %}
+        {% set use_ul = 0 %}
+    {% endif %}
+
+    {% if use_ul == 1 %}
+    <ul>
+    {% endif %}
+        {% for char in data_character.character %}
+            {% if use_ul == 1 %}<li>{% endif %}
+            {% if char.filetype == 52 %}
+                <a href="/en/character/npc/{{ char.namespace[-1]|lower }}/{% if instance_id %}#{{ instance_id }}{% endif %}">
+                    {{ char.name.en }}
+                </a>
+            {% else %}
+                <span>
+                    <a href="/en/character/student/{{ char.name.path_name|lower }}/{% if instance_id %}#{{ instance_id }}{% endif %}">
+                        <img src="/static/images/student/icon/{{ char.image.collection_texture }}.webp" class="icon-stu"/>{{ char.name.name.en }}
+                    </a>
+                </span>
+            {% endif %}
+            {% if use_ul == 1 %}</li>{% else %}{% if not loop.last %}<br />{% endif %}{% endif %}
+        {% else %}
+            {% if use_ul == 1 %}<li>Nothing to show!</li>{% else %}Nothing to show!{% endif %}
+        {% endfor %}
+    {% if use_ul == 1 %}
+    </ul>
+    {% endif %}
+{% endmacro %}
+
+{% macro output_usedby_character_dict(data_character, html_id, instance_id, instance_type) %}
     {# used for track.html for exporting track-character relationship #}
+    {% set tooltip_data = {} %}
+
     <ul>
         {% for key, value in data_character.items() %}
             {% set ref_counter = value.1 %}
             {% set char = value.0 %}
 
+            {% set tooltip_id = generate_tooltip_id() %}
+
             <li id="{{ char.uuid }}"><span>【{{ ref_counter }}】</span>
             {% if "NPC_" in key %}
-                <a href="/en/character/npc/{{ char.namespace[-1]|lower }}/{% if instance_id %}#{{ instance_id }}{% endif %}">
+                <a href="/en/character/npc/{{ char.namespace[-1]|lower }}/{% if instance_id %}#{{ html_id }}{% endif %}" onmouseover="showTooltip(this, '{{ tooltip_id }}')">
                     {{ char.name.en }}
                 </a>
             {% else %}
                 <img src="/static/images/schoolicon/School_Icon_{{ char.school_id|upper }}_W.png" class="invert-light schoolicon-p">
-                <a href="/en/character/student/{{ char.name.path_name|lower }}/{% if instance_id %}#{{ instance_id }}{% endif %}">
+                <a href="/en/character/student/{{ char.name.path_name|lower }}/{% if html_id %}#{{ html_id }}{% endif %}" onmouseover="showTooltip(this, '{{ tooltip_id }}')">
                     <img src="/static/images/student/icon/{{ char.image.collection_texture }}.webp" class="icon-stu"/>{{ char.name.personal_name.en }}
                 </a>
                 &nbsp;<span>[{{ char.club.en }}]</span>
             {% endif %}
+
+            {% do tooltip_data.update({tooltip_id: tooltip_character(char, instance_id, instance_type)}) %}
             </li>
         {% else %}
             <li>Nothing to show!</li>
         {% endfor %}
     </ul>
+
+    {{ tooltip_add_data_js(tooltip_data) }}
 {% endmacro %}
 
 {% macro get_social_for_composer(composer) %}
