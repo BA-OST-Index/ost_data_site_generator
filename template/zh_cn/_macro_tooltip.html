@@ -85,7 +85,7 @@
     <div class="tooltip-div">
         <p class="tooltip-title tooltip-ellipsis">{{ tracktype_to_name(track.track_type) }}&nbsp;{{ track.no }}.&nbsp;{{ track.name.realname.en|js_string_safe }}</p><hr />
 
-        <p class="tooltip-subtitle">Story:</p>
+        <p class="tooltip-subtitle">故事：</p>
         <ol class="tooltip-ol">
             {# 获取数据 #}
             {% set loop_data = namespace(data=get_outer_json(track.instance_id, "track"), counter=0) %}
@@ -101,7 +101,7 @@
         </ol>
         {% if instance_type == "story" %}
             <hr />
-            <p class="tooltip-subtitle">Characters (top {{ (MAX_CHAR_DISPLAY_FOR_TRACK-1)|string }} most related):</p>
+            <p class="tooltip-subtitle">人物 (前{{ (MAX_CHAR_DISPLAY_FOR_TRACK-1)|string }}个最相关):</p>
             {% set all_char = [] %}
             {% for char in outer_data.data_character.values() %}{% do all_char.append(char.0) %}{% endfor %}
             <p>{{ generate_character_anchor_flat(all_char, MAX_CHAR_DISPLAY_FOR_TRACK)|page_minify_html }}</p>
@@ -141,7 +141,7 @@
         {% endif %}
         <hr />
 
-        <p class="tooltip-subtitle">Story:</p>
+        <p class="tooltip-subtitle">故事：</p>
         {# 同时关联的故事 #}
         <ol class="tooltip-ol">
             {% set processed_data = py_tooltip_character(character, instance_id, instance_type, loop_data.data) %}
