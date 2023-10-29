@@ -141,7 +141,7 @@ class TemplateTool:
 
             for (index, part) in enumerate(story["part"], 1):
                 add_part, seg_index = 0, -1
-                for (index, segment) in enumerate(part["data"], 1):
+                for (index2, segment) in enumerate(part["data"], 1):
                     is_exit = 0
                     for bg in segment["background"]:
                         if bg["uuid"] == background["uuid"]:
@@ -156,8 +156,9 @@ class TemplateTool:
                             if is_exit:
                                 break
                     if is_exit:
-                        seg_index = index
+                        seg_index = index2
                         break
+
                 if seg_index != -1:
                     story_parts.append([part, index, seg_index, 0])
             if len(story_parts) != 0:
@@ -175,7 +176,7 @@ class TemplateTool:
 
             for (index, part) in enumerate(story["part"], 1):
                 seg_index = -1
-                for (index, segment) in enumerate(part["data"], 1):
+                for (index2, segment) in enumerate(part["data"], 1):
                     is_exit = 0
                     for story_track in segment["track"]:
                         if story_track["instance_id"] == track["instance_id"]:
@@ -201,7 +202,7 @@ class TemplateTool:
                         if is_exit:
                             break
                     if is_exit:
-                        seg_index = index
+                        seg_index = index2
                         break
 
                 if seg_index != -1:
@@ -229,7 +230,7 @@ class TemplateTool:
             related_parts = []
             for (index, part) in enumerate(story["part"], 1):
                 seg_index = -1
-                for (index, segment) in enumerate(part["data"], 1):
+                for (index2, segment) in enumerate(part["data"], 1):
                     is_exit = 0
                     for char in segment["character"]:
                         if char["uuid"] == char_data["uuid"]:
@@ -237,7 +238,7 @@ class TemplateTool:
                             break
 
                     if is_exit:
-                        seg_index = index
+                        seg_index = index2
 
                 if seg_index != -1:
                     related_parts.append([part, index, seg_index, 0])

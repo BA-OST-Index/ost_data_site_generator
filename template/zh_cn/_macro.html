@@ -18,7 +18,7 @@
 {% macro generate_story_url(story) %}{{ py_generate_story_url(curr_lang, story) }}{% endmacro %}
 
 {# 通用的Story名称生成 #}
-{% macro generate_story_name(story) %}{% set ft = story.filetype %}{% if ft == 15 %}<span><img src="/static/images/student/icon/{{ story.student.image.collection_texture }}.webp" class="icon-stu">{{ auto_zhcn_gen(story.student.name.personal_name) }}的第{{ story.pos.no }}个羁绊故事：{{ auto_zhcn_gen(story.name) }}</span>{% elif ft == 14 %}<span>活动{{ auto_zhcn_gen(story.parent_data.0.name) }}&nbsp;第{{ story.pos.segment }}个故事：{{ auto_zhcn_gen(story.name) }}</span>{% else %}{{ filetype_to_name(ft) }}故事&nbsp;第{{ story.pos.volume }}篇&nbsp;第{{ story.pos.chapter }}章&nbsp;第E{{ story.pos.segment }}话：{{ auto_zhcn_gen(story.name) }}{% endif %}{% endmacro %}
+{% macro generate_story_name(story) %}{% set ft = story.filetype %}{% if ft == 15 %}<span><img src="/static/images/student/icon/{{ story.student.image.collection_texture }}.webp" class="icon-stu">{{ auto_zhcn_gen(story.student.name.personal_name) }}的第{{ story.pos.no }}个羁绊故事：{{ auto_zhcn_gen(story.name) }}</span>{% elif ft == 14 %}<span>活动{{ auto_zhcn_gen(story.parent_data.0.name) }}&nbsp;第{{ story.pos.segment }}个故事：{{ auto_zhcn_gen(story.name) }}</span>{% else %}{{ filetype_to_name(ft) }}故事&nbsp;第{{ story.pos.volume }}篇&nbsp;第{{ story.pos.chapter }}章&nbsp;第{{ story.pos.segment }}话：{{ auto_zhcn_gen(story.name) }}{% endif %}{% endmacro %}
 
 {# 通用的UI <a>生成 #}
 {% macro generate_ui_anchor(ui) %}
@@ -125,7 +125,7 @@
 
 {# 通用的Tag <a>生成 #}
 {% macro tag_altogether(tags, instance_id) %}
-    {% for tag in tags %}<a href="/en/tag/{{ tag.namespace[-1] }}.html{% if instance_id %}#{{ instance_id }}{% endif %}" target="_blank"><span class="badge badge-{{ tag.color_css }} badge-tag">{{ auto_zhcn_gen(tag.name) }}</span></a>&nbsp;{% endfor %}
+    {% for tag in tags %}<a href="/{{ curr_lang }}/tag/{{ tag.namespace[-1] }}.html{% if instance_id %}#{{ instance_id }}{% endif %}" target="_blank"><span class="badge badge-{{ tag.color_css }} badge-tag">{{ auto_zhcn_gen(tag.name) }}</span></a>&nbsp;{% endfor %}
 {% endmacro %}
 
 {# 平铺人物<a>生成 #}
@@ -142,6 +142,6 @@
 
         {% for char in char_for_show[:-1] %}<span>{{ generate_character_anchor(char, 0, 0, 0, 0, 0, 0, 0) }}&nbsp;|&nbsp;</span>{% endfor %}
         {{ generate_character_anchor(char_for_show[-1], 0, 0, 0, 0, 0, 0, 0) }}
-        {% if characters|length > char_for_show|length %}<span>&nbsp;and more.</span>{% endif %}
+        {% if characters|length > char_for_show|length %}<span>&nbsp;及更多人。</span>{% endif %}
     {% endif %}
 {% endmacro %}

@@ -11,7 +11,7 @@ from main_changelog import ChangelogGeneration
 from jinja2 import Environment, FileSystemLoader
 from urllib.parse import urljoin
 
-ALL_LANGS = ["en", "zh_cn"]
+ALL_LANGS = ["zh_cn"]
 
 filename_to_filetype = {
     "album.html": [5],
