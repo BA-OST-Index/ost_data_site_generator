@@ -1,19 +1,19 @@
 {% extends "template/en/base.html" %}
 
-{% block title %}Battle/{{ battle.name.en }}{% endblock title %}
+{% block title %}Battle/{% if battle.filetype == 21 %}{{ battle.chapter }}-{{ battle.no[:2] }} {% endif %}{{ battle.name.en }}{% endblock title %}
 {% block article_content %}
     {% from "template/en/_macro.html" import get_social_for_composer %}
-    <h1>Battle/
-        <span>{{ battle.name.en }}</span>
-    </h1>
+    <h1>Battle/<span>{% if battle.filetype == 21 %}{{ battle.chapter }}-{{ battle.no[:2] }}&nbsp;{% endif %}{{ battle.name.en }}</span></h1>
     {% include "template/en/infobox/battle.html" %}
 
-    {% if battle.filetype == 24 %}
+    {% if battle.filetype in [24, 28] %}
         <h2>BOSS Info</h2>
         <ul>
             <li>Name: {{ battle.name.en }} ({{ battle.name.jp }})</li>
+            {% if battle.filetype == 24 %}
             <li>Faction: {{ battle.faction.en }} ({{ battle.faction.jp }})</li>
             <li>Description: {{ battle.profile.en }}</li>
+            {% endif %}
         </ul>
     {% endif %}
 

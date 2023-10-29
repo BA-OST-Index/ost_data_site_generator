@@ -1,0 +1,13 @@
+{% macro anchor_new_tab(flag) %}{% if arg_check(flag) %}target="_blank"{% endif %}{% endmacro %}
+
+{% macro replace_newline_for_p(text) %}{{ text|replace("\n\n", "</p><br /><p>")|replace("\n", "</p><p>") }}{% endmacro %}
+
+{% macro get_story_text_color_css(story) %}{% if story.is_memory %}text-momo{% elif story.is_battle %}text-danger{% else %}text-primary{% endif %}{% endmacro %}
+
+{% macro get_storypart_text_color_css(story_part) %}{% if story_part.is_memory %}text-momo{% elif story_part.is_battle %}text-danger{% elif story_part.is_momotalk %}text-black{% else %}text-primary{% endif %}{% endmacro %}
+
+{% macro get_stu_type_text_color_css(text) %}{% if text == "Explosion" or text == "LightArmor" %}text-damage-explosive{% elif text == "Pierce" or text == "HeavyArmor" %}text-damage-piercing{% elif text == "Mystic" or text == "Unarmed" %}text-damage-mystic{% elif text == "Main" %}text-role-striker{% elif text == "Support" %}text-role-special{% else %}text-damage-sonic{% endif %}{% endmacro %}
+
+{% macro word_case(text) %}{{ text[0]|upper }}{{ text[1:] }}{% endmacro %}
+
+{% macro generate_tooltip_anchor(tooltip_id) %}onmouseover="showTooltip(this)" data-tooltip="{{ tooltip_id }}"{% endmacro %}

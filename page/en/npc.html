@@ -2,7 +2,7 @@
 
 {% block title %}NPC/{{ char.name.en }}{% endblock title %}
 {% block article_content %}
-    {% from "template/en/_macro.html" import output_usedby_story, output_usedby_track, output_relatedto_character %}
+    {% from "template/en/_macro_page.html" import output_usedby_story, output_usedby_track, output_relatedto_character %}
 
     <h1>NPC/{{ char.name.en }}</h1>
     {% include "template/en/infobox/npc.html" %}

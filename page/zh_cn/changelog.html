@@ -1,0 +1,29 @@
+{% extends "template/zh_cn/base.html" %}
+
+{% block title %}更新记录/{{ changelog.repo_info.repo_name }}{% endblock %}
+{% block article_content %}
+    <title>更新记录/{{ changelog.repo_info.repo_name }}</title>
+    <p>本页面列出<a href="{{ changelog.repo_info.repo_url }}">{{ changelog.repo_info.repo_name }}</a>存储库的更新记录。本更新记录为人工维护，因而可能会出现记录更新不及时的情况；详细情况请单击上方链接查看。</p>
+    <p>除非另有注明，否则以下更新记录中的时间都以 <b>{{ changelog.repo_info.timezone }}</b> 时区时间为准。</p>
+    <p>查看其它更新记录：<b><a href="/zh_cn/changelog_data.html" target="_blank">数据部分</a></b>&nbsp;|&nbsp;<b><a href="/zh_cn/changelog_parser.html" target="_blank">数据解析器</a></b>&nbsp;|&nbsp;<b><a href="/zh_cn/changelog_site.html">网站页面</a></b></p>
+    <hr/>
+
+    {% if changelog.repo_info.data_sort == "oldest" %}
+        {# 最老的在最前面的话，就反转列表 #}
+        {% set data = changelog.data.reverse() %}
+    {% else %}
+        {% set data = changelog.data %}
+    {% endif %}
+    {% for entry in data %}
+        <h3>{{ entry.date }}{% if entry.commit != "" %}&nbsp;(<a href="{{ urljoin(changelog.repo_info.repo_url, "commit", entry.commit) }}" target="_blank">{{ entry.commit }}</a>){% endif %}</h3>
+        <ul>
+            {% for log in entry.logs %}
+                {% if log|length == 1 %}
+                    <li>{{ log.0 }}</li>
+                {% else %}
+                    <li>{{ log.0 }}<ul style="margin: 0"><li>{{ log.1 }}</li></ul></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endfor %}
+{% endblock %}

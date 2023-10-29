@@ -1,5 +1,7 @@
 {% extends "template/en/base.html" %}
-{% from 'template/en/_macro.html' import output_usedby_story, output_usedby_track, replace_newline_for_p, output_relatedto_character %}
+{% from 'template/en/_macro_page.html' import output_usedby_story, output_usedby_track, output_relatedto_character %}
+{% from 'template/en/_macro.html' import generate_track_anchor %}
+{% from "template/base/_macro.html" import replace_newline_for_p %}
 
 {% block title %}Student/{{ char.student.name.name.en }}{% endblock title %}
 {% block article_content %}
@@ -24,7 +26,7 @@
         <h3><a {% if i.is_memory %}class="text-momo"{% endif %} href="bond/{{ value.pos.no }}.html">{{ value.pos.no }}. {{ value.name.en }}</a></h3>
         {% if value.is_memory %}
             {% set track = value.bgm_special[0] %}
-            <big><p>Recollection Lobby can be collected from this story. Lobby BGM: <a href="/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}">{{ track.no }}. {{ track.name.realname.en }}</a></p></big>
+            <big><p>Recollection Lobby can be collected from this story. Lobby BGM: {{ generate_track_anchor(track, 0, 0, 0, 0, 0) }}</p></big>
         {% endif %}
     {% else %}
         <p>Nothing to show!</p>

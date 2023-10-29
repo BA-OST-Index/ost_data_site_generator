@@ -4,10 +4,10 @@
 {% block article_content %}
     <h1>UI/{{ ui.name.en }}</h1>
     {% include "template/en/infobox/ui.html" %}
-    {% from "template/en/_macro.html" import get_social_for_composer %}
+    {% from "template/en/_macro.html" import get_social_for_composer, generate_track_anchor %}
     <p><b>{{ ui.name.en }}</b> is a part of the UI (user interface) in Blue Archive.</p>
     <p>Description: {{ ui.desc.en }}</p>
     <h2 id="track">Used Track</h2>
-    <p>Track: <a href="/en/{{ ui.track.namespace|join('/') }}.html#{{ ui.uuid }}">{{ ui.track.no }}. {{ ui.track.name.realname.en }}</a></p>
+    <p>Track: {{ generate_track_anchor(ui.track, 0, 0, 0, 0, 0) }}</p>
     <p>Composer: {{ ui.track.composer.nickname }} ({{ get_social_for_composer(ui.track.composer) }})</p>
 {% endblock %}

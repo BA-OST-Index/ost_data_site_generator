@@ -4,19 +4,21 @@ import webbrowser
 import shutil
 import subprocess
 import time
-import datetime
 import sys
-import minify_html
-from random import choices as ran_choices
+from main_tool import JinjaTool, TemplateTool
+from main_lang import ALL_FUNC_EN as TemplateEnFunc, ALL_FUNC_ZHCN as TemplateZhCnFunc
+from main_changelog import ChangelogGeneration
 from jinja2 import Environment, FileSystemLoader
-from html import escape as html_escape
+from urllib.parse import urljoin
 
 ALL_LANGS = ["en", "zh_cn"]
 
 filename_to_filetype = {
+    "album.html": [5],
+    "album_all.html": [-13],
     "background.html": [71],
     "background_all.html": [-101],
-    "battle.html": [21, 22, 23, 24, 25, 26, 27],
+    "battle.html": [21, 22, 23, 24, 25, 26, 27, 28],
     "battle_all.html": [-26, -27, -28, -29, -30],
     "character_all.html": [-51, -52],
     "event_all.html": [-41, -42],
@@ -51,82 +53,32 @@ page_path_and_name2 = {
     "page/zh_cn/_zhcn_technical.html": "zh_cn/zhcn_technical.html"
 }
 
-
-# get current utc
-def get_current_utc(value, fmt="%Y-%m-%d %H:%M:%S"):
-    return datetime.datetime.utcnow().strftime(fmt)
-
-
-TOOLTIP_ID = set()
-TOOLTIP_CHAR_SET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_"
-
-
-def generate_tooltip_id():
-    global TOOLTIP_ID
-    while True:
-        id = "".join(ran_choices(TOOLTIP_CHAR_SET, k=6))
-        if id not in TOOLTIP_ID:
-            TOOLTIP_ID.add(id)
-            return id
-
-
-def js_string_safe(value):
-    return html_escape(value).replace("&amp;", "&").replace("'", "&#x27")
-
-
-def js_html_string_safe(value):
-    return value.replace("\n", "\\n")
-
-
-def page_minify_html(value):
-    return minify_html.minify(value, keep_closing_tags=True,
-                              remove_processing_instructions=True).\
-        replace("'", "&#x27")
-
-
-def get_outer_json(instance_id: str, instance_type: str):
-    def read_file(filepath):
-        with open(os.path.join("exported_data", filepath), mode="r", encoding="UTF-8") as file:
-            return json.load(file)
-
-    # track
-    if instance_type == "track":
-        instance_id = instance_id.split("_")
-        track_type = instance_id[0]
-        track_no = int(instance_id[1])
-
-        if track_type == "OST":
-            return read_file(f"track/ost/{track_no}.json")
-        elif track_type == "other":
-            return read_file(f"track/other/{track_no}.json")
-        elif track_type == "animation":
-            return read_file(f"track/animation/{track_no}.json")
-        elif track_type == "short":
-            return read_file(f"track/short/{track_no}.json")
-    # background
-    elif instance_type == "background":
-        # instance_id = background filename
-        return read_file(f"background/{instance_id}.json")
-    elif instance_type == "character":
-        # instance_id = character.uuid
-        # 尝试student
-        try:
-            return read_file(f"character/student/{instance_id.lower()}/{instance_id.lower()}.json")
-        except FileNotFoundError:
-            return read_file(f"character/npc/{instance_id}/{instance_id}.json")
-
-    raise ValueError(f"{instance_id}, {instance_type}")
-
-
 environment = Environment(loader=FileSystemLoader(os.path.split(__file__)[0]), extensions=["jinja2.ext.loopcontrols",
                                                                                            "jinja2.ext.do"])
-environment.filters["get_current_utc"] = get_current_utc
-environment.filters["js_string_safe"] = js_string_safe
-environment.filters["js_html_string_safe"] = js_html_string_safe
+# Filters
+environment.filters["js_string_safe"] = JinjaTool.js_string_safe
+environment.filters["js_html_string_safe"] = JinjaTool.js_html_string_safe
+environment.filters["page_minify_html"] = JinjaTool.page_minify_html
 environment.filters["is_list"] = lambda obj: isinstance(obj, list)
-environment.filters["page_minify_html"] = page_minify_html
-environment.globals["generate_tooltip_id"] = generate_tooltip_id
-environment.globals["get_outer_json"] = get_outer_json
+# Globals - JinjaTool
+environment.globals["get_current_utc"] = JinjaTool.get_current_utc
+environment.globals["generate_tooltip_id"] = JinjaTool.generate_tooltip_id
+environment.globals["get_outer_json"] = JinjaTool.get_outer_json
+environment.globals["arg_check"] = JinjaTool.arg_check
+environment.globals["extract_storypart_data"] = JinjaTool.storypart_extract_all_data
+environment.globals["extract_storypart_data_track"] = JinjaTool.storypart_extract_all_data_track
+environment.globals["extract_storypart_data_character"] = JinjaTool.storypart_extract_all_data_characters
+environment.globals["extract_storypart_data_background"] = JinjaTool.storypart_extract_all_data_background
+# Globals - TemplateTool
+environment.globals["py_generate_story_url"] = TemplateTool.py_generate_story_url
+environment.globals["py_tooltip_track"] = TemplateTool.py_tooltip_track
+environment.globals["py_tooltip_character"] = TemplateTool.py_tooltip_character
+environment.globals["py_tooltip_background"] = TemplateTool.py_tooltip_background
+# Globals - Template
+environment.globals["template_en"] = TemplateEnFunc
+environment.globals["template_zhcn"] = TemplateZhCnFunc
+# Globals - Others
+environment.globals["urljoin"] = urljoin
 
 
 def change_extension_name(filename: str, extension: str = 'html'):
@@ -149,7 +101,9 @@ def find_template(filetype):
 
 
 def return_template(template_name, template, content):
-    if "background" in template_name:
+    if "album" in template_name:
+        return template.render(album=content)
+    elif "background" in template_name:
         return template.render(background=content)
     elif "event" in template_name:
         return template.render(event=content)
@@ -273,30 +227,38 @@ def traverse_path(namespace: list, lang: str):
 start_time = time.time()
 folders_to_remove = ["en", "zh_cn"]
 for i in folders_to_remove:
-    try: shutil.rmtree(f"data_html/{i}")
-    except FileNotFoundError: pass
+    try:
+        shutil.rmtree(f"data_html/{i}")
+    except FileNotFoundError:
+        pass
 files_to_remove = ["404.html", "index.html"]
 for i in files_to_remove:
-    try: os.remove(f"data_html/{i}")
-    except FileNotFoundError: pass
+    try:
+        os.remove(f"data_html/{i}")
+    except FileNotFoundError:
+        pass
 print(f"Deletion completed: {time.time() - start_time:0.2f}")
 
+# Generating new files
 start_time = time.time()
 for lang in ALL_LANGS:
     traverse_path(["exported_data"], lang)
     for path, name in page_path_and_name.items():
         template = environment.get_template(path.format(lang=lang))
-        result = template.render()
+        result = template.render(is_static="static")
         os.makedirs("data_html/" + lang + "/", exist_ok=True)
         with open(os.path.join("data_html/" + lang + "/", name), mode="w", encoding="UTF-8") as file:
             file.write(result)
 for path, name in page_path_and_name2.items():
     template = environment.get_template(path)
-    result = template.render()
+    result = template.render(is_static="static")
     with open(os.path.join("data_html/", name), mode="w", encoding="UTF-8") as file:
         file.write(result)
+changelog = ChangelogGeneration(environment)
+changelog.generate()
 print(f"Generation completed: {time.time() - start_time:0.2f}")
 
+# Copying static
 start_time = time.time()
 shutil.copytree("static/static", "data_html/static", dirs_exist_ok=True, copy_function=shutil.copy)
 print(f"Copying completed: {time.time() - start_time:0.2f}")

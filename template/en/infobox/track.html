@@ -1,4 +1,4 @@
-{% from "template/en/_macro.html" import tag_altogether, get_social_for_composer %}
+{% from "template/en/_macro.html" import tag_altogether, get_social_for_composer, tracktype_to_name, generate_track_anchor %}
 <table id="infobox">
     <tr>
         <td colspan="2" class="infobox-title">{{ track.no }}. {{ track.name.realname.en }}</td>
@@ -29,7 +29,7 @@
     </tr>
     <tr>
         <td class="infobox-col-title">Track Type</td>
-        <td class="infobox-col-value">{{ track_type_for_show(track) }}</td>
+        <td class="infobox-col-value">{{ tracktype_to_name(track.track_type) }}</td>
     </tr>
     {% if track.composer.composer_id == "0" %}
     <tr><td colspan="2" class="infobox-subtitle">Composer Information</td></tr>
@@ -46,7 +46,7 @@
     {% for version in track.version %}
         <tr>
             <td class="infobox-col-title">{{ version.desc.en }}</td>
-            <td class="infobox-col-value">{% for i in version.url %}<a href="{{ i.value }}" target="_blank"><img src="/static/images/social/{{ i.platform.en }}.png" class="social-logo">{{ i.platform.en }}</a> ({{ i.short_desc.en }})<br/>{% endfor %}</td>
+            <td class="infobox-col-value">{% for i in version.url %}<a href="{{ i.value }}" target="_blank"><img src="/static/images/social/{{ i.platform.en }}.png" class="social-logo">{{ i.platform.en }}</a>{% if i.short_desc.en != "" %}&nbsp;({{ i.short_desc.en }}){% endif %}<br/>{% endfor %}</td>
         </tr>
     {% endfor %}
     <tr><td colspan="2" class="infobox-subtitle">Special Usage Information</td></tr>
@@ -69,5 +69,10 @@
     <tr>
         <td class="infobox-col-title">Event</td>
         <td class="infobox-col-value">{% if track.special_case.is_event %}Yes{% else %}No{% endif %}</td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">Related Tracks</td></tr>
+    <tr>
+        <td class="infobox-col-title">Other Tracks</td>
+        <td class="infobox-col-value">{% for i in track.related_to.track_other %}{{ generate_track_anchor(i, 0, 0, 0, 0, 0) }}<br />{% else %}No related tracks!{% endfor %}</td>
     </tr>
 </table>

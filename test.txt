@@ -1,0 +1,5 @@
+{% macro test(arg1) %}
+{%if not arg_check(arg1)%}123{%endif%}
+{% endmacro %}
+
+{{ test() }}

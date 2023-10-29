@@ -1,0 +1,31 @@
+{% extends "template/zh_cn/base.html" %}
+
+{% block title %}
+<title>Changelogs/{{ changelog.repo_info.repo_name }}</title>
+{% endblock %}
+{% block article_content %}
+    <title>Changelogs/{{ changelog.repo_info.repo_name }}</title>
+    <p>This page lists the changelog for the repository <a href="{{ changelog.repo_info.repo_url }}">{{ changelog.repo_info.repo_name }}</a>. Be noted that this changelog is maintained manually, and therefore, there could be some delays in updating the information; for more details, click the link shown above.</p>
+    <p>Unless stated, otherwise the time in the changelog would be in <b>{{ changelog.repo_info.timezone }}</b> timezone.</p>
+    <p>View other changelogs: <b><a href="/zh_cn/changelog_data.html" target="_blank">Data</a></b>&nbsp;|&nbsp;<b><a href="/zh_cn/changelog_parser.html" target="_blank">Data Parser</a></b>&nbsp;|&nbsp;<b><a href="/zh_cn/changelog_site.html">Site Pages</a></b></p>
+    <hr />
+
+    {% if changelog.repo_info.data_sort == "oldest" %}
+        {# 最老的在最前面的话，就反转列表 #}
+        {% set data = changelog.data.reverse() %}
+    {% else %}
+        {% set data = changelog.data %}
+    {% endif %}
+    {% for entry in data %}
+        <h3>{{ entry.date }}{% if entry.commit != "" %}&nbsp;(<a href="{{ urljoin(changelog.repo_info.repo_url, "commit", entry.commit) }}" target="_blank">{{ entry.commit }}</a>){% endif %}</h3>
+        <ul>
+            {% for log in entry.logs %}
+                {% if log|length == 1 %}
+                    <li>{{ log.0 }}</li>
+                {% else %}
+                    <li>{{ log.0 }}<ul style="margin: 0"><li>{{ log.1 }}</li></ul></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endfor %}
+{% endblock %}

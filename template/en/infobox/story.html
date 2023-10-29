@@ -1,7 +1,4 @@
-{% macro word_case(text) %}
-    {{text[0]|upper}}{{text[1:]}}
-{% endmacro %}
-
+{% from "template/base/_macro.html" import word_case %}
 <table id="infobox">
     <tr>
         <td colspan="2" class="infobox-title">{{ story.name.en }}</td>
@@ -32,7 +29,7 @@
             {% else %}
                 {% set story_type = "other" %}
             {% endif %}
-            <td class="infobox-col-value">{{ word_case(story_type) }}Story<br/>Volume {{ story.pos.volume }}<br/>Chapter {{ story.pos.chapter }}<br/>Episode {{ story.pos.segment }}</td>
+            <td class="infobox-col-value">{{ word_case(story_type) }} Story<br/>Volume {{ story.pos.volume }}<br/>Chapter {{ story.pos.chapter }}<br/>Episode {{ story.pos.segment }}</td>
         {% endif %}
     </tr>
     <tr><td colspan="2" class="infobox-subtitle">Special Case</td></tr>

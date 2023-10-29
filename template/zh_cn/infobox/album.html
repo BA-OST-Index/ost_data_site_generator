@@ -1,0 +1,21 @@
+<table id="infobox">
+    <tr>
+        <td colspan="2" class="infobox-title">{{ album.name.en }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" class="infobox-icon"><img width="80%" src="{{ album.cover_img }}"></td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">基础信息</td></tr>
+    <tr>
+        <td class="infobox-col-title">发行日期</td>
+        <td class="infobox-col-value">{{ album.release_date_format }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">碟片数量</td>
+        <td class="infobox-col-value">{{ album.disc_num }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">曲子数量</td>
+        <td class="infobox-col-value">{{ album.track_num }}</td>
+    </tr>
+</table>

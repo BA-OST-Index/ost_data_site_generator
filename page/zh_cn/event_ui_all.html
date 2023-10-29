@@ -2,7 +2,9 @@
 
 {% block title %}活动/{{ event.parent_data.last_parent.name.zh_cn_jp }}/UI{% endblock title %}
 {% block article_content %}
-    {% from "template/zh_cn/_macro.html" import output_usedby_ui_for_all_ui, auto_zhcn_gen %}
+    {% from "template/zh_cn/_macro_page.html" import output_usedby_ui_for_all_ui %}
+    {% from "template/zh_cn/_macro.html" import auto_zhcn_gen %}
+
     <h1>活动/{{ auto_zhcn_gen(event.parent_data.last_parent.name) }}/故事</h1>
     <p>本页列出 活动“{{ auto_zhcn_gen(event.parent_data.last_parent.name) }}” 的全部UI。</p>
     {{ output_usedby_ui_for_all_ui(event.include) }}

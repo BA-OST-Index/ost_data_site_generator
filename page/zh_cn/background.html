@@ -2,9 +2,10 @@
 
 {% block title %}背景/{{ background.filename }}{% endblock title %}
 {% block article_content %}
-    {% from "template/zh_cn/_macro.html" import output_usedby_story, output_usedby_track %}
+    {% from "template/zh_cn/_macro_page.html" import output_usedby_story, output_usedby_track %}
     <h1>背景/{{ background.filename }}</h1>
     {% include "template/zh_cn/infobox/background.html" %}
+    <p>简介：{{ background.desc.zh_cn }}</p>
     <h2>用途信息</h2>
     <h3>故事</h3>
     {{ output_usedby_story(background.used_by.data_story, background.uuid, "background") }}

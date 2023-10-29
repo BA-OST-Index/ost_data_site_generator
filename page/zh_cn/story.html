@@ -2,9 +2,11 @@
 
 {% block title %}故事/{{ story.name.zh_cn_jp }}{% endblock title %}
 {% block article_content %}
-    {% from "template/zh_cn/_macro.html" import get_ordinal_number, output_usedby_character, output_usedby_track_list, output_usedby_background_list, auto_zhcn_gen, nothing_to_show, track_type_for_show %}
+    {% from "template/base/_macro.html" import get_story_text_color_css, get_storypart_text_color_css %}
+    {% from "template/zh_cn/_macro_page.html" import output_usedby_character, output_usedby_track_list, output_usedby_background_list %}
+    {% from "template/zh_cn/_macro.html" import auto_zhcn_gen, nothing_to_show, filetype_to_name, generate_track_anchor %}
 
-    <h1>故事/<span class="{% if story.is_battle %}text-danger{% elif story.is_memory %}text-momo{% else %}text-primary{% endif %}">{{ auto_zhcn_gen(story.name) }}</span></h1>
+    <h1>故事/<span class="{{ get_story_text_color_css(story) }}">{{ auto_zhcn_gen(story.name) }}</span></h1>
     {% include "template/zh_cn/infobox/story.html" %}
     {% if story.filetype == 11 %}
         <p>“<b>{{ auto_zhcn_gen(story.name) }}</b>”是主线故事第{{ story.pos.volume }}篇第{{ story.pos.chapter }}章的第{{ story.pos.segment }}个故事。</p>
@@ -26,7 +28,7 @@
     {% if story.is_battle or story.is_memory %}
         <ul>
             {% for track in story.bgm_special %}
-                <li>{{ track_type_for_show(track) }}&nbsp;<a href="/zh_cn/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}.html">{{ track.no }}.&nbsp;{{ track.name.realname.en }} {% if track.name.realname.zh_cn == "" %}({{ track.name.realname.zh_cn }}){% endif %}</a></li>
+                <li>{{ generate_track_anchor(track, 0, 0, 0, 0, 1) }}</li>
             {% endfor %}
         </ul>
     {% else %}
@@ -35,18 +37,24 @@
 
     <h2>故事部分</h2>
     {% for part in story.part %}
-        {% if part.is_memory %}<h3 class="text-momo"{% elif part.is_battle %}<h3 class="text-danger"{% elif part.is_momotalk %}<h3{% else %}<h3 class="text-primary"{% endif %} id="story-part-{{ loop.index }}">{{ loop.index }}. {{ auto_zhcn_gen(part.name) }}</h3>
-        <p>{{ auto_zhcn_gen(part.desc) }}</p>
-        <h4>人物</h4>
-        {% if part.is_battle %}
-            {{ output_usedby_character(part, "story-" + story.instance_id, story.instance_id, "story", "True", part.battle_leader_pos) }}
-        {% else %}
-            {{ output_usedby_character(part, "story-" + story.instance_id, story.instance_id, "story") }}
-        {% endif %}
-        <h4>曲目</h4>
-        {{ output_usedby_track_list(part.track, "story-" + story.instance_id, "story", story.instance_id) }}
-        <h4>背景</h4>
-        {{ output_usedby_background_list(part.background, "story-" + story.instance_id, story.instance_id, "story") }}
+        {% set part_index = loop.index %}
+        <h3 class="{{ get_storypart_text_color_css(part) }}" id="story-part-{{ loop.index }}">{{ loop.index }}. {{ auto_zhcn_gen(part.name) }}</h3>
+
+        {% for segment in part.data %}
+            <ul style="margin: 0;">
+                <li id="story-part-{{ part_index }}-seg-{{ loop.index }}">{{ auto_zhcn_gen(segment.desc) }}</li>
+                <h4>人物</h4>
+                {% if part.is_battle %}
+                    {{ output_usedby_character(segment, "story-" + story.instance_id, story.instance_id, "story", "True", part.battle_leader_pos) }}
+                {% else %}
+                    {{ output_usedby_character(segment, "story-" + story.instance_id, story.instance_id, "story") }}
+                {% endif %}
+                <h4>歌曲</h4>
+                {{ output_usedby_track_list(segment.track, "story-" + story.instance_id, "story", story.instance_id) }}
+                <h4>背景</h4>
+                {{ output_usedby_background_list(segment.background, "story-" + story.instance_id, story.instance_id, "story") }}
+            </ul>
+        {% endfor %}
     {% else %}
         <p>{{ nothing_to_show }}</p>
     {% endfor %}

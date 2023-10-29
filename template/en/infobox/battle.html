@@ -30,6 +30,8 @@
                 <span>Doesn't support Arena yet!</span>
             {% elif battle.filetype == 24 %}
                 <span>Total Assault<br />BOSS {{ battle.name.en }}</span>
+            {% elif battle.filetype == 28 %}
+                <span>World Raid<br />BOSS {{ battle.name.en }}</span>
             {% else %}
                 {% if battle.filetype == 25 %}
                     <span>Bounty Hunt<br/>{{ battle.name.en }}</span>

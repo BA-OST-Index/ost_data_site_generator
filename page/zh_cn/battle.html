@@ -1,17 +1,19 @@
 {% extends "template/zh_cn/base.html" %}
 
-{% block title %}任务/{{ battle.name.zh_cn }}{% endblock title %}
+{% block title %}任务/{% if battle.filetype == 21 %}{{ battle.chapter }}-{{ battle.no[:2] }} {% endif %}{{ battle.name.zh_cn }}{% endblock title %}
 {% block article_content %}
     {% from "template/zh_cn/_macro.html" import get_social_for_composer, auto_zhcn_gen %}
-    <h1>战斗/<span>{{ auto_zhcn_gen(battle.name) }}</span></h1>
+    <h1>战斗/<span>{% if battle.filetype == 21 %}{{ battle.chapter }}-{{ battle.no[:2] }}&nbsp;{% endif %}{{ auto_zhcn_gen(battle.name) }}</span></h1>
     {% include "template/zh_cn/infobox/battle.html" %}
 
-    {% if battle.filetype == 24 %}
+    {% if battle.filetype in [24, 28] %}
         <h2>BOSS信息</h2>
         <ul>
             <li>名称：{{ auto_zhcn_gen(battle.name) }} ({{ battle.name.jp }})</li>
+            {% if battle.filetype == 24 %}
             <li>阵营：{{ auto_zhcn_gen(battle.faction) }} ({{ battle.faction.jp }})</li>
             <li>描述：{{ auto_zhcn_gen(battle.profile) }}</li>
+            {% endif %}
         </ul>
     {% endif %}
 

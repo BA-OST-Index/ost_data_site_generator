@@ -2,7 +2,8 @@
 
 {% block title %}NPC/{{ char.name.zh_cn_jp }}{% endblock title %}
 {% block article_content %}
-    {% from "template/zh_cn/_macro.html" import output_usedby_story, output_usedby_track, auto_zhcn_gen, output_relatedto_character %}
+    {% from "template/zh_cn/_macro_page.html" import output_usedby_story, output_usedby_track, output_relatedto_character %}
+    {% from 'template/zh_cn/_macro.html' import auto_zhcn_gen %}
 
     <h1>NPC/{{ auto_zhcn_gen(char.name) }}</h1>
     {% include "template/zh_cn/infobox/npc.html" %}

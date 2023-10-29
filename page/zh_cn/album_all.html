@@ -1,0 +1,13 @@
+{% extends "template/zh_cn/base.html" %}
+
+{% block title %}全部专辑{% endblock title %}
+{% block article_content %}
+    <h1>全部专辑</h1>
+    <p>此页显示所有可用的专辑。</p>
+    <ul>
+        {% for i in album.include %}
+            {% set i = i[1] %}
+            <li><a href="/zh_cn/album/{{ i.album_id }}.html">{{ i.name.zh_cn }}</a>&nbsp;-&nbsp;{{ i.desc.zh_cn }}</li>
+        {% endfor %}
+    </ul>
+{% endblock article_content %}

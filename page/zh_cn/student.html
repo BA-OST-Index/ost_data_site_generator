@@ -1,5 +1,7 @@
 {% extends "template/zh_cn/base.html" %}
-{% from 'template/zh_cn/_macro.html' import output_usedby_story, output_usedby_track, auto_zhcn_gen, nothing_to_do, replace_newline_for_p, output_relatedto_character %}
+{% from "template/zh_cn/_macro.html" import replace_newline_for_p %}
+{% from 'template/zh_cn/_macro_page.html' import output_usedby_story, output_usedby_track, output_relatedto_character %}
+{% from "template/zh_cn/_macro.html" import auto_zhcn_gen, nothing_to_show, generate_track_anchor %}
 
 {% block title %}学生/{{ char.student.name.name.zh_cn_jp }}{% endblock title %}
 {% block article_content %}
@@ -33,7 +35,7 @@
         <h3><a {% if i.is_memory %}class="text-momo"{% endif %} href="bond/{{ value.pos.no }}.html">{{ value.pos.no }}. {{ auto_zhcn_gen(value.name) }}</a></h3>
         {% if value.is_memory %}
             {% set track = value.bgm_special[0] %}
-            <big><p>可在该故事中收集到回忆大厅。大厅BGM：<a href="/zh_cn/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}.html">{{ track.no }}. {{ track.name.realname.en }} ({{ track.name.realname.zh_cn }})</a></p></big>
+            <big><p>可在该故事中收集到回忆大厅。大厅BGM：{{ generate_track_anchor(track, 0, 0, 0, 0, 0) }}</p></big>
         {% endif %}
     {% else %}
         <p>{{ nothing_to_show }}</p>

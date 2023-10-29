@@ -1,0 +1,354 @@
+{% from 'template/base/_macro.html' import a_new_tab, get_storypart_text_color_css, get_stu_type_text_color_css %}
+{% from 'template/en/_macro.html' import generate_ui_anchor, generate_track_anchor, generate_track_anchor, generate_background_anchor, generate_character_anchor, generate_story_anchor, generate_appearedat_html, filetype_to_name, get_ordinal_number, get_social_for_composer %}
+{% from 'template/en/_macro_tooltip.html' import tooltip_add_data_js, tooltip_storyinfo, tooltip_storypart, tooltip_background, tooltip_track, tooltip_character %}
+
+{% macro output_usedby_story(data_story, instance_uuid, instance_key) %}
+    {% set _curr_filetype = namespace(filetype=0) %}
+    {% set tooltip_data = {} %}
+
+    {% for key, value in data_story.items() %}
+        {# 记录当前的filetype，稍后用于切割不同故事 #}
+        {% if _curr_filetype.filetype == 0 %}
+            {# 循环刚刚开始，加上<ul> #}
+            {% set _curr_filetype.filetype = value.0.filetype %}
+            <h4>{{ filetype_to_name(_curr_filetype.filetype) }} Story</h4><ul>
+        {% else %}
+            {% if _curr_filetype.filetype != value.0.filetype %}
+                {# 如果当前文件已经不再是之前的 #}
+                {% set _curr_filetype.filetype = value.0.filetype %}
+                </ul><h4>{{ filetype_to_name(_curr_filetype.filetype) }} Story</h4><ul>
+            {% endif %}
+        {% endif %}
+
+        {% set tooltip_id = generate_tooltip_id() %}
+
+        <li id="story-{{ value.0.instance_id }}">
+        {% set value = value.0 %}
+        {{ generate_story_anchor(value, tooltip_id) }}
+        {% do tooltip_data.update({tooltip_id: tooltip_storyinfo(value)}) %}
+
+        {# appearedAt snippet #}
+        {% if instance_uuid %}
+            {% set related_parts = [] %}
+            {% for part in value.part %}
+                {% set part_loop = namespace(part_index=loop.index, seg_index=-1) %}
+                {% for segment in part.data %}
+                    {% set seg_loop = namespace(seg_index=loop.index, is_exit=0) %}
+                    {% for obj in segment[instance_key] %}
+                        {% if obj.uuid == instance_uuid %}
+                            {% set seg_loop.is_exit = 1 %}{% break %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if seg_loop.is_exit != 0 %}
+                        {% set part_loop.seg_index = loop.index %}{% break %}
+                    {% endif %}
+                {% endfor %}
+
+                {% if part_loop.seg_index != -1 %}
+                    {% set tooltip_id = generate_tooltip_id() %}
+                    {% do related_parts.append([part, loop.index, part_loop.seg_index, tooltip_id]) %}
+                    {% do tooltip_data.update({tooltip_id: tooltip_storypart(value, part)}) %}
+                {% endif %}
+            {% endfor %}
+
+            {{ generate_appearedat_html(value, related_parts) }}
+        {% endif %}
+        </li>
+    {% else %}
+        <p>Nothing to show!</p>
+    {% endfor %}
+    </ul>
+    {{ tooltip_add_data_js(tooltip_data) }}
+{% endmacro %}
+
+{% macro output_usedby_battle(data_battle) %}
+    <ul>
+        {% for key, value in data_battle.items() %}
+            {% set value = value[0] %}
+            <li id="{{ value.uuid }}">
+            {% if value.filetype == 21 %}
+                {% if value.no[0] == "N" %}
+                    {% set mission_type = "Normal" %}
+                {% else %}
+                    {% set mission_type = "Hard" %}
+                {% endif %}
+                    <a href="/{{ curr_lang }}/main/battle/main/{{ value.chapter }}/{{ value.no }}.html#track" target="_blank">Main Battle Chapter {{ value.chapter }} Mission {{ value.no[1] }} ({{ mission_type }}, Sub {{ value.no[2] }})</a>
+            {% elif value.filetype == 22 %}
+                {% if value.no[0] == "N" %}
+                    {% set mission_type = "Normal" %}
+                {% else %}
+                    {% set mission_type = "Challenge" %}
+                {% endif %}
+                    <a href="/{{ curr_lang }}/event/{{ value.event_id }}/{{ value.no }}.html#track" target="_blank">Event {{ value.parent_data.0.name.en }} Battle No.{{ value.no[1:] }} ({{ mission_type }}): {{ value.name.en }}</a>
+            {% else %}
+                {% if value.filetype == 24 %}
+                    {% set mission_type = "total_assault" %}
+                {% elif value.filetype == 25 %}
+                    {% set mission_type = "bounty_hunt" %}
+                {% elif value.filetype == 26 %}
+                    {% set mission_type = "school_exchange" %}
+                {% else %}
+                    {% set mission_type = "special_commision" %}
+                {% endif %}
+                    <a href="/{{ curr_lang }}/main/battle/{{ mission_type }}/{{ value.id }}.html#track" target="_blank">{{ value.name.en }}</a>
+            {% endif %}
+            </li>
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro output_usedby_ui(data_ui) %}
+    <ul>
+        {% for key, value in data_ui.items() %}
+            {% set i = value.0 %}
+
+            <!--Special case for UiInfoEvent-->
+            <li id="{{ i.uuid }}">{{ generate_ui_anchor(i) }}</li>
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro output_usedby_ui_list(data_ui) %}
+    <ul>
+        {% for i in data_ui %}
+            <li>{{ generate_ui_anchor(i) }}</li>
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro output_usedby_ui_for_all_ui(data_ui) %}
+    <ul>
+        {% for i in data_ui %}
+            {% set i = i[1] %}
+
+            <!--Special case for UiInfoEvent-->
+            <li>{{ generate_ui_anchor(i) }}</li>
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro output_usedby_background(data_background, html_id, instance_id, instance_type) %}
+    {% if instance_type in ["track"] %}
+        {% set tooltip_data = {} %}
+        {% set enable_tooltip = 1 %}
+    {% endif %}
+
+    <table class="gallery">
+        <tr>
+            {% for key, value in data_background.items() %}
+                {% if enable_tooltip == 1 %}
+                    {% set tooltip_id = generate_tooltip_id() %}
+                {% endif %}
+
+                <td class="gallery-img" id="{{ value.0.uuid }}">{{ generate_background_anchor(value.0, html_id, tooltip_id) }}</td>
+
+                {% if enable_tooltip == 1 %}
+                    {% do tooltip_data.update({tooltip_id: tooltip_background(value.0, instance_id, instance_type)}) %}
+                {% endif %}
+            {% else %}
+                <td>Nothing to show!</td>
+            {% endfor %}
+        </tr>
+    </table>
+
+    {% if enable_tooltip == 1 %}
+        {{ tooltip_add_data_js(tooltip_data) }}
+    {% endif %}
+{% endmacro %}
+
+{% macro output_usedby_background_list(data_background, html_id, instance_id, instance_type) %}
+    {% if instance_type in ["story"] %}
+        {% set tooltip_data = {} %}
+        {% set enable_tooltip = 1 %}
+    {% endif %}
+
+    <table class="gallery">
+        <tr>
+            {% for value in data_background %}
+                {% if enable_tooltip == 1 %}
+                    {% set tooltip_id = generate_tooltip_id() %}
+                {% endif %}
+
+                <td class="gallery-img">{{ generate_background_anchor(value, html_id, tooltip_id) }}</td>
+
+                {% if enable_tooltip == 1 %}
+                    {% do tooltip_data.update({tooltip_id: tooltip_background(value, instance_id, instance_type)}) %}
+                {% endif %}
+            {% else %}
+                <td>Nothing to show!</td>
+            {% endfor %}
+        </tr>
+    </table>
+
+    {% if enable_tooltip == 1 %}
+        {{ tooltip_add_data_js(tooltip_data) }}
+    {% endif %}
+{% endmacro %}
+
+{% macro output_usedby_track(data_track, with_counter, html_id, instance_id, instance_type) %}
+    {% set _with_counter = with_counter or 0 %}
+    {% if instance_type in ["character", "background"] %}
+        {% set tooltip_data = {} %}
+        {% set enable_tooltip = 1 %}
+    {% endif %}
+
+    <ul>
+        {% for key, value in data_track.items() %}
+            {% set track = value.0 %}
+
+            {% if enable_tooltip == 1 %}
+                {% set tooltip_id = generate_tooltip_id() %}
+            {% endif %}
+
+            <li id="track-{{ track.instance_id }}">{{ generate_track_anchor(track, _with_counter, value.1, html_id, tooltip_id) }}</li>
+
+            {% if enable_tooltip == 1 %}
+                {% do tooltip_data.update({tooltip_id: tooltip_track(track, instance_id, instance_type)}) %}
+            {% endif %}
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+
+    {% if enable_tooltip == 1 %}
+        {{ tooltip_add_data_js(tooltip_data) }}
+    {% endif %}
+{% endmacro %}
+
+{% macro output_usedby_track_list(data_track, html_id, instance_type, instance_id) %}
+    <ul>
+        {% if instance_type == "story" %}
+            {% set tooltip_data = {} %}
+            {% set enable_tooltip = 1 %}
+        {% endif %}
+
+        {% for value in data_track %}
+            {% if enable_tooltip == 1 %}
+                {% set tooltip_id = generate_tooltip_id() %}
+            {% endif %}
+
+            <li id="track-{{ value.instance_id }}">{{ generate_track_anchor(value, 0, 0, html_id, tooltip_id) }}</li>
+
+            {% if enable_tooltip == 1 %}
+                {% do tooltip_data.update({tooltip_id: tooltip_track(value, instance_id, instance_type)}) %}
+            {% endif %}
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+
+    {% if enable_tooltip == 1 %}
+        {{ tooltip_add_data_js(tooltip_data) }}
+    {% endif %}
+{% endmacro %}
+
+{% macro output_usedby_video(data_video, instance_id) %}
+    <ul>
+        {% for key, value in data_video.items() %}
+            {% set value = value.0 %}
+
+            <li id="{{ value.uuid }}"><a href="/en/video/{{ value.namespace.1 }}.html{% if instance_id %}#{{ instance_id }}{% endif %}" target="_blank">Video <i>{{ value.name.en }}</i></a>: {{ value.desc.en }}</li>
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro output_usedby_character(data_character, html_id, instance_id, instance_type, output_combat_info, combat_leader_pos) %}
+    {% if instance_type in ["story", "character"] %}
+        {% set enable_tooltip = 1 %}
+        {% set tooltip_data = {} %}
+    {% endif %}
+
+    <ul>
+        {% for char in data_character.character %}
+            {% if enable_tooltip == 1 %}
+                {% set tooltip_id = generate_tooltip_id() %}
+            {% endif %}
+
+            {% if arg_check(output_combat_info) and loop.index0 == combat_leader_pos %}
+                <li>{{ generate_character_anchor(char, 1, 1, html_id, tooltip_id, output_combat_info, 1, 0) }}</li>
+            {% else %}
+                <li>{{ generate_character_anchor(char, 1, 1, html_id, tooltip_id, output_combat_info, 0, 0) }}</li>
+            {% endif %}
+
+            {% if enable_tooltip == 1 %}
+                {% do tooltip_data.update({tooltip_id: tooltip_character(char, instance_id, instance_type)}) %}
+            {% endif %}
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+
+    {% if enable_tooltip == 1 %}
+        {{ tooltip_add_data_js(tooltip_data) }}
+    {% endif %}
+{% endmacro %}
+
+{# 魔改自 output_usedby_character #}
+{% macro output_relatedto_character(data_character, use_ul) %}
+    {% if not use_ul or use_ul == "True" %}
+        {% set use_ul = 1 %}
+    {% else %}
+        {% set use_ul = 0 %}
+    {% endif %}
+
+    {% if use_ul == 1 %}
+    <ul>
+    {% endif %}
+        {% for char in data_character.character %}
+            {% if use_ul == 1 %}<li>{% endif %}
+
+            {{ generate_character_anchor(char, 0, 0, 0, 0, 0, 0, 1) }}
+
+            {% if use_ul == 1 %}</li>{% else %}{% if not loop.last %}<br />{% endif %}{% endif %}
+        {% else %}
+            {% if use_ul == 1 %}<li>Nothing to show!</li>{% else %}Nothing to show!{% endif %}
+        {% endfor %}
+    {% if use_ul == 1 %}
+    </ul>
+    {% endif %}
+{% endmacro %}
+
+{% macro output_usedby_character_dict(data_character, html_id, instance_id, instance_type) %}
+    {# used for track.html for exporting track-character relationship #}
+    {% set tooltip_data = {} %}
+
+    <ul>
+        {% for key, value in data_character.items() %}
+            {% set ref_counter = value.1 %}
+            {% set char = value.0 %}
+
+            {% set tooltip_id = generate_tooltip_id() %}
+
+            <li id="{{ char.uuid }}"><span>【{{ ref_counter }}】</span>{{ generate_character_anchor(char, 1, 1, html_id, tooltip_id, 0, 0, 0) }}</li>
+            {% do tooltip_data.update({tooltip_id: tooltip_character(char, instance_id, instance_type)}) %}
+        {% else %}
+            <li>Nothing to show!</li>
+        {% endfor %}
+    </ul>
+
+    {{ tooltip_add_data_js(tooltip_data) }}
+{% endmacro %}
+
+{% macro track_version_video_player(versions) %}
+    {% for version in versions %}
+        {% set _version_index = loop.index %}
+
+        <h3>{{ version.desc.en }}</h3>
+        {% for url in version.url %}
+            <div onclick="play_video('{{ url.value }}', 'track-video-{{ _version_index }}-{{ loop.index }}')" id="track-video-{{ _version_index }}-{{ loop.index }}" class="track-video-div">
+                <p><img src="/static/images/social/{{ url.platform.en }}.png" class="social-logo">{{ url.platform.en }} ({{ url.value }})</p>
+            </div>
+            <div id="track-video-{{ _version_index }}-{{ loop.index }}-container"></div>
+        {% endfor %}
+    {% endfor %}
+{% endmacro %}

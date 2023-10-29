@@ -2,7 +2,7 @@
 
 {% block title %}{{ ui.name.en }}{% endblock title %}
 {% block article_content %}
-    {% from "template/en/_macro.html" import output_usedby_ui_for_all_ui, output_usedby_ui_list %}
+    {% from "template/en/_macro_page.html" import output_usedby_ui_for_all_ui, output_usedby_ui_list %}
     <h1>{{ ui.name.en }}</h1>
     <p>{{ ui.desc.en }}</p>
     {% if ui.filetype == -61 or ui.filetype == -45 %}

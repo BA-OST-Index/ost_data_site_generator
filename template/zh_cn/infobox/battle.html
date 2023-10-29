@@ -31,6 +31,8 @@
                 <span>暂未支持战术大赛！</span>
             {% elif battle.filetype == 24 %}
                 <span>总力战<br />BOSS {{ auto_zhcn_gen(battle.name) }}</span>
+            {% elif battle.filetype == 28 %}
+                <span>世界BOSS<br />BOSS {{ auto_zhcn_gen(battle.name) }}</span>
             {% else %}
                 {% if battle.filetype == 25 %}
                     <span>悬赏通缉<br/>{{ auto_zhcn_gen(battle.name) }}</span>

@@ -2,9 +2,11 @@
 
 {% block title %}Story/{{ story.name.en }}{% endblock title %}
 {% block article_content %}
-    {% from "template/en/_macro.html" import get_ordinal_number, output_usedby_character, output_usedby_track_list, output_usedby_background_list, track_type_for_show %}
+    {% from "template/en/_macro_page.html" import output_usedby_character, output_usedby_track_list, output_usedby_background_list  %}
+    {% from "template/en/_macro.html" import get_ordinal_number, filetype_to_name, generate_track_anchor %}
+    {% from "template/base/_macro.html" import get_story_text_color_css, get_storypart_text_color_css %}
 
-    <h1>Story/<span class="{% if story.is_battle %}text-danger{% elif story.is_memory %}text-momo{% else %}text-primary{% endif %}">{{ story.name.en }}</span></h1>
+    <h1>Story/<span class="{{ get_story_text_color_css(story) }}">{{ story.name.en }}</span></h1>
     {% include "template/en/infobox/story.html" %}
     {% if story.filetype == 11 %}
         <p><b>{{ story.name.en }}</b> is the {{ get_ordinal_number(story.pos.segment) }} story of Chapter {{ story.pos.chapter }}, Volume {{ story.pos.volume }} of the main story.</p>
@@ -26,7 +28,7 @@
     {% if story.is_battle or story.is_memory %}
         <ul>
             {% for track in story.bgm_special %}
-                <li>{{ track_type_for_show(track) }}&nbsp;<a href="/en/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}.html">{{ track.no }}. {{ track.name.realname.en }}</a></li>
+                <li>{{ generate_track_anchor(track, 0, 0, 0, 0, 1) }}</li>
             {% endfor %}
         </ul>
     {% else %}
@@ -35,18 +37,24 @@
 
     <h2>Story Parts</h2>
     {% for part in story.part %}
-        {% if part.is_memory %}<h3 class="text-momo"{% elif part.is_battle %}<h3 class="text-danger"{% elif part.is_momotalk %}<h3{% else %}<h3 class="text-primary"{% endif %} id="story-part-{{ loop.index }}">{{ loop.index }}. {{ part.name.en }}</h3>
-        <p>{{ part.desc.en }}</p>
-        <h4>Characters</h4>
-        {% if part.is_battle %}
-            {{ output_usedby_character(part, "story-" + story.instance_id, story.instance_id, "story", "True", part.battle_leader_pos) }}
-        {% else %}
-            {{ output_usedby_character(part, "story-" + story.instance_id, story.instance_id, "story") }}
-        {% endif %}
-        <h4>Tracks</h4>
-        {{ output_usedby_track_list(part.track, "story-" + story.instance_id, "story", story.instance_id) }}
-        <h4>Backgrounds</h4>
-        {{ output_usedby_background_list(part.background, "story-" + story.instance_id, story.instance_id, "story") }}
+        {% set part_index = loop.index %}
+        <h3 class="{{ get_storypart_text_color_css(part) }}" id="story-part-{{ loop.index }}">{{ loop.index }}. {{ part.name.en }}</h3>
+
+        {% for segment in part.data %}
+            <ul style="margin: 0;">
+                <li id="story-part-{{ part_index }}-seg-{{ loop.index }}">{{ segment.desc.en }}</li>
+                <h4>Characters</h4>
+                {% if part.is_battle %}
+                    {{ output_usedby_character(segment, "story-" + story.instance_id, story.instance_id, "story", "True", part.battle_leader_pos) }}
+                {% else %}
+                    {{ output_usedby_character(segment, "story-" + story.instance_id, story.instance_id, "story") }}
+                {% endif %}
+                <h4>Tracks</h4>
+                {{ output_usedby_track_list(segment.track, "story-" + story.instance_id, "story", story.instance_id) }}
+                <h4>Backgrounds</h4>
+                {{ output_usedby_background_list(segment.background, "story-" + story.instance_id, story.instance_id, "story") }}
+            </ul>
+        {% endfor %}
     {% else %}
         <p>Nothing to show!</p>
     {% endfor %}

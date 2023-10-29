@@ -1,66 +1,69 @@
 {% extends "template/base/base.html" %}
 {% block body_langcode %}en{% endblock %}
+{% set curr_lang = "en" %}
 
 {% block header %}
     {% include "template/en/header.html" %}
 {% endblock header %}
-{% block navi %}
-    {# Entry mapping #}
-    {% if background %}{% set entry_ = background %}
-    {% elif event %}{% set entry_ = event %}
-    {% elif battle %}{% set entry_ = battle %}
-    {% elif char %}{% set entry_ = char %}
-    {% elif story %}{% set entry_ = story %}
-    {% elif tag %}{% set entry_ = tag %}
-    {% elif track %}{% set entry_ = track %}
-    {% elif ui %}{% set entry_ = ui %}
-    {% elif video %}{% set entry_ = video %}
-    {% endif %}
+{% set navi_var %}
+    {% block navi %}
+        {# Entry mapping #}
+        {% if background %}{% set entry_ = background %}
+        {% elif event %}{% set entry_ = event %}
+        {% elif battle %}{% set entry_ = battle %}
+        {% elif char %}{% set entry_ = char %}
+        {% elif story %}{% set entry_ = story %}
+        {% elif tag %}{% set entry_ = tag %}
+        {% elif track %}{% set entry_ = track %}
+        {% elif ui %}{% set entry_ = ui %}
+        {% elif video %}{% set entry_ = video %}
+        {% elif album %}{% set entry_ = album %}
+        {% endif %}
 
-    {% if entry_ and entry_.filetype > 0 and entry_.filetype not in [52, 15] %}
-        <p class="navi-p"><a href=".">&lt;-- Return to the previous directory</a></p>
-    {% else %}
-        <p class="navi-p"><a href="..">&lt;-- Return to the previous directory</a></p>
-    {% endif %}
+        {% if (entry_ and entry_.filetype > 0 and entry_.filetype not in [52, 15]) or is_static == "static" %}
+            <p class="navi-p"><a href=".">&lt;-- Return to the previous directory</a></p>
+        {% else %}
+            <p class="navi-p"><a href="..">&lt;-- Return to the previous directory</a></p>
+        {% endif %}
 
-    {% if entry_ and entry_.interpage %}
-        {% if entry_.interpage %}
-            {% set _prev = entry_.interpage.prev %}
-            {% if _prev.name != "[NO_PREV]" %}
-                {% if 1 <= entry_.filetype <= 5 %}
-                    <p class="navi-p"><a href="/en/{{ _prev.namespace|join('/') }}.html">&lt;-- Previous page: {{ _prev.name.realname.en }}</a></p>
-                {% elif entry_.filetype in [52] %}
-                    {# why am i doing this #}
-                    <p class="navi-p"><a href="/en/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|lower }}">&lt;-- Previous page: {{ _prev.name.en }}</a></p>
-                {% elif 11 <= entry_.filetype <= 16 and entry_.filetype not in [14, 15] %}
-                    <p class="navi-p"><a href="/en/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|int|string }}.html">&lt;-- Previous page: {{ _prev.name.en }}</a></p>
+        {% if entry_ and entry_.interpage %}
+            {% if entry_.interpage %}
+                {% set _prev = entry_.interpage.prev %}
+                {% if _prev.name != "[NO_PREV]" %}
+                    {% if 1 <= entry_.filetype <= 5 %}
+                        <p class="navi-p"><a href="/en/{{ _prev.namespace|join('/') }}.html">&lt;-- Previous page: {{ _prev.name.realname.en }}</a></p>
+                    {% elif entry_.filetype in [52] %}
+                        {# why am i doing this #}
+                        <p class="navi-p"><a href="/en/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|lower }}">&lt;-- Previous page: {{ _prev.name.en }}</a></p>
+                    {% elif 11 <= entry_.filetype <= 16 and entry_.filetype not in [14, 15] %}
+                        <p class="navi-p"><a href="/en/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|int|string }}.html">&lt;-- Previous page: {{ _prev.name.en }}</a></p>
+                    {% else %}
+                        <p class="navi-p"><a href="/en/{{ _prev.namespace|join('/') }}.html">&lt;-- Previous page: {{ _prev.name.en }}</a></p>
+                    {% endif %}
                 {% else %}
-                    <p class="navi-p"><a href="/en/{{ _prev.namespace|join('/') }}.html">&lt;-- Previous page: {{ _prev.name.en }}</a></p>
+                    <p class="navi-p">No previous page found.</p>
                 {% endif %}
-            {% else %}
-                <p class="navi-p">No previous page found.</p>
+            {% endif %}
+            {% if entry_.interpage.next %}
+                {% set _next = entry_.interpage.next %}
+                {% if _next.name != "[NO_NEXT]" %}
+                    {% if 1 <= entry_.filetype <= 5 %}
+                        <p class="navi-p"><a href="/en/{{ _next.namespace|join('/') }}.html">--&gt; Next page: {{ _next.name.realname.en }}</a></p>
+                    {% elif entry_.filetype in [52] %}
+                        {# why am i doing this #}
+                        <p class="navi-p"><a href="/en/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|lower }}">--&gt; Next page: {{ _next.name.en }}</a></p>
+                    {% elif 11 <= entry_.filetype <= 16 and entry_.filetype not in [14, 15] %}
+                        <p class="navi-p"><a href="/en/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|int|string }}.html">--&gt; Next Page: {{ _next.name.en }}</a></p>
+                    {% else %}
+                        <p class="navi-p"><a href="/en/{{ _next.namespace|join('/') }}.html">--&gt; Next page: {{ _next.name.en }}</a></p>
+                    {% endif %}
+                {% else %}
+                    <p class="navi-p">No next page found.</p>
+                {% endif %}
             {% endif %}
         {% endif %}
-        {% if entry_.interpage.next %}
-            {% set _next = entry_.interpage.next %}
-            {% if _next.name != "[NO_NEXT]" %}
-                {% if 1 <= entry_.filetype <= 5 %}
-                    <p class="navi-p"><a href="/en/{{ _next.namespace|join('/') }}.html">--&gt; Next page: {{ _next.name.realname.en }}</a></p>
-                {% elif entry_.filetype in [52] %}
-                    {# why am i doing this #}
-                    <p class="navi-p"><a href="/en/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|lower }}">--&gt; Next page: {{ _next.name.en }}</a></p>
-                {% elif 11 <= entry_.filetype <= 16 and entry_.filetype not in [14, 15] %}
-                    <p class="navi-p"><a href="/en/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|int|string }}.html">--&gt; Next Page: {{ _next.name.en }}</a></p>
-                {% else %}
-                    <p class="navi-p"><a href="/en/{{ _next.namespace|join('/') }}.html">--&gt; Next page: {{ _next.name.en }}</a></p>
-                {% endif %}
-            {% else %}
-                <p class="navi-p">No next page found.</p>
-            {% endif %}
-        {% endif %}
-    {% endif %}
-    <hr />
-{% endblock navi %}
+    {% endblock navi %}
+{% endset %}
 {% block footer %}
     {% include "template/en/footer.html" %}
     <script>display_char_lang_element('en');</script>

@@ -7,10 +7,10 @@
 
     <title>{% block title %}{% endblock title %}- BA OST Index</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/themes/light.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha256-whL0tQWoY1Ku1iskqPFvmZ+CHsvmRWx/PIoEvIeWh4I=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/dist/tippy-bundle.umd.min.js"></script>
+    <script src="/static/jsdelivr/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/jsdelivr/tippy.light.min.css">
+    <script src="/static/jsdelivr/popper.min.js"></script>
+    <script src="/static/jsdelivr/tippy-bundle.umd.min.js"></script>
 
     <link rel="stylesheet" href="/static/css/git-wiki-style.css">
     <link rel="stylesheet" href="/static/css/wikipedialize.css">
@@ -49,35 +49,49 @@
 </head>
 
 <body style="visibility: visible; opacity: 1;" lang="{% block body_langcode %}{% endblock body_langcode %}">
-<div class="wrapper">
-    {% block header %}{% endblock header %}
-    <script>
-        function sidebar_toggle() {
-            var sidebar = document.getElementById("git-wiki-sidebar");
-            if (sidebar.style.display == "block") {
-                sidebar.style.display = "none";
-                sidebar.style.position = "inherit";
-            } else {
-                $(sidebar).attr('style', 'display: block;');
+    <div class="wrapper" id="main-wrapper">
+        {% block header %}{% endblock header %}
+        <script>
+            function sidebar_toggle() {
+                var sidebar = document.getElementById("git-wiki-sidebar");
+                if (sidebar.style.display === "block") {
+                    sidebar.style.display = "none";
+                    sidebar.style.position = "inherit";
+                } else {
+                    $(sidebar).attr('style', 'display: block;');
+                }
             }
-        }
-    </script>
+        </script>
 
-    <div class="git-wiki-page">
-        <div id="git-wiki-content">
-            {% block navi %}{% endblock navi %}
-            {% block article_content %}{% endblock article_content %}{{ content }}
+        <div class="git-wiki-page">
+            <div id="interpage-navi">
+                {% block navi %}{% endblock navi %}<hr />
+            </div>
+
+            <div id="git-wiki-content">
+                {% block article_content %}{% endblock article_content %}{{ content }}
+            </div>
+        </div>
+        <script>display_zhcn_element();</script>
+    </div>
+
+    <div id="interpage-navi-bottom">
+        <div>
+            <div id="interpage-navi-bottom-left">
+                {{ navi_var }}
+            </div>
+            <div id="interpage-navi-bottom-right"></div>
         </div>
     </div>
 
-    {% block footer %}{% endblock footer %}
-    <script>display_zhcn_element();</script>
-</div>
+    <div class="wrapper" id="bottom-wrapper">
+        {% block footer %}{% endblock footer %}
+    </div>
 
 <!--
 This page is generated with Jinja2 by Python 3.
 For more information about this project: https://github.com/BA-OST-Index/
-Generated time (UTC): {{ 0|get_current_utc }}
+Generated time (UTC): {{ get_current_utc() }}
 -->
 </body>
 </html>

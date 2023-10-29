@@ -10,3 +10,7 @@
 	path = static
 	url = https://github.com/BA-OST-Index/ost_data_site_static.git
 	branch = main
+[submodule "dev-changelogs"]
+	path = dev_changelogs
+	url = https://github.com/BA-OST-Index/dev-changelogs.git
+	branch = main

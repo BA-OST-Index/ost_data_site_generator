@@ -1,0 +1,15 @@
+{# 重写 _macro.html 的屎山代码 #}
+{# 然后所有的text都需要用<span>套起来，不然的话会莫名其妙多空格 #}
+{# 不允许直接带其它标签，如<p> <li>除非是特殊用代码 #}
+
+{# 常量 #}
+{% set current_lang = "zh_cn" %}
+
+{# 常用macro #}
+{% from 'template/zh_cn/_macro.html' import auto_zhcn_gen %}
+
+{# 各种macro #}
+{# 主要是在track.html里用 #}
+{% macro gen_album_anchor(album) %}
+    <span><a href="/{{ current_lang }}/album/{{ album.album_id }}.html">{{ album.name.zh_cn }}</a> ({{ album.disc_num }} discs) [{{ album.release_date_format }}]</span>
+{% endmacro %}

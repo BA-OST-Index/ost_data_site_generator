@@ -7,63 +7,65 @@
 {% endblock header %}
 
 {% macro get_zhcn(data) %}{% if data.zh_cn %}{{ data.zh_cn }}{% else %}{{ data.zh_cn_jp }}{% endif %}{% endmacro %}
-{% block navi %}
-    {# Entry mapping #}
-    {% if background %}{% set entry_ = background %}
-    {% elif event %}{% set entry_ = event %}
-    {% elif battle %}{% set entry_ = battle %}
-    {% elif char %}{% set entry_ = char %}
-    {% elif story %}{% set entry_ = story %}
-    {% elif tag %}{% set entry_ = tag %}
-    {% elif track %}{% set entry_ = track %}
-    {% elif ui %}{% set entry_ = ui %}
-    {% elif video %}{% set entry_ = video %}
-    {% endif %}
+{% set navi_var %}
+    {% block navi %}
+        {# Entry mapping #}
+        {% if background %}{% set entry_ = background %}
+        {% elif event %}{% set entry_ = event %}
+        {% elif battle %}{% set entry_ = battle %}
+        {% elif char %}{% set entry_ = char %}
+        {% elif story %}{% set entry_ = story %}
+        {% elif tag %}{% set entry_ = tag %}
+        {% elif track %}{% set entry_ = track %}
+        {% elif ui %}{% set entry_ = ui %}
+        {% elif video %}{% set entry_ = video %}
+        {% elif album %}{% set entry_ = album %}
+        {% endif %}
 
-    {% if entry_ and entry_.filetype > 0 and entry_.filetype not in [52, 15] %}
-        <p class="navi-p"><a href=".">&lt;-- 返回到上一级目录</a></p>
-    {% else %}
-        <p class="navi-p"><a href="..">&lt;-- 返回到上一级目录</a></p>
-    {% endif %}
+        {% if (entry_ and entry_.filetype > 0 and entry_.filetype not in [52, 15]) or is_static == "static" %}
+            <p class="navi-p"><a href=".">&lt;-- 返回到上一级目录</a></p>
+        {% else %}
+            <p class="navi-p"><a href="..">&lt;-- 返回到上一级目录</a></p>
+        {% endif %}
 
-    {% if entry_ and entry_.interpage %}
-        {% if entry_.interpage %}
-            {% set _prev = entry_.interpage.prev %}
-            {% if _prev.name != "[NO_PREV]" %}
-                {% if 1 <= entry_.filetype <= 5 %}
-                    <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- 上一页：{{ _prev.name.realname.en }} {% if _prev.name.realname.zh_cn %}({{ _prev.name.realname.zh_cn }}){% endif %}</a></p>
-                {% elif entry_.filetype in [52] %}
-                    {# why am i doing this #}
-                    <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|lower }}">&lt;-- 上一页: {{ get_zhcn(_prev.name) }}</a></p>
-                {% elif 11 <= entry_.filetype <= 16 and entry_.filetype not in [14, 15] %}
-                    <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|int|string }}.html">&lt;-- 上一页: {{ get_zhcn(_prev.name) }}</a></p>
+        {% if entry_ and entry_.interpage %}
+            {% if entry_.interpage %}
+                {% set _prev = entry_.interpage.prev %}
+                {% if _prev.name != "[NO_PREV]" %}
+                    {% if 1 <= entry_.filetype <= 5 %}
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- 上一页：{{ _prev.name.realname.en }} {% if _prev.name.realname.zh_cn %}({{ _prev.name.realname.zh_cn }}){% endif %}</a></p>
+                    {% elif entry_.filetype in [52] %}
+                        {# why am i doing this #}
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|lower }}">&lt;-- 上一页: {{ get_zhcn(_prev.name) }}</a></p>
+                    {% elif 11 <= entry_.filetype <= 16 and entry_.filetype not in [14, 15] %}
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|int|string }}.html">&lt;-- 上一页: {{ get_zhcn(_prev.name) }}</a></p>
+                    {% else %}
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- 上一页：{{ get_zhcn(_prev.name) }}</a></p>
+                    {% endif %}
                 {% else %}
-                    <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- 上一页：{{ get_zhcn(_prev.name) }}</a></p>
+                    <p class="navi-p">未找到上一页</p>
                 {% endif %}
-            {% else %}
-                <p class="navi-p">未找到上一页</p>
+            {% endif %}
+            {% if entry_.interpage.next %}
+                {% set _next = entry_.interpage.next %}
+                {% if _next.name != "[NO_NEXT]" %}
+                    {% if 1 <= entry_.filetype <= 5 %}
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">--&gt; 下一页：{{ _next.name.realname.en }} {% if _next.name.realname.zh_cn %}({{ _next.name.realname.zh_cn }}){% endif %}</a></p>
+                    {% elif entry_.filetype in [52] %}
+                        {# why am i doing this #}
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|lower }}">--&gt; 下一页: {{ get_zhcn(_next.name) }}</a></p>
+                    {% elif 11 <= entry_.filetype <= 16 and entry_.filetype not in [14, 15] %}
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|int|string }}.html">--&gt; 下一页: {{ get_zhcn(_next.name) }}</a></p>
+                    {% else %}
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">--&gt; 下一页: {{ get_zhcn(_next.name) }}</a></p>
+                    {% endif %}
+                {% else %}
+                    <p class="navi-p">未找到下一页</p>
+                {% endif %}
             {% endif %}
         {% endif %}
-        {% if entry_.interpage.next %}
-            {% set _next = entry_.interpage.next %}
-            {% if _next.name != "[NO_NEXT]" %}
-                {% if 1 <= entry_.filetype <= 5 %}
-                    <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">--&gt; 下一页：{{ _next.name.realname.en }} {% if _next.name.realname.zh_cn %}({{ _next.name.realname.zh_cn }}){% endif %}</a></p>
-                {% elif entry_.filetype in [52] %}
-                    {# why am i doing this #}
-                    <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|lower }}">--&gt; 下一页: {{ get_zhcn(_next.name) }}</a></p>
-                {% elif 11 <= entry_.filetype <= 16 and entry_.filetype not in [14, 15] %}
-                    <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|int|string }}.html">--&gt; 下一页: {{ get_zhcn(_next.name) }}</a></p>
-                {% else %}
-                    <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">--&gt; 下一页: {{ get_zhcn(_next.name) }}</a></p>
-                {% endif %}
-            {% else %}
-                <p class="navi-p">未找到下一页</p>
-            {% endif %}
-        {% endif %}
-    {% endif %}
-    <hr />
-{% endblock navi %}
+    {% endblock navi %}
+{% endset %}
 {% block footer %}
     {% include "template/zh_cn/footer.html" %}
     <script>display_char_lang_element('zh');</script>
