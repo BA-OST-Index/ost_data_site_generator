@@ -3,7 +3,7 @@
 
 {% block title %}Video/{{ video.name.en }}{% endblock title %}
 {% block other_head %}
-    <script src="/static/js/track_player.js"></script>
+    <script src="{{ get_static('js/track_player.js') }}"></script>
 {% endblock other_head %}
 {% block article_content %}
     <h1>Video/{{ video.name.en }}</h1>

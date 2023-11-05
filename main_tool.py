@@ -2,12 +2,17 @@ import datetime
 import minify_html
 import os
 import json
+import urllib.parse
 from random import choices as ran_choices
 from collections import OrderedDict
 from jinja2 import UndefinedError
+from functools import lru_cache
+from main_cache import GenerationCache
 
 TOOLTIP_ID = set()
 TOOLTIP_CHAR_SET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_"
+
+STATIC_BASE_URL = "/static/"
 
 
 class JinjaTool:
@@ -75,6 +80,7 @@ class JinjaTool:
         raise ValueError(f"{instance_id}, {instance_type}")
 
     @staticmethod
+    @lru_cache()
     def arg_check(arg):
         # test if is undefined
         if hasattr(arg, "_undefined_exception"):
@@ -108,6 +114,12 @@ class JinjaTool:
     def storypart_extract_all_data_characters(parts):
         return JinjaTool.storypart_extract_all_data(parts, "character")
 
+    @staticmethod
+    @lru_cache()
+    def get_static(path):
+        global STATIC_BASE_URL
+        return urllib.parse.urljoin(STATIC_BASE_URL, path)
+
 
 class TemplateTool:
     @staticmethod
@@ -135,6 +147,12 @@ class TemplateTool:
         """返回一个 [[Story, [[Part, loop_index, seg_index, tooltip_id], ...]], ...]"""
         all_story = []
 
+        # if instance_type == "story":
+        #     cache_id = f"background-{background['uuid']}-story"
+        #     if GenerationCache.check_for_cache("all", cache_id):
+        #         return GenerationCache.get_from_cache("all", cache_id)
+
+
         for story in extra_data.values():
             story = story[0]
             story_parts = []
@@ -145,7 +163,7 @@ class TemplateTool:
                     is_exit = 0
                     for bg in segment["background"]:
                         if bg["uuid"] == background["uuid"]:
-                            if instance_type == "story":
+                            if instance_type == "story" or instance_type == "character":
                                 is_exit = 1
                                 break
                             elif instance_type == "track":
@@ -164,11 +182,18 @@ class TemplateTool:
             if len(story_parts) != 0:
                 all_story.append([story, story_parts])
 
+        # if instance_type == "story":
+        #     GenerationCache.add_to_cache("all", cache_id, all_story)
         return all_story
 
     @staticmethod
     def py_tooltip_track(track, instance_id, instance_type, extra_data):
         all_story = []
+
+        # if instance_type == "story":
+        #     cache_id = f"track-{track['uuid']}-story"
+        #     if GenerationCache.check_for_cache("all", cache_id):
+        #         return GenerationCache.get_from_cache("all", cache_id)
 
         for story in extra_data["data_story"].values():
             story = story[0]
@@ -180,7 +205,7 @@ class TemplateTool:
                     is_exit = 0
                     for story_track in segment["track"]:
                         if story_track["instance_id"] == track["instance_id"]:
-                            if instance_type == "story":
+                            if instance_type == "story" or instance_type == "album":
                                 is_exit = 1
                                 break
                             elif instance_type == "character":
@@ -211,6 +236,9 @@ class TemplateTool:
             if len(related_parts) != 0:
                 all_story.append([story, related_parts])
 
+        # if instance_type == "story":
+        #     GenerationCache.add_to_cache("all", cache_id, all_story)
+
         return all_story
 
     @staticmethod
@@ -224,6 +252,11 @@ class TemplateTool:
             char_type = "stu"
         outer_data = char_data["used_by"]
 
+        # if instance_type == "story":
+        #     cache_id = f"character-{char_data['uuid']}-story"
+        #     if GenerationCache.check_for_cache("all", cache_id):
+        #         return GenerationCache.get_from_cache("all", cache_id)
+
         all_story = []
         for story in outer_data["data_story"].values():
             story = story[0]
@@ -234,8 +267,16 @@ class TemplateTool:
                     is_exit = 0
                     for char in segment["character"]:
                         if char["uuid"] == char_data["uuid"]:
-                            is_exit = 1
-                            break
+                            if instance_type == "character":
+                                for char2 in segment["character"]:
+                                    if char2["uuid"] == instance_id:
+                                        is_exit = 1
+                                        break
+                                if is_exit == 1:
+                                    break
+                            else:
+                                is_exit = 1
+                                break
 
                     if is_exit:
                         seg_index = index2
@@ -246,4 +287,50 @@ class TemplateTool:
             if len(related_parts) != 0:
                 all_story.append([story, related_parts])
 
+        # if instance_type == "story":
+        #     GenerationCache.add_to_cache("all", cache_id, all_story)
         return all_story
+
+    @staticmethod
+    def py_output_usedby_story(data_story: dict, instance_uuid, instance_key):
+        # cache_id = f"{instance_key}-{instance_uuid}-story"
+
+        all_story_with_filetype = OrderedDict()
+        _curr_filetype = 0
+
+        for key, value in data_story.items():
+            # 区分不同 filetype 故事
+            if _curr_filetype == 0:
+                _curr_filetype = value[0]["filetype"]
+                all_story_with_filetype[_curr_filetype] = []
+            else:
+                if _curr_filetype != value[0]["filetype"]:
+                    _curr_filetype = value[0]["filetype"]
+                    all_story_with_filetype[_curr_filetype] = []
+
+            value = value[0]
+
+            # appearedAt snippet
+            if instance_uuid:
+                related_parts = []
+
+                for (index, part) in enumerate(value["part"], 1):
+                    seg_index = -1
+                    for (index2, segment) in enumerate(part["data"], 1):
+                        is_exit = 0
+                        for obj in segment[instance_key]:
+                            if obj["uuid"] == instance_uuid:
+                                is_exit = 1
+
+                        if is_exit:
+                            seg_index = index2
+
+                    if seg_index != -1:
+                        related_parts.append([part, index, seg_index, JinjaTool.generate_tooltip_id()])
+
+                if len(related_parts) != 0:
+                    all_story_with_filetype[_curr_filetype].append([value, related_parts])
+
+        # GenerationCache.add_to_cache("all", cache_id, [story for (i, j) in all_story_with_filetype.items() for story in j])
+        return all_story_with_filetype
+

@@ -14,7 +14,7 @@
 {% macro generate_story_url(story) %}{{ py_generate_story_url(curr_lang, story) }}{% endmacro %}
 
 {# 通用的Story名称生成 #}
-{% macro generate_story_name(story) %}{% set ft = story.filetype %}{% if ft == 15 %}<span><img src="/static/images/student/icon/{{ story.student.image.collection_texture }}.webp" class="icon-stu">{{ story.student.name.personal_name.en|js_string_safe }}&nbsp;Bond&nbsp;Story&nbsp;{{ story.pos.no }}&nbsp;{{ story.name.en|js_string_safe }}</span>{% elif ft == 14 %}<span>Event&nbsp;{{ story.parent_data.0.name.en|js_string_safe }}&nbsp;Story&nbsp;{{ story.pos.segment }}:&nbsp;{{ story.name.en|js_string_safe }}</span>{% else %}{{ filetype_to_name(ft) }}&nbsp;Story&nbsp;Volume&nbsp;{{ story.pos.volume }}&nbsp;Chapter&nbsp;{{ story.pos.chapter }}&nbsp;Episode&nbsp;{{ story.pos.segment }}:&nbsp;{{ story.name.en|js_string_safe }}{% endif %}{% endmacro %}
+{% macro generate_story_name(story) %}{% set ft = story.filetype %}{% if ft == 15 %}<span><img src="{{ get_static('images/student/icon/' + story.student.image.collection_texture + '.webp') }}" class="icon-stu">{{ story.student.name.personal_name.en|js_string_safe }}&nbsp;Bond&nbsp;Story&nbsp;{{ story.pos.no }}&nbsp;{{ story.name.en|js_string_safe }}</span>{% elif ft == 14 %}<span>Event&nbsp;{{ story.parent_data.0.name.en|js_string_safe }}&nbsp;Story&nbsp;{{ story.pos.segment }}:&nbsp;{{ story.name.en|js_string_safe }}</span>{% else %}{{ filetype_to_name(ft) }}&nbsp;Story&nbsp;Volume&nbsp;{{ story.pos.volume }}&nbsp;Chapter&nbsp;{{ story.pos.chapter }}&nbsp;Episode&nbsp;{{ story.pos.segment }}:&nbsp;{{ story.name.en|js_string_safe }}{% endif %}{% endmacro %}
 
 {# 通用的UI <a>生成 #}
 {% macro generate_ui_anchor(ui) %}
@@ -52,15 +52,15 @@
         </a>
     {% else %}
         {% if arg_check(show_combatant_info) %}
-            {% if arg_check(is_leader) %}<img src="/static/images/ui/Image_Conquest_Leader.png" class="story-battle-leader">{% endif %}
+            {% if arg_check(is_leader) %}<img src="{{ get_static('images/ui/Image_Conquest_Leader.png') }}" class="story-battle-leader">{% endif %}
             <span><b class="{{ get_stu_type_text_color_css(char.combatant_info.squad_type.type) }}">{{ char.combatant_info.squad_type.lang.en }}</b>&nbsp;&#124;</span>
         {% endif %}
         {% if arg_check(with_school) %}
-            <img src="/static/images/schoolicon/School_Icon_{{ char.school_id|upper }}_W.png" class="invert-light schoolicon-p">
+            <img src="{{ get_static('images/schoolicon/School_Icon_' + char.school_id|upper + '_W.png') }}" class="invert-light schoolicon-p">
         {% endif %}
         <span>
             <a href="/{{ curr_lang }}/character/student/{{ char.name.path_name|lower }}/{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} {{ anchor_new_tab(new_tab) }}>
-                <img src="/static/images/student/icon/{{ char.image.collection_texture }}.webp" class="icon-stu">
+                <img src="{{ get_static('images/student/icon/' + char.image.collection_texture + '.webp') }}" class="icon-stu">
                 <span>{{ char.name.personal_name.en|js_string_safe }}</span>
             </a>
         </span>
@@ -96,7 +96,7 @@
 {% endmacro %}
 
 {% macro get_social_for_composer(composer) %}
-    <a href="{{ composer.contact.url.value }}" target="_blank"><img src="/static/images/social/{{ composer.contact.platform.en }}.png" class="social-logo">{{ composer.contact.url.platform.en }}: {{ composer.nickname }}</a>
+    <a href="{{ composer.contact.url.value }}" target="_blank"><img src="{{ get_static('images/social/' + composer.contact.platform.en + '.png') }}" class="social-logo">{{ composer.contact.url.platform.en }}: {{ composer.nickname }}</a>
 {% endmacro %}
 
 {# 生成story parts “出现于”(appearedAt) HTML代码 #}

@@ -2,10 +2,14 @@
 
 {% block title %}Background/{{ background.filename }}{% endblock title %}
 {% block article_content %}
-    {% from "template/en/_macro_page.html" import output_usedby_story, output_usedby_track %}
+    {% from "template/en/_macro_page.html" import output_usedby_story, output_usedby_track, output_usedby_character %}
     <h1>Background/{{ background.filename }}</h1>
     {% include "template/en/infobox/background.html" %}
     <p>Description: {{ background.desc.en }}</p>
+    {% if background.character|length != 0 %}
+        <h2>Characters in the image</h2>
+        {{ output_usedby_character(background, background.uuid + "-direct", background.uuid + "-direct", "background", False, -1, True) }}
+    {% endif %}
     <h2>Usage Info</h2>
     <h3>Stories</h3>
     {{ output_usedby_story(background.used_by.data_story, background.uuid, "background") }}

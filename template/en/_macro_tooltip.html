@@ -1,4 +1,4 @@
-{% from "template/en/_macro.html" import filetype_to_name, tracktype_to_name, generate_track_anchor, generate_story_anchor, generate_appearedat_html, generate_character_anchor_flat %}
+{% from "template/en/_macro.html" import filetype_to_name, tracktype_to_name, generate_track_anchor, generate_story_anchor, generate_appearedat_html, generate_character_anchor_flat, generate_character_anchor %}
 
 {# JS代码生成 #}
 {% macro tooltip_add_data_js(data) %}
@@ -64,8 +64,13 @@
             {% else %}
                 {% set loop_data = namespace(data=get_outer_json(background.filename, "background"), counter=0) %}
             {% endif %}
+
             {# 提取数据 #}
-            {% set outer_data = loop_data.data.used_by.data_story %}
+            {% if loop_data.data.filetype == -53 %}
+                {% set outer_data = loop_data.data.student.used_by.data_story %}
+            {% else %}
+                {% set outer_data = loop_data.data.used_by.data_story %}
+            {% endif %}
 
             {# 遍历数据 #}
             {% set processed_data = py_tooltip_background(background, instance_id, instance_type, outer_data) %}
@@ -73,6 +78,11 @@
                 <li>{{ generate_story_anchor(i.0)|page_minify_html }}&nbsp;{{ generate_appearedat_html(i.0, i.1)|page_minify_html }}</li>
             {% endfor %}
         </ol>
+        {% if background.character|length != 0 %}
+        <hr />
+        <p class="tooltip-subtitle">Character:</p>
+        <p>{% for char in background.character[:-1] %}<span>{{ generate_character_anchor(char, 0, 0, background.uuid + "-direct", 0, 0, 0, 0) }}&nbsp;|&nbsp;</span>{% endfor %}{{ generate_character_anchor(background.character[-1], 0, 0, background.uuid + "-direct", 0, 0, 0, 0) }}</p>
+        {% endif %}
     </div>
 {% endmacro %}
 

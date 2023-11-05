@@ -7,11 +7,7 @@
     <p>本页列出 活动“{{ auto_zhcn_gen(event.desc) }}” 的全部项目。</p>
     <ul>
         {% for i in event.include %}
-            {% if i.1.name.zh_cn %}
-                <li><a href="{{ i.0 }}">{{ i.1.name.zh_cn }} (ID: {{ i.0 }})</a></li>
-            {% else %}
-                <li><a href="{{ i.0 }}">{{ auto_zhcn_gen(i.1.name) }} (ID: {{ i.0 }})</a></li>
-            {% endif %}
+            <li><a href="{{ i.0 }}/">{{ auto_zhcn_gen(i.1.name) }} (ID: {{ i.0 }})</a></li>
         {% else %}
             <li>{{ nothing_to_show }}</li>
         {% endfor %}

@@ -3,8 +3,8 @@
 
 {% block title %}{{ char.name.zh_cn }}{% endblock title %}
 {% block other_head %}
-    <script src="/static/js/char_lang_display.js"></script>
-    <script src="/static/js/char_desc_display.js"></script>
+    <script src="{{ get_static('js/char_lang_display.js') }}"></script>
+    <script src="{{ get_static('js/char_desc_display.js') }}"></script>
 {% endblock other_head %}
 {% block article_content %}
     <h1>{{ char.name.zh_cn }}</h1>
@@ -41,12 +41,12 @@
                 {% set curr = i.1 %}
                 <li>
                     <a href="/zh_cn/character/student/{{ curr.student.name.path_name|lower }}/">
-                        <img src="/static/images/student/icon/{{ curr.student.image.collection_texture }}.webp" class="icon-stu"/>{{ auto_zhcn_gen(curr.student.name.name) }}<span lang="en" class="char-lang-en">&nbsp;/&nbsp;{{ curr.student.name.name.en }}</span><span lang="jp" class="char-lang-jp">&nbsp;/&nbsp;{{ curr.student.name.name.jp }}</span>
+                        <img src="{{ get_static('images/student/icon/' + curr.student.image.collection_texture + '.webp') }}" class="icon-stu"/>{{ auto_zhcn_gen(curr.student.name.name) }}<span lang="en" class="char-lang-en">&nbsp;/&nbsp;{{ curr.student.name.name.en }}</span><span lang="jp" class="char-lang-jp">&nbsp;/&nbsp;{{ curr.student.name.name.jp }}</span>
                     </a>
                     <br/>
                     <div class="stu-list-desc">
                         <span>
-                            <img src="/static/images/schoolicon/School_Icon_{{ curr.student.school_id|upper }}_W.png" class="invert-light schoolicon-p"><span>{{ auto_zhcn_gen(curr.student.school.long) }}</span>&nbsp;/&nbsp;<span>{{ auto_zhcn_gen(curr.student.club) }}</span>&nbsp;/&nbsp;<span>{{ auto_zhcn_gen(curr.student.birthday.localized) }}</span>
+                            <img src="{{ get_static('images/schoolicon/School_Icon_' + curr.student.school_id|upper + '_W.png') }}" class="invert-light schoolicon-p"><span>{{ auto_zhcn_gen(curr.student.school.long) }}</span>&nbsp;/&nbsp;<span>{{ auto_zhcn_gen(curr.student.club) }}</span>&nbsp;/&nbsp;<span>{{ auto_zhcn_gen(curr.student.birthday.localized) }}</span>
                         </span>
                     </div>
                 </li>
@@ -62,12 +62,12 @@
                     {% set curr = curr.student %}
                     <li>
                         <a href="/zh_cn/character/student/{{ curr.name.path_name|lower }}/">
-                            <img src="/static/images/student/icon/{{ curr.image.collection_texture }}.webp" class="icon-stu"/>{{ auto_zhcn_gen(curr.name.name) }}<span lang="en" class="char-lang-en">&nbsp;/&nbsp;{{ curr.name.name.en }}</span><span lang="jp" class="char-lang-jp">&nbsp;/&nbsp;{{ curr.name.name.jp }}</span>
+                            <img src="{{ get_static('images/student/icon/' + curr.image.collection_texture + '.webp') }}" class="icon-stu"/>{{ auto_zhcn_gen(curr.name.name) }}<span lang="en" class="char-lang-en">&nbsp;/&nbsp;{{ curr.name.name.en }}</span><span lang="jp" class="char-lang-jp">&nbsp;/&nbsp;{{ curr.name.name.jp }}</span>
                         </a>
                         <br/>
                         <div class="stu-list-desc">
                             <span>
-                                <img src="/static/images/schoolicon/School_Icon_{{ curr.school_id|upper }}_W.png" class="invert-light schoolicon-p"><span>{{ auto_zhcn_gen(curr.school.long) }}</span>&nbsp;/&nbsp;<span>{{ auto_zhcn_gen(curr.club) }}</span>&nbsp;/&nbsp;<span>{{ auto_zhcn_gen(curr.birthday.localized) }}</span>
+                                <img src="{{ get_static('images/schoolicon/School_Icon_' + curr.school_id|upper + '_W.png') }}" class="invert-light schoolicon-p"><span>{{ auto_zhcn_gen(curr.school.long) }}</span>&nbsp;/&nbsp;<span>{{ auto_zhcn_gen(curr.club) }}</span>&nbsp;/&nbsp;<span>{{ auto_zhcn_gen(curr.birthday.localized) }}</span>
                             </span>
                         </div>
                     </li>

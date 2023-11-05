@@ -11,7 +11,7 @@
     {% if story.filetype == 11 %}
         <p><b>{{ story.name.en }}</b> is the {{ get_ordinal_number(story.pos.segment) }} story of Chapter {{ story.pos.chapter }}, Volume {{ story.pos.volume }} of the main story.</p>
     {% elif story.filetype == 15 %}
-        <p><b>{{ story.name.en }}</b> is the {{ get_ordinal_number(story.pos.no) }} story of the bond story of the student <img src="/static/images/student/icon/{{ story.student.image.collection_texture }}.webp" class="icon-stu"/>{{ story.student.name.personal_name.en }}.</p>
+        <p><b>{{ story.name.en }}</b> is the {{ get_ordinal_number(story.pos.no) }} story of the bond story of the student <img src="{{ get_static('images/student/icon/' + story.student.image.collection_texture + '.webp') }}" class="icon-stu"/>{{ story.student.name.personal_name.en }}.</p>
     {% elif story.filetype == 14 %}
         <p><b>{{ story.name.en }}</b> is the {{ get_ordinal_number(story.pos.segment) }} story of the event {{ story.parent_data.0.name.en }}.</p>
     {% else %}

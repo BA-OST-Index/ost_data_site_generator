@@ -12,6 +12,6 @@
     <p>Overview: In total, there are <b>{{ album.track_num }} tracks</b> (<b>{{ album.disc_num }} discs</b>) on this album. This album is released on <b>{{ album.release_date_format }}</b>.</p>
     {% for disc in album.tracks %}
         <h3>Disc {{ loop.index }} ({{ disc|length }} tracks)</h3>
-        {{ output_usedby_track_list(disc) }}
+        {{ output_usedby_track_list(disc, "album-" + album.album_no, "album", album.uuid) }}
     {% endfor %}
 {% endblock %}

@@ -6,7 +6,7 @@
     <p>{{ event.desc.en }}</p>
     <ul>
         {% for i in event.include %}
-            <li><a href="{{ i.0 }}">{{ i.1.name.en }} (ID: {{ i.0 }})</a></li>
+            <li><a href="{{ i.0 }}/">{{ i.1.name.en }} (ID: {{ i.0 }})</a></li>
         {% else %}
             <li>Nothing to show!</li>
         {% endfor %}

@@ -1,31 +1,39 @@
 import json
 import os
-import urllib.parse
+import time
 import webbrowser
-from jinja2 import Environment, FileSystemLoader
-from main_tool import JinjaTool
+from _main import *
 
-environment = Environment(loader=FileSystemLoader(os.path.split(__file__)[0]), extensions=["jinja2.ext.loopcontrols",
-                                                                                           "jinja2.ext.do"])
-environment.filters["js_string_safe"] = JinjaTool.js_string_safe
-environment.filters["js_html_string_safe"] = JinjaTool.js_html_string_safe
-environment.filters["is_list"] = lambda obj: isinstance(obj, list)
-environment.filters["page_minify_html"] = JinjaTool.page_minify_html
-environment.globals["get_current_utc"] = JinjaTool.get_current_utc
-environment.globals["generate_tooltip_id"] = JinjaTool.generate_tooltip_id
-environment.globals["get_outer_json"] = JinjaTool.get_outer_json
-environment.globals["arg_check"] = JinjaTool.arg_check
-environment.globals["urljoin"] = urllib.parse.urljoin
+environment = get_jinja_env()
 
-path = "test.txt"
-name = "test.html"
-data_path = "exported_data/main/story/main/1/1/02.json"
+
+path = "page/en/story.html"
+name = "en/main/story/main/2/2/25.html"
+data_path = "exported_data/main/story/main/2/2/25.json"
+
+'''
+path = "page/en/npc.html"
+name = "en/character/npc/ariskey/index.html"
+data_path = "exported_data/character/npc/ArisKey/ArisKey.json"
+'''
+'''
+path = "page/en/background.html"
+name = "en/background/BG_AronaRoom_In.jpg.html"
+data_path = "exported_data/background/BG_AronaRoom_In.jpg.json"
+'''
 
 with open(data_path, mode="r", encoding="UTF-8") as file:
     data = json.load(file)
 
 template = environment.get_template(path)
+st = time.time_ns()
 result = template.render(is_static="", story=data)
+print((time.time_ns() - st) / 1e+6)
+
+st = time.time_ns()
+for i in range(10): template.render(is_static="", story=data)
+print((time.time_ns() - st) / 1e+6 / 100)
+
 os.makedirs(os.path.split(os.path.join("data_html/", name))[0], exist_ok=True)
 with open(os.path.join("data_html/", name), mode="w", encoding="UTF-8") as file:
     file.write(result)

@@ -6,58 +6,28 @@
     {% set _curr_filetype = namespace(filetype=0) %}
     {% set tooltip_data = {} %}
 
-    {% for key, value in data_story.items() %}
-        {# 记录当前的filetype，稍后用于切割不同故事 #}
-        {% if _curr_filetype.filetype == 0 %}
-            {# 循环刚刚开始，加上<ul> #}
-            {% set _curr_filetype.filetype = value.0.filetype %}
-            <h4>{{ filetype_to_name(_curr_filetype.filetype) }} Story</h4><ul>
-        {% else %}
-            {% if _curr_filetype.filetype != value.0.filetype %}
-                {# 如果当前文件已经不再是之前的 #}
-                {% set _curr_filetype.filetype = value.0.filetype %}
-                </ul><h4>{{ filetype_to_name(_curr_filetype.filetype) }} Story</h4><ul>
-            {% endif %}
-        {% endif %}
+    {% set processed_data = py_output_usedby_story(data_story, instance_uuid, instance_key) %}
+    {% for filetype, story_list in processed_data.items() %}
+        <h4>{{ filetype_to_name(filetype) }} Story</h4>
 
-        {% set tooltip_id = generate_tooltip_id() %}
+        <ul>
+        {% for story in story_list %}
+            {% set story_ = story.0 %}
+            {% set related_parts = story.1 %}
+            {% set storyinfo_tooltip = generate_tooltip_id() %}
 
-        <li id="story-{{ value.0.instance_id }}">
-        {% set value = value.0 %}
-        {{ generate_story_anchor(value, tooltip_id) }}
-        {% do tooltip_data.update({tooltip_id: tooltip_storyinfo(value)}) %}
+            <li id="story-{{ story_.instance_id }}">{{ generate_story_anchor(story_, storyinfo_tooltip) }}&nbsp;{{ generate_appearedat_html(story_, related_parts) }}</li>
+            {% do tooltip_data.update({storyinfo_tooltip: tooltip_storyinfo(story_)}) %}
 
-        {# appearedAt snippet #}
-        {% if instance_uuid %}
-            {% set related_parts = [] %}
-            {% for part in value.part %}
-                {% set part_loop = namespace(part_index=loop.index, seg_index=-1) %}
-                {% for segment in part.data %}
-                    {% set seg_loop = namespace(seg_index=loop.index, is_exit=0) %}
-                    {% for obj in segment[instance_key] %}
-                        {% if obj.uuid == instance_uuid %}
-                            {% set seg_loop.is_exit = 1 %}{% break %}
-                        {% endif %}
-                    {% endfor %}
-                    {% if seg_loop.is_exit != 0 %}
-                        {% set part_loop.seg_index = loop.index %}{% break %}
-                    {% endif %}
-                {% endfor %}
-
-                {% if part_loop.seg_index != -1 %}
-                    {% set tooltip_id = generate_tooltip_id() %}
-                    {% do related_parts.append([part, loop.index, part_loop.seg_index, tooltip_id]) %}
-                    {% do tooltip_data.update({tooltip_id: tooltip_storypart(value, part)}) %}
-                {% endif %}
+            {% for i in related_parts %}
+                {% do tooltip_data.update({i.3: tooltip_storypart(story_, i.0)}) %}
             {% endfor %}
-
-            {{ generate_appearedat_html(value, related_parts) }}
-        {% endif %}
-        </li>
+        {% endfor %}
+        </ul>
     {% else %}
         <p>Nothing to show!</p>
     {% endfor %}
-    </ul>
+
     {{ tooltip_add_data_js(tooltip_data) }}
 {% endmacro %}
 
@@ -135,8 +105,8 @@
     </ul>
 {% endmacro %}
 
-{% macro output_usedby_background(data_background, html_id, instance_id, instance_type) %}
-    {% if instance_type in ["track"] %}
+{% macro output_usedby_background(data_background, html_id, instance_id, instance_type, bg_direct) %}
+    {% if instance_type in ["track", "character"] %}
         {% set tooltip_data = {} %}
         {% set enable_tooltip = 1 %}
     {% endif %}
@@ -148,7 +118,7 @@
                     {% set tooltip_id = generate_tooltip_id() %}
                 {% endif %}
 
-                <td class="gallery-img" id="{{ value.0.uuid }}">{{ generate_background_anchor(value.0, html_id, tooltip_id) }}</td>
+                <td class="gallery-img" id="{{ value.0.uuid }}{% if arg_check(bg_direct) %}-direct{% endif %}">{{ generate_background_anchor(value.0, html_id, tooltip_id) }}</td>
 
                 {% if enable_tooltip == 1 %}
                     {% do tooltip_data.update({tooltip_id: tooltip_background(value.0, instance_id, instance_type)}) %}
@@ -225,7 +195,7 @@
 
 {% macro output_usedby_track_list(data_track, html_id, instance_type, instance_id) %}
     <ul>
-        {% if instance_type == "story" %}
+        {% if instance_type == "story" or instance_type == "album" %}
             {% set tooltip_data = {} %}
             {% set enable_tooltip = 1 %}
         {% endif %}
@@ -262,8 +232,8 @@
     </ul>
 {% endmacro %}
 
-{% macro output_usedby_character(data_character, html_id, instance_id, instance_type, output_combat_info, combat_leader_pos) %}
-    {% if instance_type in ["story", "character"] %}
+{% macro output_usedby_character(data_character, html_id, instance_id, instance_type, output_combat_info, combat_leader_pos, character_html_id) %}
+    {% if instance_type in ["story", "character", "background"] %}
         {% set enable_tooltip = 1 %}
         {% set tooltip_data = {} %}
     {% endif %}
@@ -274,10 +244,19 @@
                 {% set tooltip_id = generate_tooltip_id() %}
             {% endif %}
 
+            {% if arg_check(character_html_id) %}
+                {% if char.filetype == 52 %}
+                    {% set character_html_id = char.namespace[-1] %}
+                {% else %}
+                    {% set character_html_id = char.uuid %}
+                {% endif %}
+                {% set html_id = "" %}
+            {% endif %}
+
             {% if arg_check(output_combat_info) and loop.index0 == combat_leader_pos %}
-                <li>{{ generate_character_anchor(char, 1, 1, html_id, tooltip_id, output_combat_info, 1, 0) }}</li>
+                <li {% if arg_check(character_html_id) %}id="{{ character_html_id }}-direct"{% endif %}>{{ generate_character_anchor(char, 1, 1, html_id, tooltip_id, output_combat_info, 1, 0) }}</li>
             {% else %}
-                <li>{{ generate_character_anchor(char, 1, 1, html_id, tooltip_id, output_combat_info, 0, 0) }}</li>
+                <li {% if arg_check(character_html_id) %}id="{{ character_html_id }}-direct"{% endif %}>{{ generate_character_anchor(char, 1, 1, html_id, tooltip_id, output_combat_info, 0, 0) }}</li>
             {% endif %}
 
             {% if enable_tooltip == 1 %}
@@ -346,7 +325,7 @@
         <h3>{{ version.desc.en }}</h3>
         {% for url in version.url %}
             <div onclick="play_video('{{ url.value }}', 'track-video-{{ _version_index }}-{{ loop.index }}')" id="track-video-{{ _version_index }}-{{ loop.index }}" class="track-video-div">
-                <p><img src="/static/images/social/{{ url.platform.en }}.png" class="social-logo">{{ url.platform.en }} ({{ url.value }})</p>
+                <p><img src="{{ get_static('images/social/' + url.platform.en + '.png') }}" class="social-logo">{{ url.platform.en }} ({{ url.value }})</p>
             </div>
             <div id="track-video-{{ _version_index }}-{{ loop.index }}-container"></div>
         {% endfor %}

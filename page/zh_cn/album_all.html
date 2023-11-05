@@ -7,7 +7,7 @@
     <ul>
         {% for i in album.include %}
             {% set i = i[1] %}
-            <li><a href="/zh_cn/album/{{ i.album_id }}.html">{{ i.name.zh_cn }}</a>&nbsp;-&nbsp;{{ i.desc.zh_cn }}</li>
+            <li><a href="/zh_cn/album/{{ i.album_id }}.html">{% if i.name.zh_cn != "" %}{{ i.name.zh_cn }}{% else %}{{ i.name.en }}{% endif %}</a>&nbsp;-&nbsp;{{ i.desc.zh_cn }}</li>
         {% endfor %}
     </ul>
 {% endblock article_content %}

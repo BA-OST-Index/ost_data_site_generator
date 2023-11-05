@@ -12,11 +12,11 @@
         {% for i in story.include %}
             {% set i = i.1 %}
             {% if story.filetype == -22 %}
-                <li><a href="{{ i.namespace[-1] }}">{{ i.name.en }}</a></li>
+                <li><a href="{{ i.namespace[-1] }}/">{{ i.name.en }}</a></li>
             {% elif story.filetype == -23 %}
-                <li><a href="{{ i.namespace[-1] }}">Volume {{ i.namespace[-1] }}: {{ i.name.en }}</a><br/>{{ i.desc.en }}</li>
+                <li><a href="{{ i.namespace[-1] }}/">Volume {{ i.namespace[-1] }}: {{ i.name.en }}</a><br/>{{ i.desc.en }}</li>
             {% elif story.filetype == -24 %}
-                <li><a href="{{ i.namespace[-1] }}">Chapter {{ i.namespace[-1] }}: {{ i.name.en }}</a><br/>{{ i.desc.en }}</li>
+                <li><a href="{{ i.namespace[-1] }}/">Chapter {{ i.namespace[-1] }}: {{ i.name.en }}</a><br/>{{ i.desc.en }}</li>
             {% elif story.filetype == -25 %}
                 <li>
                     <a href="{{ i.pos.segment }}.html" class="{% if i.is_battle %}text-danger{% elif i.is_memory %}text-momo{% endif %}">Episode {{ i.pos.segment }}: {{ i.name.en }}</a>

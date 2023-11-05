@@ -2,8 +2,8 @@
 
 {% block title %}{{ char.name.en }}{% endblock title %}
 {% block other_head %}
-    <script src="/static/js/char_lang_display.js"></script>
-    <script src="/static/js/char_desc_display.js"></script>
+    <script src="{{ get_static('js/char_lang_display.js') }}"></script>
+    <script src="{{ get_static('js/char_desc_display.js') }}"></script>
 {% endblock other_head %}
 {% block article_content %}
     <h1>{{ char.name.en }}</h1>
@@ -38,12 +38,12 @@
                 {% set curr = i.1 %}
                 <li>
                     <a href="/en/character/student/{{ curr.student.name.path_name|lower }}/">
-                        <img src="/static/images/student/icon/{{ curr.student.image.collection_texture }}.webp" class="icon-stu"/>{{ curr.student.name.name.en }}<span lang="jp" class="char-lang-jp">&nbsp;/&nbsp;{{ curr.student.name.name.jp }}</span>
+                        <img src="{{ get_static('images/student/icon/{{ curr.student.image.collection_texture }}.webp') }}" class="icon-stu"/>{{ curr.student.name.name.en }}<span lang="jp" class="char-lang-jp">&nbsp;/&nbsp;{{ curr.student.name.name.jp }}</span>
                     </a>
                     <br/>
                     <div class="stu-list-desc">
                         <span>
-                            <img src="/static/images/schoolicon/School_Icon_{{ curr.student.school_id|upper }}_W.png" class="invert-light schoolicon-p"><span>{{ curr.student.school.long.en }}</span>&nbsp;/&nbsp;<span>{{ curr.student.club.en }}</span>&nbsp;/&nbsp;<span>{{ curr.student.birthday.localized.en }}</span>
+                            <img src="{{ get_static('images/schoolicon/School_Icon_' + curr.student.school_id|upper + '_W.png') }}" class="invert-light schoolicon-p"><span>{{ curr.student.school.long.en }}</span>&nbsp;/&nbsp;<span>{{ curr.student.club.en }}</span>&nbsp;/&nbsp;<span>{{ curr.student.birthday.localized.en }}</span>
                         </span>
                     </div>
                 </li>
@@ -59,12 +59,12 @@
                     {% set curr = curr.student %}
                     <li>
                         <a href="/en/character/student/{{ curr.name.path_name|lower }}/">
-                            <img src="/static/images/student/icon/{{ curr.image.collection_texture }}.webp" class="icon-stu"/>{{ curr.name.name.en }}<span lang="jp" class="char-lang-jp">&nbsp;/&nbsp;{{ curr.name.name.jp }})</span>
+                            <img src="{{ get_static('images/student/icon/' + curr.image.collection_texture + '.webp') }}" class="icon-stu"/>{{ curr.name.name.en }}<span lang="jp" class="char-lang-jp">&nbsp;/&nbsp;{{ curr.name.name.jp }})</span>
                         </a>
                         <br/>
                         <div class="stu-list-desc">
                             <span>
-                                <img src="/static/images/schoolicon/School_Icon_{{ curr.school_id|upper }}_W.png" class="invert-light schoolicon-p"><span>{{ curr.school.long.en }}</span>&nbsp;/&nbsp;<span>{{ curr.club.en }}</span>&nbsp;/&nbsp;<span>{{ curr.birthday.localized.en }}</span>
+                                <img src="{{ get_static('images/schoolicon/School_Icon_' + curr.school_id|upper  + '_W.png') }}" class="invert-light schoolicon-p"><span>{{ curr.school.long.en }}</span>&nbsp;/&nbsp;<span>{{ curr.club.en }}</span>&nbsp;/&nbsp;<span>{{ curr.birthday.localized.en }}</span>
                             </span>
                         </div>
                     </li>

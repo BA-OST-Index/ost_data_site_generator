@@ -2,7 +2,7 @@
 
 {% block title %}曲子/{{ track.no }}. {{ track.name.realname.en }} ({{ track.name.realname.zh_cn }}){% endblock title %}
 {% block other_head %}
-    <script src="/static/js/track_player.js"></script>
+    <script src="{{ get_static('js/track_player.js') }}"></script>
 {% endblock other_head %}
 {% block article_content %}
     {% from "template/zh_cn/_macro_page.html" import output_usedby_background, output_usedby_story, output_usedby_battle, output_usedby_ui, output_usedby_video, output_usedby_character_dict, track_version_video_player %}
@@ -46,7 +46,7 @@
     <p>此处显示引用了这首曲子的实例。</p>
     <h3>相关曲子</h3>
     <ul>
-        {% for i in track.related_to.track_other %}<li>{{ generate_track_anchor(i, 0, 0, 0, 0, 1) }}</li>{% else %}<li>无曲子！</li>{% endfor %}
+        {% for i in track.related_to.track_other %}<li id="album-{{ album.album_id }}">{{ generate_track_anchor(i, 0, 0, 0, 0, 1) }}</li>{% else %}<li>无曲子！</li>{% endfor %}
     </ul>
     <h3>背景</h3>
     {{ output_usedby_background(track.used_by.data_background, "track-" + track.instance_id, track.instance_id, "track") }}

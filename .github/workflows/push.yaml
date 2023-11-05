@@ -26,7 +26,7 @@ jobs:
       run: |
         git submodule update --remote
     - name: Run main.py
-      run: python main.py github
+      run: python main_prod.py
     - name: Push changes
       run: |
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"

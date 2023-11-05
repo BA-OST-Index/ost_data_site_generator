@@ -19,7 +19,7 @@
         {% for i in battle.include %}
             <!--Folder Data File-->
             {% if i.1.filetype < 0 %}
-                <li><a href="{{ i.0 }}">{{ i.1.name.zh_cn }}</a></li>
+                <li><a href="{{ i.0 }}/">{{ i.1.name.zh_cn }}</a></li>
                 {% continue %}
             {% endif %}
 

@@ -40,14 +40,21 @@
     {% else %}
         <p>{{ nothing_to_show }}</p>
     {% endfor %}
+
     <h2>其它故事</h2>
     {{ output_usedby_story(char.student.used_by.data_story, char.student.uuid, "character") }}
     <h2>曲目</h2>
     {{ output_usedby_track(char.student.used_by.data_track, 1, char.student.uuid, char.student.uuid, "character") }}
+    <h2>背景</h2>
+    <p>以下背景中均有此人物直接出现。</p>
+    {{ output_usedby_background(char.student.used_by.data_background_direct, char.student.uuid + "-direct", char.student.uuid, "character", True) }}
 
     <h2>相关人物</h2>
     <h3>其它版本</h3>
     {{ output_relatedto_character({"character": char.student.related_to.character_variant}, "True") }}
     <h3>其它人物</h3>
     {{ output_relatedto_character({"character": char.student.related_to.character_other}, "True") }}
+    <h3>在故事中途</h3>
+    <p>以下均为与该人物一起出现过的人物。</p>
+    {{ output_usedby_character_dict(char.student.used_by.data_character, char.student.uuid + "-direct", char.student.uuid, "character")  }}
 {% endblock %}

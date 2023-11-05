@@ -29,6 +29,7 @@ class TemplateEn:
 
         return track_type_dict[track_type]
 
+
 class TemplateZhCn:
     @staticmethod
     def filetype_to_name(filetype):

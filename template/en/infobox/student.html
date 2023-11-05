@@ -5,7 +5,7 @@
         <td colspan="2" class="infobox-title">{{ char.student.name.family_name.en }} {{ char.student.name.personal_name.en }}</td>
     </tr>
     <tr>
-        <td colspan="2" class="infobox-icon"><img width="95%" src="/static/images/student/portrait/{{ char.student.image.collection_texture }}.webp"><br/><br/><img width="50%" src="/static/images/student/icon/{{ char.student.image.collection_texture }}.webp" /></td>
+        <td colspan="2" class="infobox-icon"><img width="95%" src="{{ get_static('images/student/portrait/' + char.student.image.collection_texture + '.webp') }}"><br/><br/><img width="50%" src="{{ get_static('images/student/icon/' + char.student.image.collection_texture + '.webp') }}" /></td>
     </tr>
     <tr><td colspan="2" class="infobox-subtitle">General Information</td></tr>
     <tr>
