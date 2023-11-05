@@ -95,7 +95,7 @@
 {% endmacro %}
 
 {# 通用的Album <a>生成 #}
-{% macro generate_album_anchor(album, new_tab) %}
+{% macro generate_album_anchor(album, new_tab, html_id) %}
     <span><a href="/{{ curr_lang }}/album/{{ album.album_id }}.html{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {{ anchor_new_tab(new_tab) }}>{{ auto_zhcn_gen(album.name) }}&nbsp;({{ album.track_num }} discs)&nbsp;[{{ album.release_date_format }}]</a></span>
 {% endmacro %}
 
