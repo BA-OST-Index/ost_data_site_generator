@@ -1,6 +1,6 @@
 from _main import *
 
-ALL_LANGS = ["en", "zh_cn"]
+ALL_LANGS = ["zh_cn"]
 LANG_OTHER_PAGE = {
     "page/{lang}/main_all.html": "main/index.html",
     "page/{lang}/_index.html": "index.html",
@@ -11,7 +11,7 @@ OTHER_STATIC_PAGE = {
     "page/404.html": "404.html",
     "page/zh_cn/_zhcn_technical.html": "zh_cn/zhcn_technical.html"
 }
-ALL_FOLDERS = ["background", "character", "track", "album", "event", "main", "tag", "ui", "video"]
+ALL_FOLDERS = ["album", "track"]
 
 delete_old_page()
 # copy_static_file(True)
