@@ -33,7 +33,7 @@
     <p>此曲子已被收录至以下专辑。</p>
     <ul>
         {% for album in track.album %}
-            <li>{{ generate_album_anchor(album) }}</li>
+            <li>{{ generate_album_anchor(album, True, "track-" + track.instance_id) }}</li>
         {% endfor %}
     </ul>
 

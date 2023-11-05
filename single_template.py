@@ -7,9 +7,13 @@ from _main import *
 environment = get_jinja_env()
 
 
-path = "page/en/story.html"
-name = "en/main/story/main/2/2/25.html"
-data_path = "exported_data/main/story/main/2/2/25.json"
+path = "page/en/album.html"
+name = "en/album/01.html"
+data_path = "exported_data/album/01.json"
+
+path = "page/en/track.html"
+name = "en/track/ost/16.html"
+data_path = "exported_data/track/ost/16.json"
 
 '''
 path = "page/en/npc.html"
@@ -27,12 +31,8 @@ with open(data_path, mode="r", encoding="UTF-8") as file:
 
 template = environment.get_template(path)
 st = time.time_ns()
-result = template.render(is_static="", story=data)
+result = template.render(is_static="", track=data)
 print((time.time_ns() - st) / 1e+6)
-
-st = time.time_ns()
-for i in range(10): template.render(is_static="", story=data)
-print((time.time_ns() - st) / 1e+6 / 100)
 
 os.makedirs(os.path.split(os.path.join("data_html/", name))[0], exist_ok=True)
 with open(os.path.join("data_html/", name), mode="w", encoding="UTF-8") as file:

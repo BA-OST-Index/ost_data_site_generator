@@ -33,7 +33,7 @@
     <p>This track has been included in the following albums.</p>
     <ul>
         {% for album in track.album %}
-            <li id="album-{{ album.album_id }}">{{ generate_album_anchor(album) }}</li>
+            <li id="album-{{ album.album_id }}">{{ generate_album_anchor(album, True, "track-" + track.instance_id) }}</li>
         {% endfor %}
     </ul>
 

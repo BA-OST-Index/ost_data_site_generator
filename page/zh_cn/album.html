@@ -12,6 +12,6 @@
     <p>概览：本专辑中共有<b>{{ album.track_num }}首曲子</b>（<b>{{ album.disc_num }}碟片</b>）。此专辑发行于<b>{{ album.release_date_format }}</b>。</p>
     {% for disc in album.tracks %}
         <h3>第{{ loop.index }}张碟片（{{ disc|length }}首）</h3>
-        {{ output_usedby_track_list(disc, "album-" + album.album_no, "album", album.uuid) }}
+        {{ output_usedby_track_list(disc, "album-" + album.album_id, "album", album.uuid) }}
     {% endfor %}
 {% endblock %}
