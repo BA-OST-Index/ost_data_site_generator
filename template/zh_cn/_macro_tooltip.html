@@ -17,6 +17,7 @@
 {% set MAX_CHAR_DISPLAY_FOR_TRACK = 11 %} {# one-indexed, total 10 (for track usage) #}
 {% set MAX_TRACK_DISPLAY = 6 %} {# one-indexed, total 5 #}
 {% set MAX_STORY_DISPLAY = 6 %} {# one-indexed, total 6 #}
+{% set MAX_CHAR_FOR_OTHER_CHAR = 11 %}
 
 {# 提取所有story_part里头的desc #}
 {% macro get_story_part_desc(story_part) %}{% for segment in story_part.data %}{{ auto_zhcn_gen(segment.desc) }}{% endfor %}{% endmacro %}
@@ -82,7 +83,7 @@
 
         {% if background.character|length != 0 %}
         <hr />
-        <p class="tooltip-subtitle">Character:</p>
+        <p class="tooltip-subtitle">图片中的人物：</p>
         <p>{% for char in background.character[:-1] %}<span>{{ generate_character_anchor(char, 0, 0, background.uuid + "-direct", 0, 0, 0, 0) }}&nbsp;|&nbsp;</span>{% endfor %}{{ generate_character_anchor(background.character[-1], 0, 0, background.uuid + "-direct", 0, 0, 0, 0) }}</p>
         {% endif %}
     </div>
@@ -158,6 +159,31 @@
             {% set processed_data = py_tooltip_character(character, instance_id, instance_type, loop_data.data) %}
             {% for i in processed_data %}
                 <li>{{ generate_story_anchor(i.0)|page_minify_html }}&nbsp;{{ generate_appearedat_html(i.0, i.1)|page_minify_html }}</li>
+            {% endfor %}
+        </ol>
+
+        <p class="tooltip-subtitle">相关人物：</p>
+        {% if char_type == "stu" %}
+        <p>其它版本：{{ generate_character_anchor_flat(char_data.related_to.character_variant, MAX_CHAR_FOR_OTHER_CHAR) }}</p>
+        {% endif %}
+        <p>其它人物：{{ generate_character_anchor_flat(char_data.related_to.character_other, MAX_CHAR_FOR_OTHER_CHAR) }}</p>
+    </div>
+{% endmacro %}
+
+{% macro tooltip_album(album) %}
+    {% set album = get_outer_json(album.namespace[-1], "album") %}
+
+    <div class="tooltip-div">
+        <p class="tooltip-title tooltip-ellipsis">{{ auto_zhcn_gen(album.name) }}</p>
+        <p>发行日期：{{ album.release_date_format }}</p>
+        <p>共{{ album.track_num }}首曲子，{{ album.disc_num }}张碟片。</p>
+        <hr />
+        <ol class="tooltip-ol">
+            {% for disc in album.tracks %}
+                {% set disc_index = loop.index %}
+                {% for track in disc %}
+                    <li>[Disc {{ disc_index }}] {{ generate_track_anchor(track, False, False, "album-" + album.album_id, False, False) }}</li>
+                {% endfor %}
             {% endfor %}
         </ol>
     </div>

@@ -262,8 +262,10 @@ def generate_other_per_lang(lang: list, environment: Environment, page: dict):
         for path, name in page.items():
             template = environment.get_template(path.format(lang=i))
             result = template.render(is_static="static")
-            os.makedirs(f"{OUTPUT_FOLDER}/" + i + "/", exist_ok=True)
-            with open(os.path.join(f"{OUTPUT_FOLDER}/" + i + "/", name), mode="w", encoding="UTF-8") as file:
+
+            target_path = os.path.join(f"{OUTPUT_FOLDER}/" + i + "/", name)
+            os.makedirs(target_path.split()[0], exist_ok=True)
+            with open(target_path, mode="w", encoding="UTF-8") as file:
                 file.write(result)
     print(f"Generated all other pages: {GeneratorTool.get_curr_time_printable()}")
 

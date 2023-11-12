@@ -80,7 +80,7 @@
         </ol>
         {% if background.character|length != 0 %}
         <hr />
-        <p class="tooltip-subtitle">Character:</p>
+        <p class="tooltip-subtitle">Characters in this picture:</p>
         <p>{% for char in background.character[:-1] %}<span>{{ generate_character_anchor(char, 0, 0, background.uuid + "-direct", 0, 0, 0, 0) }}&nbsp;|&nbsp;</span>{% endfor %}{{ generate_character_anchor(background.character[-1], 0, 0, background.uuid + "-direct", 0, 0, 0, 0) }}</p>
         {% endif %}
     </div>
@@ -156,6 +156,31 @@
             {% set processed_data = py_tooltip_character(character, instance_id, instance_type, loop_data.data) %}
             {% for i in processed_data %}
                 <li>{{ generate_story_anchor(i.0)|page_minify_html }}&nbsp;{{ generate_appearedat_html(i.0, i.1)|page_minify_html }}</li>
+            {% endfor %}
+        </ol>
+
+        <p class="tooltip-subtitle">Related Characters:</p>
+        {% if char_type == "stu" %}
+        <p>Other Variants: {{ generate_character_anchor_flat(char_data.related_to.character_variant, MAX_CHAR_FOR_OTHER_CHAR) }}</p>
+        {% endif %}
+        <p>Other Characters: {{ generate_character_anchor_flat(char_data.related_to.character_other, MAX_CHAR_FOR_OTHER_CHAR) }}</p>
+    </div>
+{% endmacro %}
+
+{% macro tooltip_album(album) %}
+    {% set album = get_outer_json(album.namespace[-1], "album") %}
+
+    <div class="tooltip-div">
+        <p class="tooltip-title tooltip-ellipsis">{{ album.name.en|js_string_safe }}</p>
+        <p>Released date: {{ album.release_date_format }}</p>
+        <p>Total {{ album.track_num }} tracks in {{ album.disc_num }} discs.</p>
+        <hr />
+        <ol class="tooltip-ol">
+            {% for disc in album.tracks %}
+                {% set disc_index = loop.index %}
+                {% for track in disc %}
+                    <li>[Disc {{ disc_index }}] {{ generate_track_anchor(track, False, False, "album-" + album.album_id, False, False) }}</li>
+                {% endfor %}
             {% endfor %}
         </ol>
     </div>

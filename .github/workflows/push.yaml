@@ -25,8 +25,14 @@ jobs:
     - name: Update submodules
       run: |
         git submodule update --remote
+
+    # Custom script
+    - name: Run custom prechecking
+      run: python prechecker.py
     - name: Run main.py
       run: python main_prod.py
+
+    # Push changes
     - name: Push changes
       run: |
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"

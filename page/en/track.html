@@ -5,7 +5,7 @@
     <script src="{{ get_static('js/track_player.js') }}"></script>
 {% endblock other_head %}
 {% block article_content %}
-    {% from "template/en/_macro_page.html" import output_usedby_background, output_usedby_story, output_usedby_battle, output_usedby_ui, output_usedby_video, output_usedby_character_dict, track_version_video_player %}
+    {% from "template/en/_macro_page.html" import output_usedby_background, output_usedby_story, output_usedby_battle, output_usedby_ui, output_usedby_video, output_usedby_character_dict, track_version_video_player, output_track_album %}
     {% from "template/en/_macro.html" import tracktype_to_name, generate_album_anchor, generate_track_anchor %}
 
     <h1>Track/{{ track.no }}. {{ track.name.realname.en }}</h1>
@@ -31,11 +31,7 @@
 
     <h2>Track in Album</h2>
     <p>This track has been included in the following albums.</p>
-    <ul>
-        {% for album in track.album %}
-            <li id="album-{{ album.album_id }}">{{ generate_album_anchor(album, True, "track-" + track.instance_id) }}</li>
-        {% endfor %}
-    </ul>
+    {{ output_track_album(track.album, track) }}
 
     <h2>Play Music Here</h2>
     <p>Tips: In order to avoid potential copyright infringement, we're using <b>third-party embedded web players</b> to provide services. You can also manually visit them by clicking the links in the infobox.</p>

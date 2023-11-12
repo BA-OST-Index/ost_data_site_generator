@@ -1,12 +1,13 @@
 {% extends "template/zh_cn/base.html" %}
 {% from 'template/zh_cn/_macro_page.html' import output_usedby_track_list %}
+{% from 'template/zh_cn/_macro.html' import auto_zhcn_gen %}
 
 {% block title %}专辑/{{ album.name.en }}{% endblock title %}
 {% block article_content %}
     <h1>专辑/{{ album.name.zh_cn }}</h1>
     {% include "template/zh_cn/infobox/album.html" %}
-    <p><b>{{ album.name.zh_cn }}</b>是由蔚蓝档案官方发行的一个专辑。</p>
-    <p>{{ album.desc.zh_cn }}</p>
+    <p><b>{{ auto_zhcn_gen(album.name) }}</b>是由蔚蓝档案官方发行的一个专辑。</p>
+    <p>{{ auto_zhcn_gen(album.desc) }}</p>
 
     <h2>曲子信息</h2>
     <p>概览：本专辑中共有<b>{{ album.track_num }}首曲子</b>（<b>{{ album.disc_num }}碟片</b>）。此专辑发行于<b>{{ album.release_date_format }}</b>。</p>

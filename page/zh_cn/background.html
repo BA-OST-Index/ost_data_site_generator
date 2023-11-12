@@ -2,17 +2,19 @@
 
 {% block title %}背景/{{ background.filename }}{% endblock title %}
 {% block article_content %}
-    {% from "template/zh_cn/_macro_page.html" import output_usedby_story, output_usedby_track, output_usedby_character %}
+    {% from "template/zh_cn/_macro_page.html" import output_usedby_story, output_usedby_track, output_usedby_character, output_usedby_character_dict %}
     <h1>背景/{{ background.filename }}</h1>
     {% include "template/zh_cn/infobox/background.html" %}
     <p>简介：{{ background.desc.zh_cn }}</p>
-     {% if background.character|length != 0 %}
-        <h2>背景中的角色</h2>
-        {{ output_usedby_character(background, background.uuid + "-direct", background.uuid + "-direct", "background", False, -1, True) }}
-    {% endif %}
+
     <h2>用途信息</h2>
     <h3>故事</h3>
     {{ output_usedby_story(background.used_by.data_story, background.uuid, "background") }}
     <h3>曲目</h3>
     {{ output_usedby_track(background.used_by.data_track, 1, background.uuid, background.uuid, "background") }}
+    <h3>人物</h3>
+    <h4>背景中的角色</h4>
+    {{ output_usedby_character(background, background.uuid + "-direct", background.uuid + "-direct", "background", False, -1, True) }}
+    <h4>其它角色</h4>
+    {{ output_usedby_character_dict(background.used_by.data_character, background.uuid, background.uuid, "background", False) }}
 {% endblock %}

@@ -14,15 +14,18 @@
 
     <h2>Usage Info</h2>
     <h3>Backgrounds</h3>
+    <h4>Direct Backgrounds</h4>
     <p>The following backgrounds are ones with the characters in them.</p>
     {{ output_usedby_background(char.used_by.data_background_direct, char.namespace[-1] + "-direct", char.namespace[-1], "character", True) }}
+    <h4>In-Story Backgrounds</h4>
+    {{ output_usedby_background(char.used_by.data_background, char.namespace[-1], char.namespace[-1], "character", True) }}
     <h3>Stories</h3>
     {{ output_usedby_story(char.used_by.data_story, char.uuid, "character") }}
     <h3>Tracks</h3>
     {{ output_usedby_track(char.used_by.data_track, 1, char.uuid, char.namespace[-1], "character") }}
     <h3>Characters along the way</h3>
     <p>The following characters are the ones who have appeared with this character.</p>
-    {{ output_usedby_character_dict(char.used_by.data_character, char.namespace[-1] + "-direct", char.uuid, "character")  }}
+    {{ output_usedby_character_dict(char.used_by.data_character, char.uuid + "-direct", char.uuid, "character", True)  }}
 
     <h2>Related Characters</h2>
     {{ output_relatedto_character({"character": char.related_to.character_other}, "True") }}

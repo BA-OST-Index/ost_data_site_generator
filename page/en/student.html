@@ -37,8 +37,11 @@
     <h2>Tracks</h2>
     {{ output_usedby_track(char.student.used_by.data_track, 1, char.student.uuid, char.student.uuid, "character") }}
     <h2>Backgrounds</h2>
+    <h3>Direct Backgrounds</h3>
     <p>The following backgrounds are ones with the characters in them.</p>
     {{ output_usedby_background(char.student.used_by.data_background_direct, char.student.uuid + "-direct", char.student.uuid, "character", True) }}
+    <h3>Other Backgrounds</h3>
+    {{ output_usedby_background(char.student.used_by.data_background, char.student.uuid, char.student.uuid, "character", True) }}
 
     <h2>Related Characters</h2>
     <h3>Variants</h3>
@@ -47,5 +50,5 @@
     {{ output_relatedto_character({"character": char.student.related_to.character_other}, "True") }}
     <h3>In Story</h3>
     <p>The following characters are the ones who have appeared with this character.</p>
-    {{ output_usedby_character_dict(char.student.used_by.data_character, char.student.uuid + "-direct", char.student.uuid, "character")  }}
+    {{ output_usedby_character_dict(char.student.used_by.data_character, char.student.uuid + "-direct", char.student.uuid, "character", True)  }}
 {% endblock %}

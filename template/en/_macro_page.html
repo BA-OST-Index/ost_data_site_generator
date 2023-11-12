@@ -1,6 +1,6 @@
 {% from 'template/base/_macro.html' import a_new_tab, get_storypart_text_color_css, get_stu_type_text_color_css %}
-{% from 'template/en/_macro.html' import generate_ui_anchor, generate_track_anchor, generate_track_anchor, generate_background_anchor, generate_character_anchor, generate_story_anchor, generate_appearedat_html, filetype_to_name, get_ordinal_number, get_social_for_composer %}
-{% from 'template/en/_macro_tooltip.html' import tooltip_add_data_js, tooltip_storyinfo, tooltip_storypart, tooltip_background, tooltip_track, tooltip_character %}
+{% from 'template/en/_macro.html' import generate_ui_anchor, generate_track_anchor, generate_track_anchor, generate_background_anchor, generate_character_anchor, generate_story_anchor, generate_appearedat_html, filetype_to_name, get_ordinal_number, get_social_for_composer, generate_album_anchor %}
+{% from 'template/en/_macro_tooltip.html' import tooltip_add_data_js, tooltip_storyinfo, tooltip_storypart, tooltip_background, tooltip_track, tooltip_character, tooltip_album %}
 
 {% macro output_usedby_story(data_story, instance_uuid, instance_key) %}
     {% set _curr_filetype = namespace(filetype=0) %}
@@ -111,23 +111,21 @@
         {% set enable_tooltip = 1 %}
     {% endif %}
 
-    <table class="gallery">
-        <tr>
-            {% for key, value in data_background.items() %}
-                {% if enable_tooltip == 1 %}
-                    {% set tooltip_id = generate_tooltip_id() %}
-                {% endif %}
+    <div class="gallery">
+        {% for key, value in data_background.items() %}
+            {% if enable_tooltip == 1 %}
+                {% set tooltip_id = generate_tooltip_id() %}
+            {% endif %}
 
-                <td class="gallery-img" id="{{ value.0.uuid }}{% if arg_check(bg_direct) %}-direct{% endif %}">{{ generate_background_anchor(value.0, html_id, tooltip_id) }}</td>
+            <div class="gallery-img" id="{{ value.0.uuid }}{% if arg_check(bg_direct) %}-direct{% endif %}">{{ generate_background_anchor(value.0, html_id, tooltip_id, value.1, True) }}</div>
 
-                {% if enable_tooltip == 1 %}
-                    {% do tooltip_data.update({tooltip_id: tooltip_background(value.0, instance_id, instance_type)}) %}
-                {% endif %}
-            {% else %}
-                <td>Nothing to show!</td>
-            {% endfor %}
-        </tr>
-    </table>
+            {% if enable_tooltip == 1 %}
+                {% do tooltip_data.update({tooltip_id: tooltip_background(value.0, instance_id, instance_type)}) %}
+            {% endif %}
+        {% else %}
+            <p>Nothing to show!</p>
+        {% endfor %}
+    </div>
 
     {% if enable_tooltip == 1 %}
         {{ tooltip_add_data_js(tooltip_data) }}
@@ -140,23 +138,21 @@
         {% set enable_tooltip = 1 %}
     {% endif %}
 
-    <table class="gallery">
-        <tr>
-            {% for value in data_background %}
-                {% if enable_tooltip == 1 %}
-                    {% set tooltip_id = generate_tooltip_id() %}
-                {% endif %}
+    <div class="gallery">
+        {% for value in data_background %}
+            {% if enable_tooltip == 1 %}
+                {% set tooltip_id = generate_tooltip_id() %}
+            {% endif %}
 
-                <td class="gallery-img">{{ generate_background_anchor(value, html_id, tooltip_id) }}</td>
+            <div class="gallery-img">{{ generate_background_anchor(value, html_id, tooltip_id) }}</div>
 
-                {% if enable_tooltip == 1 %}
-                    {% do tooltip_data.update({tooltip_id: tooltip_background(value, instance_id, instance_type)}) %}
-                {% endif %}
-            {% else %}
-                <td>Nothing to show!</td>
-            {% endfor %}
-        </tr>
-    </table>
+            {% if enable_tooltip == 1 %}
+                {% do tooltip_data.update({tooltip_id: tooltip_background(value, instance_id, instance_type)}) %}
+            {% endif %}
+        {% else %}
+            <td>Nothing to show!</td>
+        {% endfor %}
+    </div>
 
     {% if enable_tooltip == 1 %}
         {{ tooltip_add_data_js(tooltip_data) }}
@@ -297,7 +293,7 @@
     {% endif %}
 {% endmacro %}
 
-{% macro output_usedby_character_dict(data_character, html_id, instance_id, instance_type) %}
+{% macro output_usedby_character_dict(data_character, html_id, instance_id, instance_type, is_direct) %}
     {# used for track.html for exporting track-character relationship #}
     {% set tooltip_data = {} %}
 
@@ -308,7 +304,7 @@
 
             {% set tooltip_id = generate_tooltip_id() %}
 
-            <li id="{{ char.uuid }}"><span>【{{ ref_counter }}】</span>{{ generate_character_anchor(char, 1, 1, html_id, tooltip_id, 0, 0, 0) }}</li>
+            <li id="{{ char.uuid }}{% if arg_check(is_direct) %}-direct{% endif %}"><span>【{{ ref_counter }}】</span>{{ generate_character_anchor(char, 1, 1, html_id, tooltip_id, 0, 0, 0) }}</li>
             {% do tooltip_data.update({tooltip_id: tooltip_character(char, instance_id, instance_type)}) %}
         {% else %}
             <li>Nothing to show!</li>
@@ -330,4 +326,18 @@
             <div id="track-video-{{ _version_index }}-{{ loop.index }}-container"></div>
         {% endfor %}
     {% endfor %}
+{% endmacro %}
+
+{% macro output_track_album(albums, track) %}
+    <ul>
+        {% set tooltip_data = {} %}
+        {% for album in albums %}
+            {% set tooltip_id = generate_tooltip_id() %}
+            <li id="album-{{ album.album_id }}" data-tooltip="{{ tooltip_id }}" onmouseover="showTooltip(this)">{{ generate_album_anchor(album, True, "track-" + track.instance_id) }}</li>
+
+            {% do tooltip_data.update({tooltip_id: tooltip_album(album)}) %}
+        {% endfor %}
+    </ul>
+
+    {{ tooltip_add_data_js(tooltip_data) }}
 {% endmacro %}

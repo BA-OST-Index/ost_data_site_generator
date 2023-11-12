@@ -35,12 +35,10 @@
 {% endmacro %}
 
 {# 通用的Background <a>生成 #}
-{% macro generate_background_anchor(bg, html_id, tooltip_id) %}
-    <div id="{{ bg.uuid }}">
+{% macro generate_background_anchor(bg, html_id, tooltip_id, bg_count, is_disable_div_id) %}
+    <div {% if not is_disable_div_id %}id="{{ bg.uuid }}"{% endif %}>
         <img src="{{ bg.image.value }}" {% if arg_check(tooltip_id) %}onmouseover="showTooltipGallerySmall(this)" data-tooltip="{{ tooltip_id }}"{% endif %}>
-        <p class="gallery-caption">
-            <a href="/{{ curr_lang }}/background/{{ bg.filename }}.html{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} target="_blank">{{ bg.filename|js_string_safe }}</a>
-        </p>
+        <p class="gallery-caption">{% if arg_check(bg_count) %}<span>【{{ bg_count }}】</span>{% endif %}<span><a href="/{{ curr_lang }}/background/{{ bg.filename }}.html{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} target="_blank">{{ bg.filename|js_string_safe }}</a></span></p>
     </div>
 {% endmacro %}
 
@@ -61,7 +59,7 @@
         <span>
             <a href="/{{ curr_lang }}/character/student/{{ char.name.path_name|lower }}/{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} {{ anchor_new_tab(new_tab) }}>
                 <img src="{{ get_static('images/student/icon/' + char.image.collection_texture + '.webp') }}" class="icon-stu">
-                <span>{{ char.name.personal_name.en|js_string_safe }}</span>
+                <span>{{ char.name.name.en|js_string_safe }}</span>
             </a>
         </span>
         {% if arg_check(show_combatant_info) %}
@@ -120,8 +118,10 @@
 {% endmacro %}
 
 {# 通用的Tag <a>生成 #}
+{% macro generate_tag_span(tag) %}<span class="badge badge-{{ tag.color_css }} badge-tag">{{ tag.name.en }}</span>{% endmacro %}
+
 {% macro tag_altogether(tags, instance_id) %}
-    {% for tag in tags %}<a href="/en/tag/{{ tag.namespace[-1] }}.html{% if instance_id %}#{{ instance_id }}{% endif %}" target="_blank"><span class="badge badge-{{ tag.color_css }} badge-tag">{{ tag.name.en }}</span></a>&nbsp;{% endfor %}
+    {% for tag in tags %}<a href="/en/tag/{{ tag.namespace[-1] }}.html{% if instance_id %}#{{ instance_id }}{% endif %}" target="_blank">{{ generate_tag_span(tag) }}</a>&nbsp;{% endfor %}
 {% endmacro %}
 
 {# 平铺人物<a>生成 #}

@@ -1,6 +1,6 @@
 {% extends "template/base/base.html" %}
 {% block body_langcode %}en{% endblock %}
-{% set curr_lang = "en" %}
+{% set current_lang = "en" %}
 
 {% block header %}
     {% include "template/en/header.html" %}
@@ -26,36 +26,48 @@
             <p class="navi-p"><a href="..">&lt;-- Return to the previous directory</a></p>
         {% endif %}
 
+        {% if entry_.filetype == -53 %}
+            {# 学生json #}
+            {% set entry_ = namespace(filetype=entry_.filetype, interpage=entry_.student.interpage) %}
+        {% endif %}
+
         {% if entry_ and entry_.interpage %}
             {% if entry_.interpage %}
                 {% set _prev = entry_.interpage.prev %}
+
                 {% if _prev.name != "[NO_PREV]" %}
                     {% if 1 <= entry_.filetype <= 5 %}
-                        <p class="navi-p"><a href="/en/{{ _prev.namespace|join('/') }}.html">&lt;-- Previous page: {{ _prev.name.realname.en }}</a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- Previous page: {{ _prev.name.realname.en }}</a></p>
                     {% elif entry_.filetype in [52] %}
                         {# why am i doing this #}
-                        <p class="navi-p"><a href="/en/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|lower }}">&lt;-- Previous page: {{ _prev.name.en }}</a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|lower }}">&lt;-- Previous page: {{ _prev.name.en }}</a></p>
                     {% elif 11 <= entry_.filetype <= 16 and entry_.filetype not in [14, 15] %}
-                        <p class="navi-p"><a href="/en/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|int|string }}.html">&lt;-- Previous page: {{ _prev.name.en }}</a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|int|string }}.html">&lt;-- Previous page: {{ _prev.name.en }}</a></p>
+                    {% elif entry_.filetype == -53 %}
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}/">&lt;-- Previous Page: {{ _prev.name.name.en }}</a></p>
                     {% else %}
-                        <p class="navi-p"><a href="/en/{{ _prev.namespace|join('/') }}.html">&lt;-- Previous page: {{ _prev.name.en }}</a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- Previous page: {{ _prev.name.en }}</a></p>
                     {% endif %}
                 {% else %}
                     <p class="navi-p">No previous page found.</p>
                 {% endif %}
             {% endif %}
-            {% if entry_.interpage.next %}
+
+            {% if entry_.interpage %}
                 {% set _next = entry_.interpage.next %}
+
                 {% if _next.name != "[NO_NEXT]" %}
                     {% if 1 <= entry_.filetype <= 5 %}
-                        <p class="navi-p"><a href="/en/{{ _next.namespace|join('/') }}.html">--&gt; Next page: {{ _next.name.realname.en }}</a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">--&gt; Next page: {{ _next.name.realname.en }}</a></p>
                     {% elif entry_.filetype in [52] %}
                         {# why am i doing this #}
-                        <p class="navi-p"><a href="/en/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|lower }}">--&gt; Next page: {{ _next.name.en }}</a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|lower }}">--&gt; Next page: {{ _next.name.en }}</a></p>
                     {% elif 11 <= entry_.filetype <= 16 and entry_.filetype not in [14, 15] %}
-                        <p class="navi-p"><a href="/en/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|int|string }}.html">--&gt; Next Page: {{ _next.name.en }}</a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|int|string }}.html">--&gt; Next Page: {{ _next.name.en }}</a></p>
+                    {% elif entry_.filetype == -53 %}
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}/">&lt;-- Next Page: {{ _next.name.name.en }}</a></p>
                     {% else %}
-                        <p class="navi-p"><a href="/en/{{ _next.namespace|join('/') }}.html">--&gt; Next page: {{ _next.name.en }}</a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">--&gt; Next page: {{ _next.name.en }}</a></p>
                     {% endif %}
                 {% else %}
                     <p class="navi-p">No next page found.</p>

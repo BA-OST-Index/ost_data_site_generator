@@ -11,7 +11,7 @@ OTHER_STATIC_PAGE = {
     "page/404.html": "404.html",
     "page/zh_cn/_zhcn_technical.html": "zh_cn/zhcn_technical.html"
 }
-ALL_FOLDERS = ["album", "track"]
+ALL_FOLDERS = ["character"]
 
 delete_old_page()
 # copy_static_file(True)

@@ -76,6 +76,8 @@ class JinjaTool:
                 return read_file(f"character/student/{instance_id.lower()}/{instance_id.lower()}.json")
             except FileNotFoundError:
                 return read_file(f"character/npc/{instance_id}/{instance_id}.json")
+        elif instance_type == "album":
+            return read_file(f"album/{instance_id}.json")
 
         raise ValueError(f"{instance_id}, {instance_type}")
 
@@ -270,6 +272,13 @@ class TemplateTool:
                             if instance_type == "character":
                                 for char2 in segment["character"]:
                                     if char2["uuid"] == instance_id:
+                                        is_exit = 1
+                                        break
+                                if is_exit == 1:
+                                    break
+                            elif instance_type == "track":
+                                for track in segment["track"]:
+                                    if track["instance_id"] == instance_id:
                                         is_exit = 1
                                         break
                                 if is_exit == 1:

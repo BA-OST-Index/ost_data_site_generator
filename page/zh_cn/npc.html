@@ -14,8 +14,12 @@
     <p>{{ auto_zhcn_gen(char.desc) }}</p>
 
     <h2>使用详情</h2>
-    <h3>背景</h3>
+    <h3>直接背景</h3>
     <p>以下背景中均有此人物直接出现。</p>
+    {{ output_usedby_background(char.used_by.data_background_direct, char.namespace[-1] + "-direct", char.namespace[-1], "character", True) }}
+    <h4>故事内背景</h4>
+    {{ output_usedby_background(char.used_by.data_background, char.namespace[-1], char.namespace[-1], "character", True) }}
+    <h3>其它背景</h3>
     {{ output_usedby_background(char.used_by.data_background_direct, char.namespace[-1] + "-direct", char.namespace[-1], "character", True) }}
     <h3>故事</h3>
     {{ output_usedby_story(char.used_by.data_story, char.uuid, "character") }}
@@ -23,7 +27,7 @@
     {{ output_usedby_track(char.used_by.data_track, 1, char.uuid, char.namespace[-1], "character") }}
     <h3>一同出现的人物</h3>
     <p>以下均为与该人物一起出现过的人物。</p>
-    {{ output_usedby_character_dict(char.used_by.data_character, char.namespace[-1] + "-direct", char.uuid, "character")  }}
+    {{ output_usedby_character_dict(char.used_by.data_character, char.uuid + "-direct", char.uuid, "character", True)  }}
 
     <h2>相关人物</h2>
     {{ output_relatedto_character({"character": char.related_to.character_other}, "True") }}
