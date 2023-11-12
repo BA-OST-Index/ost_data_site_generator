@@ -26,7 +26,7 @@
             <p class="navi-p"><a href="..">&lt;-- Return to the previous directory</a></p>
         {% endif %}
 
-        {% if entry_.filetype == -53 %}
+        {% if entry_ and entry_.filetype == -53 %}
             {# 学生json #}
             {% set entry_ = namespace(filetype=entry_.filetype, interpage=entry_.student.interpage) %}
         {% endif %}
