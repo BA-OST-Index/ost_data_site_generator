@@ -35,6 +35,7 @@
     <script src="{{ get_static('js/highlight_element.js') }}"></script>
     <script src="{{ get_static('js/tooltip.js') }}"></script>
     <script src="{{ get_static('js/lang_switch.js') }}"></script>
+    <script src="{{ get_static('js/time_show.js') }}"></script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-BKTB7R8TC3"></script>
     <script>
@@ -72,7 +73,9 @@
                 {% block article_content %}{% endblock article_content %}{{ content }}
             </div>
         </div>
-        <script>display_zhcn_element();</script>
+        <script>
+            display_zhcn_element();
+        </script>
     </div>
 
     <div id="interpage-navi-bottom">
