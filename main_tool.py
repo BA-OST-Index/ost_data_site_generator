@@ -1,4 +1,4 @@
-import datetime
+import time
 import minify_html
 import os
 import json
@@ -17,8 +17,8 @@ STATIC_BASE_URL = "/static/"
 
 class JinjaTool:
     @staticmethod
-    def get_current_utc(fmt="%Y-%m-%d %H:%M:%S"):
-        return datetime.datetime.utcnow().strftime(fmt)
+    def get_current_utc():
+        return time.time()
 
     @staticmethod
     def generate_tooltip_id():

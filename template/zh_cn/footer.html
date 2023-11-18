@@ -5,11 +5,12 @@
             v2.8.5</a> 的一个修改版本，原版本由 <a href="https://github.com/Drassil">Drassil</a> 制作。</p>
         <p>此网站托管在 GitHub Pages 上并由 CloudFlare 进行增强。</p>
         <small>
-            <p>页面生成于{{ get_current_utc() }} (UTC)</p>
+            <p>页面生成于<span id="page-generation-time"></span> (当地时间)</p>
             <p>自2023年06月06日以来，BA OST Index项目已开发<b><span><span id="project-time-day"></span>天&nbsp;<span id="project-time-hour"></span>时<span id="project-time-minute"></span>分<span id="project-time-second"></span>秒</span></b></p>
         </small>
     </div>
     <script>
         addEventListener("load", function () {showProjectTime(); setInterval(showProjectTime, 1000);})
+        addEventListener("load", function () {document.getElementById("page-generation-time").innerText = showTimestampInLocalTime({{ get_current_utc() }})})
     </script>
 </footer>
