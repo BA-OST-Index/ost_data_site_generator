@@ -11,3 +11,5 @@
 {% macro word_case(text) %}{{ text[0]|upper }}{{ text[1:] }}{% endmacro %}
 
 {% macro generate_tooltip_anchor(tooltip_id) %}onmouseover="showTooltip(this)" data-tooltip="{{ tooltip_id }}"{% endmacro %}
+
+{% macro generate_popup_for_tooltip_anchor(tooltip_id) %}<span onclick="showPopupByTooltipId('{{ tooltip_id }}')" style="display: inline-block"><img src="{{ get_static('images/site/circle-info.svg') }}" class="popup-icon"></span>{% endmacro %}

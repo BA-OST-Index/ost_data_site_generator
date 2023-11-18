@@ -179,7 +179,7 @@
             {% for disc in album.tracks %}
                 {% set disc_index = loop.index %}
                 {% for track in disc %}
-                    <li>[Disc {{ disc_index }}] {{ generate_track_anchor(track, False, False, "album-" + album.album_id, False, False) }}</li>
+                    <li>&#91;Disc {{ disc_index }}&#93; {{ generate_track_anchor(track, False, False, "album-" + album.album_id, False, False) }}</li>
                 {% endfor %}
             {% endfor %}
         </ol>
