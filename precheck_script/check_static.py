@@ -40,7 +40,7 @@ def check_static_otehr(env, page: dict):
 
     for path, name in page.items():
         try:
-            render_template(env, path.format(lang=i))
+            render_template(env, path)
         except Exception:
             failed_count += 1
 

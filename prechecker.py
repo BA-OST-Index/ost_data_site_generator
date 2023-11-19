@@ -20,3 +20,6 @@ try:
     check_static_otehr(env, OTHER_STATIC_PAGE)
 except AssertionError:
     encounter_exception = True
+
+if encounter_exception:
+    raise AssertionError
