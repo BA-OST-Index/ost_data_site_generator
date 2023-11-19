@@ -1,4 +1,4 @@
-{% from 'template/base/_macro.html' import anchor_new_tab, get_storypart_text_color_css, get_stu_type_text_color_css, generate_tooltip_anchor, generate_popup_for_tooltip_anchor %}
+{% from 'template/base/_macro.html' import anchor_new_tab, get_storypart_text_color_css, get_stu_type_text_color_css, generate_tooltip_anchor, generate_popup_for_tooltip_anchor, generate_tag_badge %}
 {% set curr_lang = "zh_cn" %}
 {% set nothing_to_show = "无内容可显示！" %}
 
@@ -126,7 +126,7 @@
 {% endmacro %}
 
 {# 通用的Tag <a>生成 #}
-{% macro generate_tag_span(tag) %}<span class="badge badge-{{ tag.color_css }} badge-tag">{{ auto_zhcn_gen(tag.name) }}</span>{% endmacro %}
+{% macro generate_tag_span(tag) %}{{ generate_tag_badge(tag.color_css, tag.name.en) }}{% endmacro %}
 
 {% macro tag_altogether(tags, instance_id) %}
     {% for tag in tags %}<a href="/{{ curr_lang }}/tag/{{ tag.namespace[-1] }}.html{% if instance_id %}#{{ instance_id }}{% endif %}" target="_blank">{{ generate_tag_span(tag) }}</a>&nbsp;{% endfor %}
@@ -148,4 +148,21 @@
         {{ generate_character_anchor(char_for_show[-1], 0, 0, 0, 0, 0, 0, 0) }}
         {% if characters|length > char_for_show|length %}<span>&nbsp;及更多人。</span>{% endif %}
     {% endif %}
+{% endmacro %}
+
+{# 视频标签生成 #}
+{% macro output_video_stat_badge(stat) %}
+    <div class="video-stats-badge">
+    {% if stat.is_jp %}{{ generate_tag_badge("primary", "日服") }}{% endif %}
+    {% if stat.is_global %}{{ generate_tag_badge("primary", "国际服") }}{% endif %}
+    {% if stat.is_cn %}{{ generate_tag_badge("primary", "国服") }}{% endif %}
+    {% if stat.is_pv %}{{ generate_tag_badge("success", "PV") }}{% endif %}
+    {% if stat.is_pv_char %}{{ generate_tag_badge("success", "人物PV") }}{% endif %}
+    {% if stat.is_pv_ani %}{{ generate_tag_badge("success", "动画PV") }}{% endif %}
+    {% if stat.is_mv %}{{ generate_tag_badge("info", "MV") }}{% endif %}
+    {% if stat.is_animation %}{{ generate_tag_badge("info", "动画") }}{% endif %}
+    {% if stat.is_other %}{{ generate_tag_badge("info", "其它") }}{% endif %}
+    {% if stat.is_ad %}{{ generate_tag_badge("secondary", "广告") }}{% endif %}
+    {% if stat.is_ingame %}{{ generate_tag_badge("secondary", "游戏内") }}{% endif %}
+    </div>
 {% endmacro %}

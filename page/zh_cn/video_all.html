@@ -1,4 +1,5 @@
 {% extends "template/zh_cn/base.html" %}
+{% from 'template/zh_cn/_macro.html' import output_video_stat_badge %}
 
 {% block title %}{{ video.name.zh_cn }}{% endblock title %}
 {% block article_content %}
@@ -7,7 +8,9 @@
     <ul>
         {% for i in video.include %}
             {% set i = i[1] %}
-            <li><a href="/zh_cn/video/{{ i.namespace.1 }}.html">{{ i.name.zh_cn }}</a>&nbsp;-&nbsp;{{ i.desc.zh_cn }}</li>
+            <li><a href="/zh_cn/video/{{ i.namespace.1 }}.html">{{ i.name.zh_cn }}</a> {{ output_video_stat_badge(i.stats) }}
+                <br />{{ i.desc.zh_cn }}
+            </li>
         {% endfor %}
     </ul>
 {% endblock article_content %}
