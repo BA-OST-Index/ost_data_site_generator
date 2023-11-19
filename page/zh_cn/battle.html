@@ -2,7 +2,7 @@
 
 {% block title %}任务/{% if battle.filetype == 21 %}{{ battle.chapter }}-{{ battle.no[:2] }} {% endif %}{{ battle.name.zh_cn }}{% endblock title %}
 {% block article_content %}
-    {% from "template/zh_cn/_macro.html" import get_social_for_composer, auto_zhcn_gen %}
+    {% from "template/zh_cn/_macro.html" import get_social_for_composer, auto_zhcn_gen, generate_track_anchor %}
     <h1>战斗/<span>{% if battle.filetype == 21 %}{{ battle.chapter }}-{{ battle.no[:2] }}&nbsp;{% endif %}{{ auto_zhcn_gen(battle.name) }}</span></h1>
     {% include "template/zh_cn/infobox/battle.html" %}
 
@@ -18,14 +18,13 @@
     {% endif %}
 
     <h2 id="track">曲目信息</h2>
-    {% if battle.filetype in [21, 22] %}
-        {% set track = battle.track.0 %}
-    {% else %}
-        {% set track = battle.track %}
-    {% endif %}
     <ul>
-        <li>曲子：<a href="/zh_cn/track/{{ track.namespace.1 }}/{{ track.no }}.html#{{ battle.uuid }}">{{ track.no }}. {{ track.name.realname.en }} {% if track.name.realname.zh_cn %}({{ track.name.realname.zh_cn }}){% endif %}</a></li>
-        <li>简介：{{ track.desc.zh_cn }}</li>
-        <li>作曲家：{{ track.composer.nickname }} ({{ get_social_for_composer(track.composer) }})</li>
+        {% if battle.track|is_list %}
+            {% for i in battle.track %}
+                <li>{{ generate_track_anchor(i, 0, 0, 0, 0, True) }}</li>
+            {% endfor %}
+        {% else %}
+            <li>{{ generate_track_anchor(battle.track, 0, 0, 0, 0, True) }}</li>
+        {% endif %}
     </ul>
 {% endblock article_content %}

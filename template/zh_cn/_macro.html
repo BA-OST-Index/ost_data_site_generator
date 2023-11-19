@@ -1,4 +1,4 @@
-{% from 'template/base/_macro.html' import anchor_new_tab, get_storypart_text_color_css, get_stu_type_text_color_css, generate_tooltip_anchor %}
+{% from 'template/base/_macro.html' import anchor_new_tab, get_storypart_text_color_css, get_stu_type_text_color_css, generate_tooltip_anchor, generate_popup_for_tooltip_anchor, generate_tag_badge %}
 {% set curr_lang = "zh_cn" %}
 {% set nothing_to_show = "无内容可显示！" %}
 
@@ -35,6 +35,7 @@
     <a href="/{{ curr_lang }}/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}.html{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %}>
         <span>{% if arg_check(with_counter) %}【{{ count_num }}】{% endif %}{{ filetype_to_name(track.filetype) }}&nbsp;{{ track.no }}.&nbsp;{{ track.name.realname.en|js_string_safe }} {% if track.name.realname.zh_cn != "" %}({{ track.name.realname.zh_cn }}){% endif %}</span>
     </a>
+    {% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}
     {% if arg_check(enable_author) %}<span>&nbsp;by&nbsp;{{ track.composer.nickname }}</span>{% endif %}
 {% endmacro %}
 
@@ -42,7 +43,7 @@
 {% macro generate_background_anchor(bg, html_id, tooltip_id, bg_count, disable_div_id) %}
     <div {% if not disable_div_id %}id="{{ bg.uuid }}"{% endif %}>
         <img src="{{ bg.image.value }}" {% if arg_check(tooltip_id) %}onmouseover="showTooltipGallerySmall(this)" data-tooltip="{{ tooltip_id }}"{% endif %}>
-        <p class="gallery-caption">{% if arg_check(bg_count) %}<span>【{{ bg_count }}】</span>{% endif %}<span><a href="/{{ curr_lang }}/background/{{ bg.filename }}.html{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} target="_blank">{{ bg.filename|js_string_safe }}</a></span></p>
+        <p class="gallery-caption">{% if arg_check(bg_count) %}<span>【{{ bg_count }}】</span>{% endif %}<span><a href="/{{ curr_lang }}/background/{{ bg.filename }}.html{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} target="_blank">{{ bg.filename|js_string_safe }}</a>{% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}</span></p>
     </div>
 {% endmacro %}
 
@@ -52,6 +53,7 @@
         <a href="/{{ curr_lang }}/character/npc/{{ char.namespace[-1]|lower }}/{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} {{ anchor_new_tab(new_tab) }}>
             <span>{{ auto_zhcn_gen(char.name) }}</span>
         </a>
+        {% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}
     {% else %}
         {% if arg_check(show_combatant_info) %}
             {% if arg_check(is_leader) %}<img src="{{ get_static('images/ui/Image_Conquest_Leader.png') }}" class="story-battle-leader">{% endif %}
@@ -66,6 +68,7 @@
                 <span>{{ auto_zhcn_gen(char.name.name) }}</span>
             </a>
         </span>
+        {% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}
         {% if arg_check(show_combatant_info) %}
             <span>&nbsp;
                 <span class="{{ get_stu_type_text_color_css(char.combatant_info.attack_type.type) }}">{{ auto_zhcn_gen(char.combatant_info.attack_type.lang) }}</span>&nbsp;/&nbsp;<span class="{{ get_stu_type_text_color_css(char.combatant_info.armor_type.type) }}">{{ auto_zhcn_gen(char.combatant_info.armor_type.lang) }}</span>
@@ -90,11 +93,12 @@
     {% else %}
         <a href="{{ target_url }}" {{ anchor_new_tab(new_tab) }} {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %}>{{ generate_story_name(story) }}</a>
     {% endif %}
+    {% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}
 {% endmacro %}
 
 {# 通用的Album <a>生成 #}
 {% macro generate_album_anchor(album, new_tab, html_id) %}
-    <span><a href="/{{ curr_lang }}/album/{{ album.album_id }}.html{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {{ anchor_new_tab(new_tab) }}>{{ auto_zhcn_gen(album.name) }}&nbsp;({{ album.track_num }} discs)&nbsp;[{{ album.release_date_format }}]</a></span>
+    <span><a href="/{{ curr_lang }}/album/{{ album.album_id }}.html{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {{ anchor_new_tab(new_tab) }}>{{ auto_zhcn_gen(album.name) }}&nbsp;({{ album.track_num }} discs)&nbsp;&#91;{{ album.release_date_format }}&#93;</a></span>
 {% endmacro %}
 
 {% macro get_social_for_composer(composer) %}
@@ -116,13 +120,13 @@
         <span>,&nbsp;</span>
         {% endif %}
 
-        <span><a href="{{ generate_story_url(base_story) }}#story-part-{{ loop_index }}-seg-{{ seg_index }}" class="{{ ele_class }}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %}><i>[{{ loop_index }}]&nbsp;{{ auto_zhcn_gen(part.name) }}</i></a></span>
+        <span><a href="{{ generate_story_url(base_story) }}#story-part-{{ loop_index }}-seg-{{ seg_index }}" class="{{ ele_class }}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %}><i>&#91;{{ loop_index }}&#93;&nbsp;{{ auto_zhcn_gen(part.name) }}</i></a>{% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}</span>
     {% endfor %}
     <span>)</span>
 {% endmacro %}
 
 {# 通用的Tag <a>生成 #}
-{% macro generate_tag_span(tag) %}<span class="badge badge-{{ tag.color_css }} badge-tag">{{ auto_zhcn_gen(tag.name) }}</span>{% endmacro %}
+{% macro generate_tag_span(tag) %}{{ generate_tag_badge(tag.color_css, tag.name.en) }}{% endmacro %}
 
 {% macro tag_altogether(tags, instance_id) %}
     {% for tag in tags %}<a href="/{{ curr_lang }}/tag/{{ tag.namespace[-1] }}.html{% if instance_id %}#{{ instance_id }}{% endif %}" target="_blank">{{ generate_tag_span(tag) }}</a>&nbsp;{% endfor %}
@@ -144,4 +148,21 @@
         {{ generate_character_anchor(char_for_show[-1], 0, 0, 0, 0, 0, 0, 0) }}
         {% if characters|length > char_for_show|length %}<span>&nbsp;及更多人。</span>{% endif %}
     {% endif %}
+{% endmacro %}
+
+{# 视频标签生成 #}
+{% macro output_video_stat_badge(stat) %}
+    <div class="video-stats-badge">
+    {% if stat.is_jp %}{{ generate_tag_badge("primary", "日服") }}{% endif %}
+    {% if stat.is_global %}{{ generate_tag_badge("primary", "国际服") }}{% endif %}
+    {% if stat.is_cn %}{{ generate_tag_badge("primary", "国服") }}{% endif %}
+    {% if stat.is_pv %}{{ generate_tag_badge("success", "PV") }}{% endif %}
+    {% if stat.is_pv_char %}{{ generate_tag_badge("success", "人物PV") }}{% endif %}
+    {% if stat.is_pv_ani %}{{ generate_tag_badge("success", "动画PV") }}{% endif %}
+    {% if stat.is_mv %}{{ generate_tag_badge("info", "MV") }}{% endif %}
+    {% if stat.is_animation %}{{ generate_tag_badge("info", "动画") }}{% endif %}
+    {% if stat.is_other %}{{ generate_tag_badge("info", "其它") }}{% endif %}
+    {% if stat.is_ad %}{{ generate_tag_badge("secondary", "广告") }}{% endif %}
+    {% if stat.is_ingame %}{{ generate_tag_badge("secondary", "游戏内") }}{% endif %}
+    </div>
 {% endmacro %}

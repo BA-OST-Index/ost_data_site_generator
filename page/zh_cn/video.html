@@ -1,7 +1,8 @@
 {% extends "template/zh_cn/base.html" %}
+{% from 'template/zh_cn/_macro.html' import output_video_stat_badge %}
 {% from 'template/zh_cn/_macro_page.html' import output_usedby_track_list, track_version_video_player %}
 
-{% block title %}视频/{{ video.name.zh_cn }}{% endblock title %}
+{% block title %}视频/{{ video.name.zh_cn }} {{ output_video_stat_badge(video.stats) }}{% endblock title %}
 {% block other_head %}
     <script src="{{ get_static('js/track_player.js') }}"></script>
 {% endblock other_head %}

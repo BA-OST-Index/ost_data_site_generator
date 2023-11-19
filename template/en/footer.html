@@ -4,6 +4,13 @@
         <p>The website is a modified version of <a href="https://github.com/Drassil/git-wiki-theme">Git-Wiki
             v2.8.5</a>, originally by <a href="https://github.com/Drassil">Drassil</a>.</p>
         <p>This website is hosted on GitHub Pages and enhanced by CloudFlare.</p>
-        <small><p>Page is generated at {{ get_current_utc() }} (UTC)</p></small>
+        <small>
+            <p>Page is generated at <span id="page-generation-time"></span> (local time)</p>
+            <p>BA OST Index has been in development for <b><span><span id="project-time-day"></span>&nbsp;days&nbsp;<span id="project-time-hour"></span>&nbsp;hour&nbsp;<span id="project-time-minute"></span>&nbsp;minute&nbsp;<span id="project-time-second"></span>&nbsp;second</span></b> since June 6, 2023</p>
+        </small>
     </div>
+    <script>
+        addEventListener("load", function () {showProjectTime(); setInterval(showProjectTime, 1000);})
+        addEventListener("load", function () {document.getElementById("page-generation-time").innerText = showTimestampInLocalTime({{ get_current_utc() }})})
+    </script>
 </footer>

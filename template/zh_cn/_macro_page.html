@@ -1,4 +1,4 @@
-{% from 'template/base/_macro.html' import a_new_tab, get_storypart_text_color_css, get_stu_type_text_color_css %}
+{% from 'template/base/_macro.html' import a_new_tab, get_storypart_text_color_css, get_stu_type_text_color_css, generate_popup_for_tooltip_anchor %}
 {% from 'template/zh_cn/_macro.html' import generate_ui_anchor, generate_track_anchor, generate_track_anchor, generate_background_anchor, generate_character_anchor, generate_story_anchor, generate_appearedat_html, filetype_to_name, get_social_for_composer, auto_zhcn_gen, nothing_to_show, generate_album_anchor %}
 {% from 'template/zh_cn/_macro_tooltip.html' import tooltip_add_data_js, tooltip_storyinfo, tooltip_storypart, tooltip_background, tooltip_track, tooltip_character, tooltip_album %}
 {% set curr_lang = "zh_cn" %}
@@ -334,7 +334,7 @@
         {% set tooltip_data = {} %}
         {% for album in albums %}
             {% set tooltip_id = generate_tooltip_id() %}
-            <li id="album-{{ album.album_id }}" data-tooltip="{{ tooltip_id }}" onmouseover="showTooltip(this)">{{ generate_album_anchor(album, True, "track-" + track.instance_id) }}</li>
+            <li id="album-{{ album.album_id }}" data-tooltip="{{ tooltip_id }}" onmouseover="showTooltip(this)">{{ generate_album_anchor(album, True, "track-" + track.instance_id) }}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}</li>
 
             {% do tooltip_data.update({tooltip_id: tooltip_album(album)}) %}
         {% endfor %}

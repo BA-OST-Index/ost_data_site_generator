@@ -1,0 +1,30 @@
+name: Dev Branch
+
+on:
+  push:
+    branches:
+      - 'dev'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: 'recursive'
+        fetch-depth: 0
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - name: Install necessary Python packages
+      run: |
+        pip install -r requirements.txt
+    - name: Update submodules
+      run: |
+        git submodule update --remote
+
+    # Custom script
+    - name: Run custom prechecking
+      run: python prechecker.py

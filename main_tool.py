@@ -1,5 +1,5 @@
-import datetime
-import minify_html
+import time
+import htmlmin
 import os
 import json
 import urllib.parse
@@ -17,8 +17,8 @@ STATIC_BASE_URL = "/static/"
 
 class JinjaTool:
     @staticmethod
-    def get_current_utc(fmt="%Y-%m-%d %H:%M:%S"):
-        return datetime.datetime.utcnow().strftime(fmt)
+    def get_current_utc():
+        return time.time()
 
     @staticmethod
     def generate_tooltip_id():
@@ -31,7 +31,10 @@ class JinjaTool:
 
     @staticmethod
     def js_string_safe(value):
-        return value.replace("&amp;", "&").replace("'", "\'")
+        return (value.replace("&amp;", "&").
+                replace("'", "\'").
+                replace("[", "&#91;").
+                replace("]", "&#93;"))
 
     @staticmethod
     def js_html_string_safe(value):
@@ -39,11 +42,10 @@ class JinjaTool:
 
     @staticmethod
     def page_minify_html(value):
-        return minify_html.minify(value, keep_closing_tags=True,
-                                  remove_processing_instructions=True). \
-            replace("'", "&#x27"). \
-            replace("</span> ", "</span>"). \
-            replace(" &nbsp; ", "&nbsp;")
+        return htmlmin.minify(value,
+                              remove_empty_space=True,
+                              remove_optional_attribute_quotes=False). \
+            replace("'", "&#x27")
 
     @staticmethod
     def get_outer_json(instance_id: str, instance_type: str):
@@ -153,7 +155,6 @@ class TemplateTool:
         #     cache_id = f"background-{background['uuid']}-story"
         #     if GenerationCache.check_for_cache("all", cache_id):
         #         return GenerationCache.get_from_cache("all", cache_id)
-
 
         for story in extra_data.values():
             story = story[0]
@@ -342,4 +343,3 @@ class TemplateTool:
 
         # GenerationCache.add_to_cache("all", cache_id, [story for (i, j) in all_story_with_filetype.items() for story in j])
         return all_story_with_filetype
-

@@ -2,7 +2,7 @@
 
 {% block title %}Battle/{% if battle.filetype == 21 %}{{ battle.chapter }}-{{ battle.no[:2] }} {% endif %}{{ battle.name.en }}{% endblock title %}
 {% block article_content %}
-    {% from "template/en/_macro.html" import get_social_for_composer %}
+    {% from "template/en/_macro.html" import get_social_for_composer, generate_track_anchor %}
     <h1>Battle/<span>{% if battle.filetype == 21 %}{{ battle.chapter }}-{{ battle.no[:2] }}&nbsp;{% endif %}{{ battle.name.en }}</span></h1>
     {% include "template/en/infobox/battle.html" %}
 
@@ -18,14 +18,13 @@
     {% endif %}
 
     <h2 id="track">Track Info</h2>
-    {% if battle.filetype in [21, 22] %}
-        {% set track = battle.track.0 %}
-    {% else %}
-        {% set track = battle.track %}
-    {% endif %}
     <ul>
-        <li>Track: <a href="/en/track/{{ track.namespace.1 }}/{{ track.no }}.html#{{ battle.uuid }}">{{ track.no }}. {{ track.name.realname.en }}</a></li>
-        <li>Description: {{ track.desc.en }}</li>
-        <li>Composer: {{ track.composer.nickname }} ({{ get_social_for_composer(track.composer) }})</li>
+        {% if battle.track|is_list %}
+            {% for i in battle.track %}
+                <li>{{ generate_track_anchor(i, 0, 0, 0, 0, True) }}</li>
+            {% endfor %}
+        {% else %}
+            <li>{{ generate_track_anchor(battle.track, 0, 0, 0, 0, True) }}</li>
+        {% endif %}
     </ul>
 {% endblock %}
