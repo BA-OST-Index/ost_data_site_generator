@@ -40,7 +40,7 @@
         {% set all_tracks = extract_storypart_data_track(story_part) %}
 
         <p>{% if all_characters|length == 0 %}<span>No characters to display!</span>{% else %}Character:{{ generate_character_anchor_flat(all_characters, MAX_CHAR_DISPLAY)|page_minify_html }}{% endif %}</p><hr />
-        <p>{% if all_tracks|length == 0 %}No tracks to display!{% else %}Track:{% for track in all_tracks %}{% if loop.index == MAX_TRACK_DISPLAY %}&nbsp; and more.{% break %}{% else %}&nbsp;{{ generate_track_anchor(track, 0, 0, 0, 0, 0)|page_minify_html }}{% endif %}{% endfor %}{% endif %}</p>
+        <p>{% if all_tracks|length == 0 %}No tracks to display!{% else %}Track:{% for track in all_tracks %}{% if loop.index == MAX_TRACK_DISPLAY %}&nbsp; and more.{% break %}{% else %}&nbsp;|&nbsp;{{ generate_track_anchor(track, 0, 0, 0, 0, 0)|page_minify_html }}{% endif %}{% endfor %}{% endif %}</p>
     </div>
 {% endmacro %}
 

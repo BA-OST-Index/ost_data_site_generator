@@ -42,7 +42,7 @@
         {% set all_tracks = extract_storypart_data_track(story_part) %}
 
         <p>{% if all_characters|length == 0 %}<span>No characters to display!</span>{% else %}人物：{{ generate_character_anchor_flat(all_characters, MAX_CHAR_DISPLAY)|page_minify_html }}{% endif %}</p><hr />
-        <p>{% if all_tracks|length == 0 %}无歌曲可显示！{% else %}歌曲：{% for track in all_tracks %}{% if loop.index == MAX_TRACK_DISPLAY %}&nbsp; and more.{% break %}{% else %}&nbsp;{{ generate_track_anchor(track, 0, 0, 0, 0, 0)|page_minify_html }}{% endif %}{% endfor %}{% endif %}</p>
+        <p>{% if all_tracks|length == 0 %}无歌曲可显示！{% else %}歌曲：{% for track in all_tracks %}{% if loop.index == MAX_TRACK_DISPLAY %}&nbsp; 及更多人。{% break %}{% else %}&nbsp;|&nbsp;{{ generate_track_anchor(track, 0, 0, 0, 0, 0)|page_minify_html }}{% endif %}{% endfor %}{% endif %}</p>
     </div>
 {% endmacro %}
 
