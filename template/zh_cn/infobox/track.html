@@ -49,27 +49,6 @@
             <td class="infobox-col-value">{% for i in version.url %}<a href="{{ i.value }}" target="_blank"><img src="{{ get_static('images/social/' + i.platform.en + '.png') }}" class="social-logo">{{ i.platform.zh_cn }}</a>{% if i.short_desc.zh_cn != "" %}&nbsp;({{ i.short_desc.zh_cn }}){% endif %}<br/>{% endfor %}</td>
         </tr>
     {% endfor %}
-    <tr><td colspan="2" class="infobox-subtitle">特殊信息</td></tr>
-    <tr>
-        <td class="infobox-col-title">为OST(原声带)</td>
-        <td class="infobox-col-value">{% if track.special_case.is_ost %}是{% else %}否{% endif %}</td>
-    </tr>
-    <tr>
-        <td class="infobox-col-title">在故事中出现</td>
-        <td class="infobox-col-value">{% if track.special_case.is_story %}是{% else %}否{% endif %}</td>
-    </tr>
-    <tr>
-        <td class="infobox-col-title">在战斗中出现</td>
-        <td class="infobox-col-value">{% if track.special_case.is_battle %}是{% else %}否{% endif %}</td>
-    </tr>
-    <tr>
-        <td class="infobox-col-title">在回忆大厅中出现</td>
-        <td class="infobox-col-value">{% if track.special_case.is_bond %}是{% else %}否{% endif %}</td>
-    </tr>
-    <tr>
-        <td class="infobox-col-title">在活动中出现</td>
-        <td class="infobox-col-value">{% if track.special_case.is_event %}是{% else %}否{% endif %}</td>
-    </tr>
     <tr><td colspan="2" class="infobox-subtitle">相关曲子</td></tr>
     <tr>
         <td class="infobox-col-title">其它曲子</td>

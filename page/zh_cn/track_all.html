@@ -1,4 +1,5 @@
 {% extends "template/zh_cn/base.html" %}
+{% from 'template/zh_cn/_macro.html' import output_track_stat_badge_with_tags %}
 
 {% block title %}{{ track.name.zh_cn }}{% endblock title %}
 {% block article_content %}
@@ -7,9 +8,11 @@
     <ul>
         {% for i in track.include %}
             {% if 1 <= i.1.filetype <= 4 %}
-                <li><a href="{{ i.1.no }}.html">{{ i.1.no }}. {{ i.1.name.realname.en }} ({{ i.1.name.realname.zh_cn }})</a>&nbsp;-&nbsp;{{ i.1.desc.zh_cn }}</li>
+                <li><a href="{{ i.1.no }}.html">{{ i.1.no }}. {{ i.1.name.realname.en }}</a> {{ output_track_stat_badge_with_tags(i.1.tags, i.1.stats) }}
+                    {% if i.1.desc.zh_cn != "" %}<br />{{ i.1.desc.zh_cn }}{% endif %}</li>
             {% else %}
-                <li><a href="{{ i.1.namespace.1 }}/index.html">{{ i.1.name.zh_cn }}</a>&nbsp;-&nbsp;{{ i.1.desc.zh_cn }}</li>
+                <li><a href="{{ i.1.namespace.1 }}/index.html">{{ i.1.name.zh_cn }}</a> {{ output_track_stat_badge_with_tags(i.1.tags, i.1.stats) }}
+                    {% if i.1.desc.zh_cn != "" %}<br />{{ i.1.desc.zh_cn }}{% endif %}</li>
             {% endif %}
         {% endfor %}
     </ul>

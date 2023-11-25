@@ -43,3 +43,62 @@
         </tbody>
     </table>
 {% endmacro %}
+
+{% macro track_stats_table(stats) %}
+    <table class="track-stats-table stats-table">
+        <tbody>
+            <tr class="stats-title">
+                <td colspan="8">歌曲类型</td>
+            </tr>
+            <tr>
+                <td colspan="1" class="td-12-50-width">OST</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_ost) }}</td>
+                <td colspan="1" class="td-12-50-width">动画</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_ani) }}</td>
+                <td colspan="1" class="td-12-50-width">短篇动画</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_short) }}</td>
+                <td colspan="1" class="td-12-50-width">其它</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_other) }}</td>
+            </tr>
+            <tr class="stats-title">
+                <td colspan="8">地区发行情况</td>
+            </tr>
+            <tr>
+                <td colspan="1" class="td-12-50-width">游戏内</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_ba) }}</td>
+                <td colspan="1" class="td-12-50-width">日服</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_jp) }}</td>
+                <td colspan="1" class="td-12-50-width">国际服</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_global) }}</td>
+                <td colspan="1" class="td-12-50-width">国服</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_cn) }}</td>
+            </tr>
+            <tr class="stats-title">
+                <td colspan="8">故事内使用情况</td>
+            </tr>
+            <tr>
+                <td colspan="1" class="td-12-50-width">总体情况</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_story) }}</td>
+                <td colspan="1" class="td-12-50-width">主线故事</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_story_main) }}</td>
+                <td colspan="1" class="td-12-50-width">回忆大厅</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_story_memory) }}</td>
+                <td colspan="1" class="td-12-50-width">活动故事</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_story_event) }}</td>
+            </tr>
+            <tr class="stats-title">
+                <td colspan="8">任务/战斗内使用情况</td>
+            </tr>
+            <tr>
+                <td colspan="1" class="td-12-50-width">总体情况</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_battle) }}</td>
+                <td colspan="1" class="td-12-50-width">主线任务/战斗</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_battle_main) }}</td>
+                <td colspan="1" class="td-12-50-width">故事内战斗</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_battle_story) }}</td>
+                <td colspan="1" class="td-12-50-width">活动任务</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_battle_event) }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endmacro %}

@@ -43,3 +43,62 @@
         </tbody>
     </table>
 {% endmacro %}
+
+{% macro track_stats_table(stats) %}
+    <table class="track-stats-table stats-table">
+        <tbody>
+            <tr class="stats-title">
+                <td colspan="8">Track Types</td>
+            </tr>
+            <tr>
+                <td colspan="1" class="td-12-50-width">OST</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_ost) }}</td>
+                <td colspan="1" class="td-12-50-width">Animation</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_ani) }}</td>
+                <td colspan="1" class="td-12-50-width">Short Animation</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_short) }}</td>
+                <td colspan="1" class="td-12-50-width">Other</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_other) }}</td>
+            </tr>
+            <tr class="stats-title">
+                <td colspan="8">Release Stats</td>
+            </tr>
+            <tr>
+                <td colspan="1" class="td-12-50-width">In Game</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_ba) }}</td>
+                <td colspan="1" class="td-12-50-width">JP</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_jp) }}</td>
+                <td colspan="1" class="td-12-50-width">Global</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_global) }}</td>
+                <td colspan="1" class="td-12-50-width">CN</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_cn) }}</td>
+            </tr>
+            <tr class="stats-title">
+                <td colspan="8">Story Usage</td>
+            </tr>
+            <tr>
+                <td colspan="1" class="td-12-50-width">Overview</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_story) }}</td>
+                <td colspan="1" class="td-12-50-width">Main Story</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_story_main) }}</td>
+                <td colspan="1" class="td-12-50-width">Recollection Lobby</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_story_memory) }}</td>
+                <td colspan="1" class="td-12-50-width">Event Story</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_story_event) }}</td>
+            </tr>
+            <tr class="stats-title">
+                <td colspan="8">Mission/Battle Usage</td>
+            </tr>
+            <tr>
+                <td colspan="1" class="td-12-50-width">Overview</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_battle) }}</td>
+                <td colspan="1" class="td-12-50-width">Main Mission/Battle</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_battle_main) }}</td>
+                <td colspan="1" class="td-12-50-width">In Story Battle</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_battle_story) }}</td>
+                <td colspan="1" class="td-12-50-width">Event Mission</td>
+                <td colspan="1" class="td-12-50-width">{{ generate_tick_img_by_bool(stats.is_battle_event) }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endmacro %}

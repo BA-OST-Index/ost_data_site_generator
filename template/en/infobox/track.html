@@ -49,27 +49,6 @@
             <td class="infobox-col-value">{% for i in version.url %}<a href="{{ i.value }}" target="_blank"><img src="{{ get_static('images/social/' + i.platform.en + '.png') }}" class="social-logo">{{ i.platform.en }}</a>{% if i.short_desc.en != "" %}&nbsp;({{ i.short_desc.en }}){% endif %}<br/>{% endfor %}</td>
         </tr>
     {% endfor %}
-    <tr><td colspan="2" class="infobox-subtitle">Special Usage Information</td></tr>
-    <tr>
-        <td class="infobox-col-title">OST</td>
-        <td class="infobox-col-value">{% if track.special_case.is_ost %}Yes{% else %}No{% endif %}</td>
-    </tr>
-    <tr>
-        <td class="infobox-col-title">Story</td>
-        <td class="infobox-col-value">{% if track.special_case.is_story %}Yes{% else %}No{% endif %}</td>
-    </tr>
-    <tr>
-        <td class="infobox-col-title">Battle</td>
-        <td class="infobox-col-value">{% if track.special_case.is_battle %}Yes{% else %}No{% endif %}</td>
-    </tr>
-    <tr>
-        <td class="infobox-col-title">Recollection Lobby</td>
-        <td class="infobox-col-value">{% if track.special_case.is_bond %}Yes{% else %}No{% endif %}</td>
-    </tr>
-    <tr>
-        <td class="infobox-col-title">Event</td>
-        <td class="infobox-col-value">{% if track.special_case.is_event %}Yes{% else %}No{% endif %}</td>
-    </tr>
     <tr><td colspan="2" class="infobox-subtitle">Related Tracks</td></tr>
     <tr>
         <td class="infobox-col-title">Other Tracks</td>

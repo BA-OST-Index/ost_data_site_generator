@@ -126,7 +126,7 @@
 {% endmacro %}
 
 {# 通用的Tag <a>生成 #}
-{% macro generate_tag_span(tag) %}{{ generate_tag_badge(tag.color_css, tag.name.en) }}{% endmacro %}
+{% macro generate_tag_span(tag) %}{{ generate_tag_badge(tag.color_css, tag.name.zh_cn) }}{% endmacro %}
 
 {% macro tag_altogether(tags, instance_id) %}
     {% for tag in tags %}<a href="/{{ curr_lang }}/tag/{{ tag.namespace[-1] }}.html{% if instance_id %}#{{ instance_id }}{% endif %}" target="_blank">{{ generate_tag_span(tag) }}</a>&nbsp;{% endfor %}
@@ -152,7 +152,7 @@
 
 {# 视频标签生成 #}
 {% macro output_video_stat_badge(stat) %}
-    <div class="video-stats-badge">
+    <div class="video-stats-badge stats-badge">
     {% if stat.is_jp %}{{ generate_tag_badge("primary", "日服") }}{% endif %}
     {% if stat.is_global %}{{ generate_tag_badge("primary", "国际服") }}{% endif %}
     {% if stat.is_cn %}{{ generate_tag_badge("primary", "国服") }}{% endif %}
@@ -165,4 +165,37 @@
     {% if stat.is_ad %}{{ generate_tag_badge("secondary", "广告") }}{% endif %}
     {% if stat.is_ingame %}{{ generate_tag_badge("secondary", "游戏内") }}{% endif %}
     </div>
+{% endmacro %}
+
+{# 歌曲标签生成 #}
+{% macro output_track_stat_badge_p2p3(stat) %}
+    {# 仅生成第二、三部分（发行地区+使用情况） #}
+    {% if stat.is_ba %}{{ generate_tag_badge("success", "游戏内") }}{% endif %}
+    {% if not stat.is_ba %}
+        {% if stat.is_jp %}{{ generate_tag_badge("success", "日服") }}{% endif %}
+        {% if stat.is_global %}{{ generate_tag_badge("success", "国际服") }}{% endif %}
+        {% if stat.is_cn %}{{ generate_tag_badge("success", "国服") }}{% endif %}
+    {% endif %}
+
+    {% if stat.is_story %}{{ generate_tag_badge("info", "故事曲") }}{% endif %}
+    {% if stat.is_battle %}{{ generate_tag_badge("danger", "战斗曲") }}{% endif %}
+    {% if stat.is_story_memory %}{{ generate_tag_badge("momo", "回忆大厅") }}{% endif %}
+{% endmacro %}
+
+{% macro output_track_stat_badge_all(stat) %}
+    <div class="track-stats-badge stats-badge">
+    {% if stat.is_ost %}{{ generate_tag_badge("primary", "OST") }}{% endif %}
+    {% if stat.is_ani %}{{ generate_tag_badge("primary", "动画") }}{% endif %}
+    {% if stat.is_short %}{{ generate_tag_badge("primary", "短篇动画") }}{% endif %}
+    {% if stat.is_other %}{{ generate_tag_badge("primary", "其它") }}{% endif %}
+
+    {{ output_track_stat_badge_p2p3(stat) }}
+
+    {% if stat.has_related %}{{ generate_tag_badge("secondary", "有关联曲子") }}{% endif %}
+    </div>
+{% endmacro %}
+
+{# usage: track_all.html #}
+{% macro output_track_stat_badge_with_tags(tags, stat) %}
+    <div class="track-stats-badge stats-badge">{% if tags|length != 0 %}{% for i in tags %}{% if loop.index == MAX_TRACK_TAG_OUTPUT %}{% break %}{% endif %}{{ generate_tag_span(i) }}&nbsp;{% endfor %}{% endif %}</div>
 {% endmacro %}

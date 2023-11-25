@@ -1,4 +1,4 @@
-{% from "template/en/_macro.html" import filetype_to_name, tracktype_to_name, generate_track_anchor, generate_story_anchor, generate_appearedat_html, generate_character_anchor_flat, generate_character_anchor %}
+{% from "template/en/_macro.html" import filetype_to_name, tracktype_to_name, generate_track_anchor, generate_story_anchor, generate_appearedat_html, generate_character_anchor_flat, generate_character_anchor, output_track_stat_badge_p2p3 %}
 
 {# JS代码生成 #}
 {% macro tooltip_add_data_js(data) %}
@@ -92,7 +92,7 @@
 {# instance_type可选background/character/story #}
 {% macro tooltip_track(track, instance_id, instance_type) %}
     <div class="tooltip-div">
-        <p class="tooltip-title tooltip-ellipsis">{{ tracktype_to_name(track.track_type) }}&nbsp;{{ track.no }}.&nbsp;{{ track.name.realname.en|js_string_safe }}</p><hr />
+        <p class="tooltip-title tooltip-ellipsis">{{ tracktype_to_name(track.track_type) }}&nbsp;{{ track.no }}.&nbsp;{{ track.name.realname.en|js_string_safe }} <span class="track-stats-badge stats-badge">{{ output_track_stat_badge_p2p3(track.stats) }}</span></p><hr />
 
         <p class="tooltip-subtitle">Story:</p>
         <ol class="tooltip-ol">
