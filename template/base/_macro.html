@@ -15,3 +15,5 @@
 {% macro generate_popup_for_tooltip_anchor(tooltip_id) %}<span onclick="showPopupByTooltipId('{{ tooltip_id }}')" style="display: inline-block"><img src="{{ get_static('images/site/circle-info.svg') }}" class="popup-icon"></span>{% endmacro %}
 
 {% macro generate_tag_badge(color_css, text) %}<span class="badge badge-{{ color_css }} badge-tag">{{ text }}</span>{% endmacro %}
+
+{% macro generate_tick_img_by_bool(flag, img_size) %}{% if flag == True %}{% set img_url = get_static('images/site/Yes_check.svg') %}{% else %}{% set img_url = get_static('images/site/X_mark.svg') %}{% endif %}{% if not arg_check(img_size) %}{% set img_size = "1em" %}{% endif %}<img src="{{ img_url }}" style="height: {{ img_size }}" />{% endmacro %}

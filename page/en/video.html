@@ -1,6 +1,7 @@
 {% extends "template/en/base.html" %}
 {% from 'template/en/_macro.html' import output_video_stat_badge %}
 {% from 'template/en/_macro_page.html' import output_usedby_track_list, track_version_video_player %}
+{% from 'template/en/_macro_page2.html' import video_stats_table %}
 
 {% block title %}Video/{{ video.name.en }}{% endblock title %}
 {% block other_head %}
@@ -16,4 +17,6 @@
     <p>Tips: In order to avoid potential copyright infringement, we're using <b>third-party embedded web players</b> to provide services. You can also manually visit them by clicking the links in the infobox.</p>
     <p>By clicking the links below, you agree to the Terms of Services of the corresponding platforms/service providers.</p>
     {{ track_version_video_player(video.version) }}
+    <h2>Video Stats</h2>
+    {{ video_stats_table(video.stats) }}
 {% endblock %}

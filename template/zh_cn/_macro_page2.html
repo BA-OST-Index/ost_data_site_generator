@@ -1,0 +1,45 @@
+{% from 'template/base/_macro.html' import generate_tick_img_by_bool %}
+
+{% macro video_stats_table(stats) %}
+    <table class="video-stats-table stats-table">
+        <tbody>
+            <tr class="stats-title">
+                <td colspan="12">Regional Release</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="td-16-67-width">日服</td>
+                <td colspan="2" class="td-16-67-width">{{ generate_tick_img_by_bool(stats.is_jp) }}</td>
+                <td colspan="2" class="td-16-67-width">国际服</td>
+                <td colspan="2" class="td-16-67-width">{{ generate_tick_img_by_bool(stats.is_global) }}</td>
+                <td colspan="2" class="td-16-67-width">国服</td>
+                <td colspan="2" class="td-16-67-width">{{ generate_tick_img_by_bool(stats.is_cn) }}</td>
+            </tr>
+            <tr class="stats-title">
+                <td colspan="12">Video Type</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="td-16-67-width">官方PV</td>
+                <td colspan="2" class="td-16-67-width">{{ generate_tick_img_by_bool(stats.is_pv) }}</td>
+                <td colspan="2" class="td-16-67-width">人物PV</td>
+                <td colspan="2" class="td-16-67-width">{{ generate_tick_img_by_bool(stats.is_pv_char) }}</td>
+                <td colspan="2" class="td-16-67-width">动画PV</td>
+                <td colspan="2" class="td-16-67-width">{{ generate_tick_img_by_bool(stats.is_pv_ani) }}</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="td-25-00-width">MV</td>
+                <td colspan="3" class="td-25-00-width">{{ generate_tick_img_by_bool(stats.is_mv) }}</td>
+                <td colspan="3" class="td-25-00-width">动画</td>
+                <td colspan="3" class="td-25-00-width">{{ generate_tick_img_by_bool(stats.is_animation) }}</td>
+            </tr>
+            <tr class="stats-title">
+                <td colspan="12">Other</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="td-25-00-width">作为广告使用</td>
+                <td colspan="3" class="td-25-00-width">{{ generate_tick_img_by_bool(stats.is_ad) }}</td>
+                <td colspan="3" class="td-25-00-width">在游戏内出现</td>
+                <td colspan="3" class="td-25-00-width">{{ generate_tick_img_by_bool(stats.is_ingame) }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endmacro %}
