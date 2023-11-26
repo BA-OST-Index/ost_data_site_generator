@@ -1,6 +1,8 @@
 {% from 'template/base/_macro.html' import anchor_new_tab, get_storypart_text_color_css, get_stu_type_text_color_css, generate_tooltip_anchor, generate_popup_for_tooltip_anchor, generate_tag_badge %}
 {% set curr_lang = "en" %}
 
+{% set MAX_TRACK_TAG_OUTPUT = 6 %} {# one-indexed, actually 5 #}
+
 {# ------------------------------------------------------------------- #}
 {# ------------------------------- 通用函数 --------------------------- #}
 {# ------------------------------------------------------------------- #}
@@ -148,7 +150,7 @@
 
 {# 视频标签生成 #}
 {% macro output_video_stat_badge(stat) %}
-    <div class="video-stats-badge">
+    <div class="video-stats-badge stats-badge">
     {% if stat.is_jp %}{{ generate_tag_badge("primary", "JP") }}{% endif %}
     {% if stat.is_global %}{{ generate_tag_badge("primary", "Global") }}{% endif %}
     {% if stat.is_cn %}{{ generate_tag_badge("primary", "CN") }}{% endif %}
@@ -163,3 +165,35 @@
     </div>
 {% endmacro %}
 
+{# 歌曲标签生成 #}
+{% macro output_track_stat_badge_p2p3(stat) %}
+    {# 仅生成第二、三部分（发行地区+使用情况） #}
+    {% if stat.is_ba %}{{ generate_tag_badge("success", "InGame") }}{% endif %}
+    {% if not stat.is_ba %}
+        {% if stat.is_jp %}{{ generate_tag_badge("success", "JP") }}{% endif %}
+        {% if stat.is_global %}{{ generate_tag_badge("success", "Global") }}{% endif %}
+        {% if stat.is_cn %}{{ generate_tag_badge("success", "CN") }}{% endif %}
+    {% endif %}
+
+    {% if stat.is_story %}{{ generate_tag_badge("info", "Story") }}{% endif %}
+    {% if stat.is_battle %}{{ generate_tag_badge("danger", "Battle") }}{% endif %}
+    {% if stat.is_story_memory %}{{ generate_tag_badge("momo", "Recollection") }}{% endif %}
+{% endmacro %}
+
+{% macro output_track_stat_badge_all(stat) %}
+    <div class="track-stats-badge stats-badge">
+    {% if stat.is_ost %}{{ generate_tag_badge("primary", "OST") }}{% endif %}
+    {% if stat.is_ani %}{{ generate_tag_badge("primary", "Animation") }}{% endif %}
+    {% if stat.is_short %}{{ generate_tag_badge("primary", "Short") }}{% endif %}
+    {% if stat.is_other %}{{ generate_tag_badge("primary", "Other") }}{% endif %}
+
+    {{ output_track_stat_badge_p2p3(stat) }}
+
+    {% if stat.has_related %}{{ generate_tag_badge("secondary", "RelatedTo") }}{% endif %}
+    </div>
+{% endmacro %}
+
+{# usage: track_all.html #}
+{% macro output_track_stat_badge_with_tags(tags, stat) %}
+    <div class="track-stats-badge stats-badge">{% if tags|length != 0 %}{% for i in tags %}{% if loop.index == MAX_TRACK_TAG_OUTPUT %}{% break %}{% endif %}{{ generate_tag_span(i) }}&nbsp;{% endfor %}{% endif %}</div>
+{% endmacro %}

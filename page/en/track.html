@@ -6,9 +6,10 @@
 {% endblock other_head %}
 {% block article_content %}
     {% from "template/en/_macro_page.html" import output_usedby_background, output_usedby_story, output_usedby_battle, output_usedby_ui, output_usedby_video, output_usedby_character_dict, track_version_video_player, output_track_album %}
-    {% from "template/en/_macro.html" import tracktype_to_name, generate_album_anchor, generate_track_anchor %}
+    {% from "template/en/_macro.html" import tracktype_to_name, generate_album_anchor, generate_track_anchor, output_track_stat_badge_all %}
+    {% from "template/en/_macro_page2.html" import track_stats_table %}
 
-    <h1>Track/{{ track.no }}. {{ track.name.realname.en }}</h1>
+    <h1>Track/{{ track.no }}. {{ track.name.realname.en }} {{ output_track_stat_badge_all(track.stats) }}</h1>
     {% include "template/en/infobox/track.html" %}
     <p><b>{{ track.name.realname.en }}</b> is the No. {{ track.no }} track in the {{ tracktype_to_name(track.track_type) }}.</p>
     <p>{{ track.desc.en }}</p>
@@ -37,6 +38,9 @@
     <p>Tips: In order to avoid potential copyright infringement, we're using <b>third-party embedded web players</b> to provide services. You can also manually visit them by clicking the links in the infobox.</p>
     <p>By clicking the links below, you agree to the Terms of Services of the corresponding platforms/service providers.</p>
     {{ track_version_video_player(track.version) }}
+
+    <h2>Track Stats</h2>
+    {{ track_stats_table(track.stats) }}
 
     <h2>Usage Info</h2>
     <p>This section shows instances where the song has been referenced.</p>
