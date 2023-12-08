@@ -118,7 +118,7 @@
         <span>,&nbsp;</span>
         {% endif %}
 
-        <span><a href="{{ generate_story_url(base_story) }}#story-part-{{ loop_index }}-seg-{{ seg_index }}" class="{{ ele_class }}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %}><i>&#91;{{ loop_index }}&#93;&nbsp;{{ part.name.en|js_string_safe }}</i></a>{% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}</span>
+        <span><a href="{{ generate_story_url(base_story) }}#story-part-{{ loop_index }}{% if seg_index != -1 %}-seg-{{ seg_index }}{% endif %}" class="{{ ele_class }}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %}><i>&#91;{{ loop_index }}&#93;&nbsp;{{ part.name.en|js_string_safe }}</i></a>{% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}</span>
     {% endfor %}
     <span>)</span>
 {% endmacro %}
