@@ -11,19 +11,19 @@
     <p>{{ char.desc.zh_cn }}</p>
     <div>
         <p>选择显示角色名字的模式：
-            <select id="char_lang_display" onchange="set_char_lang_display_status('zh', this)">
+            <select id="char_lang_display" onchange="setCharLangDisplayStatus('zh', this)">
                 <option value="0">仅中文</option>
                 <option value="1">中文+英文</option>
                 <option value="2">中文+日语</option>
                 <option value="3">中文+英文+日语</option>
             </select>
         </p>
-        <script>display_char_lang_element('zh'); document.getElementById("char_lang_display").value = localStorage.getItem("char_lang_zh");</script>
+        <script>displayCharLangElement('zh'); document.getElementById("char_lang_display").value = localStorage.getItem("char_lang_zh");</script>
         <p>是否启用显示学生详细信息？&nbsp;
             <input type="radio" name="desc_enable" value="enable" id="char_desc_radio_1">&nbsp;启用&nbsp;
             <input type="radio" name="desc_enable" value="disable" id="char_desc_radio_0">&nbsp;禁用
         </p>
-        <script>set_listen_char_desc_preference(); check_char_desc_radio();</script>
+        <script>setListenerOnCharDescPreference(); displayCharDescRadioStatus();</script>
     </div>
     {% if char.filetype == -51 %}
         <h2>NPC</h2>

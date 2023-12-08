@@ -320,7 +320,7 @@
 
         <h3>{{ version.desc.en }}</h3>
         {% for url in version.url %}
-            <div onclick="play_video('{{ url.value }}', 'track-video-{{ _version_index }}-{{ loop.index }}')" id="track-video-{{ _version_index }}-{{ loop.index }}" class="track-video-div">
+            <div onclick="playEmbeddedVideo('{{ url.value }}', 'track-video-{{ _version_index }}-{{ loop.index }}')" id="track-video-{{ _version_index }}-{{ loop.index }}" class="track-video-div">
                 <p><img src="{{ get_static('images/social/' + url.platform.en + '.png') }}" class="social-logo">{{ url.platform.en }} ({{ url.value }})</p>
             </div>
             <div id="track-video-{{ _version_index }}-{{ loop.index }}-container"></div>
@@ -333,7 +333,7 @@
         {% set tooltip_data = {} %}
         {% for album in albums %}
             {% set tooltip_id = generate_tooltip_id() %}
-            <li id="album-{{ album.album_id }}" data-tooltip="{{ tooltip_id }}" onmouseover="showTooltip(this)">{{ generate_album_anchor(album, True, "track-" + track.instance_id) }}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}</li>
+            <li id="album-{{ album.album_id }}" data-tooltip="{{ tooltip_id }}" onmouseover="showTooltipById(this)">{{ generate_album_anchor(album, True, "track-" + track.instance_id) }}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}</li>
 
             {% do tooltip_data.update({tooltip_id: tooltip_album(album)}) %}
         {% endfor %}

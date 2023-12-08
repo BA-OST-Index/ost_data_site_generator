@@ -10,17 +10,17 @@
     <p>{{ char.desc.en }}</p>
     <div>
         <p>Select the mode you want to display character names:&nbsp;
-            <select id="char_lang_display" onchange="set_char_lang_display_status('en', this)">
+            <select id="char_lang_display" onchange="setCharLangDisplayStatus('en', this)">
                 <option value="0">English Only</option>
                 <option value="1">English + Japanese</option>
             </select>
         </p>
-        <script>display_char_lang_element('en'); document.getElementById("char_lang_display").value = localStorage.getItem("char_lang_en");</script>
+        <script>displayCharLangElement('en'); document.getElementById("char_lang_display").value = localStorage.getItem("char_lang_en");</script>
         <p>Enable student's detailed description?&nbsp;
             <input type="radio" name="desc_enable" value="enable" id="char_desc_radio_1">&nbsp;Enable&nbsp;
             <input type="radio" name="desc_enable" value="disable" id="char_desc_radio_0">&nbsp;Disable
         </p>
-        <script>set_listen_char_desc_preference(); check_char_desc_radio();</script>
+        <script>setListenerOnCharDescPreference(); displayCharDescRadioStatus();</script>
     </div>
     {% if char.filetype == -51 %}
         <h2>NPC</h2>
