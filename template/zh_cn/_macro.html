@@ -120,7 +120,7 @@
         <span>,&nbsp;</span>
         {% endif %}
 
-        <span><a href="{{ generate_story_url(base_story) }}#story-part-{{ loop_index }}-seg-{{ seg_index }}" class="{{ ele_class }}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %}><i>&#91;{{ loop_index }}&#93;&nbsp;{{ auto_zhcn_gen(part.name) }}</i></a>{% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}</span>
+        <span><a href="{{ generate_story_url(base_story) }}#story-part-{{ loop_index }}{% if seg_index != -1 %}-seg-{{ seg_index }}{% endif %}" class="{{ ele_class }}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %}><i>&#91;{{ loop_index }}&#93;&nbsp;{{ auto_zhcn_gen(part.name) }}</i></a>{% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}</span>
     {% endfor %}
     <span>)</span>
 {% endmacro %}
@@ -198,4 +198,37 @@
 {# usage: track_all.html #}
 {% macro output_track_stat_badge_with_tags(tags, stat) %}
     <div class="track-stats-badge stats-badge">{% if tags|length != 0 %}{% for i in tags %}{% if loop.index == MAX_TRACK_TAG_OUTPUT %}{% break %}{% endif %}{{ generate_tag_span(i) }}&nbsp;{% endfor %}{% endif %}</div>
+{% endmacro %}
+
+{# 生成UrlModel链接 #}
+{% macro generate_general_urlmodel_anchor(url, html_code_params, disable_href, disable_url_show, disable_desc_short) %}
+    <a {% if not arg_check(disable_href) %}href="{{ url.value }}" {% else %}href="javascript: void 0;" {% endif %} {{ html_code_params }}>
+        <img src="{{ get_static('images/social/' + url.platform.en + '.png') }}" class="social-logo">{{ url.platform.en }}{% if not arg_check(disable_url_show) %} ({{ url.value }}){% endif %}{% if not arg_check(disable_desc_short) %} ({{ auto_zhcn_gen(url.short_desc) }}){% endif %}
+    </a>
+{% endmacro %}
+
+{% macro output_story_source_by_lang(source_list, player_html_id) %}
+    {% if source_list|length != 0 %}
+        {% for url in source_list[:-1] %}
+            <span>{{ generate_general_urlmodel_anchor(url, 'onclick="playEmbeddedStoryVideo(\'' + player_html_id + '\', \'' + url.value + '\')"', True, True, False) }}</span><span>&nbsp;|&nbsp;</span>
+        {% endfor %}
+
+        {% set url = source_list[-1] %}
+        <span>{{ generate_general_urlmodel_anchor(url, 'onclick="playEmbeddedStoryVideo(\'' + player_html_id + '\', \'' + url.value + '\')"', True, True, False) }}</span>
+    {% else %}
+        <span>{{ nothing_to_show }}</span>
+    {% endif %}
+{% endmacro %}
+
+{% macro output_storypart_source_by_lang(source_list, player_html_id) %}
+    {% if source_list|length != 0 %}
+        {% for url in source_list[:-1] %}
+            <span>{{ generate_general_urlmodel_anchor(url, 'onclick="playEmbeddedStoryPartVideo(\'' + player_html_id + '\', \'' + url.value + '\')"', True, True, False) }}</span><span>&nbsp;|&nbsp;</span>
+        {% endfor %}
+
+        {% set url = source_list[-1] %}
+        <span>{{ generate_general_urlmodel_anchor(url, 'onclick="playEmbeddedStoryPartVideo(\'' + player_html_id + '\', \'' + url.value + '\')"', True, True, False) }}</span>
+    {% else %}
+        <span>{{ nothing_to_show }}</span>
+    {% endif %}
 {% endmacro %}

@@ -36,65 +36,84 @@
     </style>
     <script src="{{ get_static('js/common.js') }}"></script>
     <script src="{{ get_static('js/zhcn_switch.js') }}"></script>
-    <script src="{{ get_static('js/highlight_element.js') }}"></script>
+    <script src="{{ get_static('js/highlightElement.js') }}"></script>
     <script src="{{ get_static('js/tooltip.js') }}"></script>
     <script src="{{ get_static('js/lang_switch.js') }}"></script>
     <script src="{{ get_static('js/time_show.js') }}"></script>
     <script src="{{ get_static('js/popup.js') }}"></script>
+    <script src="{{ get_static('js/cn_popup.js') }}"></script>
+    <script src="{{ get_static('js/track_player.js') }}"></script>
+    <script src="{{ get_static('js/story_video_player.js') }}"></script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-BKTB7R8TC3"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
 
-      gtag('config', 'G-BKTB7R8TC3');
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'G-BKTB7R8TC3');
     </script>
-    <script>var tooltip_data = {}; function add_tooltip_data(dictionary) {tooltip_data = Object.assign({}, tooltip_data, dictionary)}</script>
+    <script>var tooltip_data = {};
+
+    function add_tooltip_data(dictionary) {
+        tooltip_data = Object.assign({}, tooltip_data, dictionary)
+    }</script>
     {% block other_head %}{% endblock other_head %}
 </head>
 
 <body style="visibility: visible; opacity: 1;" lang="{% block body_langcode %}{% endblock body_langcode %}">
-    <div class="wrapper" id="main-wrapper">
-        {% block header %}{% endblock header %}
-        <script>
-            function sidebar_toggle() {
-                var sidebar = document.getElementById("git-wiki-sidebar");
-                if (sidebar.style.display === "block") {
-                    sidebar.style.display = "none";
-                    sidebar.style.position = "inherit";
-                } else {
-                    $(sidebar).attr('style', 'display: block;');
-                }
+<div class="wrapper" id="main-wrapper">
+    {% block header %}{% endblock header %}
+    <script>
+        function sidebar_toggle() {
+            var sidebar = document.getElementById("git-wiki-sidebar");
+            if (sidebar.style.display === "block") {
+                sidebar.style.display = "none";
+                sidebar.style.position = "inherit";
+            } else {
+                $(sidebar).attr('style', 'display: block;');
             }
-        </script>
+        }
+    </script>
 
-        <div class="git-wiki-page">
-            <div id="interpage-navi">
-                {% block navi %}{% endblock navi %}<hr />
-            </div>
-
-            <div id="git-wiki-content">
-                {% block article_content %}{% endblock article_content %}{{ content }}
-            </div>
+    <div class="git-wiki-page">
+        <div id="interpage-navi">
+            {% block navi %}{% endblock navi %}
+            <hr/>
         </div>
-        <script>
-            display_zhcn_element();
-        </script>
-    </div>
 
-    <div id="interpage-navi-bottom">
-        <div>
-            <div id="interpage-navi-bottom-left">
-                {{ navi_var }}
-            </div>
-            <div id="interpage-navi-bottom-right"></div>
+        <div id="git-wiki-content">
+            {% block article_content %}{% endblock article_content %}{{ content }}
         </div>
     </div>
+    <script>
+        displayZhcnString();
+    </script>
+</div>
 
-    <div class="wrapper" id="bottom-wrapper">
-        {% block footer %}{% endblock footer %}
+<div id="interpage-navi-bottom">
+    <div>
+        <div id="interpage-navi-bottom-left">
+            {{ navi_var }}
+        </div>
+        <div id="interpage-navi-bottom-right"></div>
     </div>
+</div>
+
+<div class="wrapper" id="bottom-wrapper">
+    {% block footer %}{% endblock footer %}
+</div>
+
+<!--全局JS，用于显示跳转到加速站的弹窗-->
+<script>
+    addEventListener("load", function () {
+        checkCnIP();
+    })
+</script>
 
 <!--
 This page is generated with Jinja2 by Python 3.
