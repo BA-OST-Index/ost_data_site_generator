@@ -1,5 +1,5 @@
 {% from 'template/base/_macro.html' import a_new_tab, get_storypart_text_color_css, get_stu_type_text_color_css, generate_popup_for_tooltip_anchor %}
-{% from 'template/en/_macro.html' import generate_ui_anchor, generate_track_anchor, generate_track_anchor, generate_background_anchor, generate_character_anchor, generate_story_anchor, generate_appearedat_html, filetype_to_name, get_ordinal_number, get_social_for_composer, generate_album_anchor, output_track_stat_badge_with_tags %}
+{% from 'template/en/_macro.html' import generate_ui_anchor, generate_track_anchor, generate_track_anchor, generate_background_anchor, generate_character_anchor, generate_story_anchor, generate_appearedat_html, filetype_to_name, get_ordinal_number, get_social_for_composer, generate_album_anchor, output_track_stat_badge_with_tags, generate_general_urlmodel_anchor, output_story_source_by_lang %}
 {% from 'template/en/_macro_tooltip.html' import tooltip_add_data_js, tooltip_storyinfo, tooltip_storypart, tooltip_background, tooltip_track, tooltip_character, tooltip_album %}
 
 {% macro output_usedby_story(data_story, instance_uuid, instance_key) %}
@@ -340,4 +340,16 @@
     </ul>
 
     {{ tooltip_add_data_js(tooltip_data) }}
+{% endmacro %}
+
+{# 用于StoryInfo列出来源 #}
+{% macro output_storyinfo_source(source_dict) %}
+    {% set player_html_id = "storyinfo-source-player" %}
+    <ul class="storyinfo-source-ul">
+        <li>English: {{ output_story_source_by_lang(source_dict.en, player_html_id) }}</li>
+        <li>Chinese Traditional: {{ output_story_source_by_lang(source_dict.zh_tw, player_html_id) }}</li>
+        <li>Chinese Simplified (CN server): {{ output_story_source_by_lang(source_dict.zh_cn_cn, player_html_id) }}</li>
+        <li>Chinese Simplified (JP fan trans): {{ output_story_source_by_lang(source_dict.zh_cn_jp, player_html_id) }}</li>
+    </ul>
+    <div id="{{ player_html_id }}"></div>
 {% endmacro %}

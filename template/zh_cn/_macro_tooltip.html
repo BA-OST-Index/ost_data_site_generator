@@ -1,4 +1,4 @@
-{% from "template/zh_cn/_macro.html" import filetype_to_name, tracktype_to_name, generate_track_anchor, generate_story_anchor, generate_appearedat_html, generate_character_anchor_flat, auto_zhcn_gen, generate_character_anchor, output_track_stat_badge_p2p3 %}
+{% from "template/zh_cn/_macro.html" import filetype_to_name, tracktype_to_name, generate_track_anchor, generate_story_anchor, generate_appearedat_html, generate_character_anchor_flat, auto_zhcn_gen, generate_character_anchor, output_track_stat_badge_p2p3, output_storypart_source_by_lang %}
 {% set curr_lang = "zh_cn" %}
 
 {# JS代码生成 #}
@@ -196,4 +196,21 @@
             {% endfor %}
         </ol>
     </div>
+{% endmacro %}
+
+{% macro tooltip_storypart_source(part) %}
+    {% set player_html_id = "storypart-source-player" %}
+    {% set source_dict = part.source %}
+
+    <p class="tooltip-title">{{ auto_zhcn_gen(part.name) }}</p>
+    <p>以下列出所有可用来源。</p>
+    <ul>
+        <li>英语：{{ output_storypart_source_by_lang(source_dict.en, player_html_id) }}</li>
+        <li>中文繁体：{{ output_storypart_source_by_lang(source_dict.zh_tw, player_html_id) }}</li>
+        <li>中文简体（国服）：{{ output_storypart_source_by_lang(source_dict.zh_cn_cn, player_html_id) }}</li>
+        <li>中文简体（日服）：{{ output_storypart_source_by_lang(source_dict.zh_cn_jp, player_html_id) }}</li>
+    </ul>
+
+    <div id="{{ player_html_id }}"></div>
+    <div id="tooltip-width-detect"></div>
 {% endmacro %}
