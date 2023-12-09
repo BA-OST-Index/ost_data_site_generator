@@ -94,13 +94,21 @@
 {# instance_id指的是background/character(实为uuid)/story的instance_id，用于过滤 #}
 {# instance_type可选background/character/story #}
 {% macro tooltip_track(track, instance_id, instance_type) %}
+    {% set track_json = get_outer_json(track.instance_id, "track") %}
     <div class="tooltip-div">
-        <p class="tooltip-title tooltip-ellipsis">{{ tracktype_to_name(track.track_type) }}&nbsp;{{ track.no }}.&nbsp;{{ track.name.realname.en|js_string_safe }} <span class="track-stats-badge stats-badge">{{ output_track_stat_badge_p2p3(track.stats) }}</span></p><hr />
+        <p class="tooltip-title tooltip-ellipsis">{{ tracktype_to_name(track.track_type) }}&nbsp;{{ track.no }}.&nbsp;{{ track.name.realname.en|js_string_safe }} <span class="track-stats-badge stats-badge">{{ output_track_stat_badge_p2p3(track.stats) }}</span></p>
+        <hr />
+
+        {% if track_json.bond_chars|length != 0 %}
+        <p class="tooltip-subtitle">回忆大厅人物：</p>
+        <p>{{ generate_character_anchor_flat(track_json.bond_chars)|page_minify_html }}</p>
+        <hr />
+        {% endif %}
 
         <p class="tooltip-subtitle">故事：</p>
         <ol class="tooltip-ol">
             {# 获取数据 #}
-            {% set loop_data = namespace(data=get_outer_json(track.instance_id, "track"), counter=0) %}
+            {% set loop_data = namespace(data=track_json, counter=0) %}
 
             {# 提取数据 #}
             {% set outer_data = loop_data.data.used_by %}
@@ -111,6 +119,7 @@
                 <li>{{ generate_story_anchor(i.0)|page_minify_html }}&nbsp;{{ generate_appearedat_html(i.0, i.1)|page_minify_html }}</li>
             {% endfor %}
         </ol>
+
         {% if instance_type == "story" %}
             <hr />
             <p class="tooltip-subtitle">人物 (前{{ (MAX_CHAR_DISPLAY_FOR_TRACK-1)|string }}个最相关):</p>
