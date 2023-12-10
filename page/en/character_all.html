@@ -1,4 +1,5 @@
 {% extends "template/en/base.html" %}
+{% from 'template/base/_macro.html' import generate_tag_badge %}
 
 {% block title %}{{ char.name.en }}{% endblock title %}
 {% block other_head %}
@@ -10,17 +11,17 @@
     <p>{{ char.desc.en }}</p>
     <div>
         <p>Select the mode you want to display character names:&nbsp;
-            <select id="char_lang_display" onchange="set_char_lang_display_status('en', this)">
+            <select id="char_lang_display" onchange="setCharLangDisplayStatus('en', this)">
                 <option value="0">English Only</option>
                 <option value="1">English + Japanese</option>
             </select>
         </p>
-        <script>display_char_lang_element('en'); document.getElementById("char_lang_display").value = localStorage.getItem("char_lang_en");</script>
+        <script>displayCharLangElement('en'); document.getElementById("char_lang_display").value = localStorage.getItem("char_lang_en");</script>
         <p>Enable student's detailed description?&nbsp;
             <input type="radio" name="desc_enable" value="enable" id="char_desc_radio_1">&nbsp;Enable&nbsp;
             <input type="radio" name="desc_enable" value="disable" id="char_desc_radio_0">&nbsp;Disable
         </p>
-        <script>set_listen_char_desc_preference(); check_char_desc_radio();</script>
+        <script>setListenerOnCharDescPreference(); displayCharDescRadioStatus();</script>
     </div>
     {% if char.filetype == -51 %}
         <h2>NPC</h2>
@@ -39,6 +40,7 @@
                 <li>
                     <a href="/en/character/student/{{ curr.student.name.path_name|lower }}/">
                         <img src="{{ get_static('images/student/icon/' + curr.student.image.collection_texture + '.webp') }}" class="icon-stu"/>{{ curr.student.name.name.en }}<span lang="jp" class="char-lang-jp">&nbsp;/&nbsp;{{ curr.student.name.name.jp }}</span>
+                        {% if curr.student.bond_track %}<a href="/en/{{ '/'.join(curr.student.bond_track.namespace) }}.html" class="badge-stu-bond-track">{{ generate_tag_badge("momo", curr.student.bond_track.no|string + ". " + curr.student.bond_track.name.realname.en) }}</a>{% endif %}
                     </a>
                     <br/>
                     <div class="stu-list-desc">
@@ -60,6 +62,7 @@
                     <li>
                         <a href="/en/character/student/{{ curr.name.path_name|lower }}/">
                             <img src="{{ get_static('images/student/icon/' + curr.image.collection_texture + '.webp') }}" class="icon-stu"/>{{ curr.name.name.en }}<span lang="jp" class="char-lang-jp">&nbsp;/&nbsp;{{ curr.name.name.jp }})</span>
+                            {% if curr.bond_track %}<a href="/en/{{ '/'.join(curr.bond_track.namespace) }}.html" class="badge-stu-bond-track">{{ generate_tag_badge("momo", curr.bond_track.no|string + ". " + curr.bond_track.name.realname.en) }}</a>{% endif %}
                         </a>
                         <br/>
                         <div class="stu-list-desc">

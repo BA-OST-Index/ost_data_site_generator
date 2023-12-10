@@ -98,25 +98,25 @@ class JinjaTool:
         return True
 
     @staticmethod
-    def storypart_extract_all_data(parts, key_name):
+    def storypart_extract_all_data(part, key_name):
         temp = OrderedDict()
-        for segment in parts["data"]:
+        for segment in part["data"]:
             for obj in segment[key_name]:
                 if obj["uuid"] not in temp.keys():
                     temp[obj["uuid"]] = obj
         return [i for i in temp.values()]
 
     @staticmethod
-    def storypart_extract_all_data_track(parts):
-        return JinjaTool.storypart_extract_all_data(parts, "track")
+    def storypart_extract_all_data_track(part):
+        return JinjaTool.storypart_extract_all_data(part, "track")
 
     @staticmethod
-    def storypart_extract_all_data_background(parts):
-        return JinjaTool.storypart_extract_all_data(parts, "background")
+    def storypart_extract_all_data_background(part):
+        return JinjaTool.storypart_extract_all_data(part, "background")
 
     @staticmethod
-    def storypart_extract_all_data_characters(parts):
-        return JinjaTool.storypart_extract_all_data(parts, "character")
+    def storypart_extract_all_data_characters(part):
+        return JinjaTool.storypart_extract_all_data(part, "character")
 
     @staticmethod
     @lru_cache()
@@ -266,18 +266,26 @@ class TemplateTool:
             related_parts = []
             for (index, part) in enumerate(story["part"], 1):
                 seg_index = -1
+
+                # 针对 char-char (in-story) 设计，这部分只精确到part
+                if instance_type == "character":
+                    is_exit = 0
+                    for char2 in JinjaTool.storypart_extract_all_data_characters(part):
+                        if char2["uuid"] == instance_id:
+                            is_exit = 1
+                            break
+                    if is_exit == 1:
+                        related_parts.append([part, index, seg_index, 0])
+
+                    # 直接跳过剩下循环
+                    continue
+
+                # 其它数据
                 for (index2, segment) in enumerate(part["data"], 1):
                     is_exit = 0
                     for char in segment["character"]:
                         if char["uuid"] == char_data["uuid"]:
-                            if instance_type == "character":
-                                for char2 in segment["character"]:
-                                    if char2["uuid"] == instance_id:
-                                        is_exit = 1
-                                        break
-                                if is_exit == 1:
-                                    break
-                            elif instance_type == "track":
+                            if instance_type == "track":
                                 for track in segment["track"]:
                                     if track["instance_id"] == instance_id:
                                         is_exit = 1

@@ -1,12 +1,9 @@
 {% extends "template/zh_cn/base.html" %}
 
 {% block title %}曲子/{{ track.no }}. {{ track.name.realname.en }} ({{ track.name.realname.zh_cn }}){% endblock title %}
-{% block other_head %}
-    <script src="{{ get_static('js/track_player.js') }}"></script>
-{% endblock other_head %}
 {% block article_content %}
     {% from "template/zh_cn/_macro_page.html" import output_usedby_background, output_usedby_story, output_usedby_battle, output_usedby_ui, output_usedby_video, output_usedby_character_dict, track_version_video_player, output_track_album %}
-    {% from "template/zh_cn/_macro.html" import tracktype_to_name, generate_album_anchor, generate_track_anchor, nothing_to_show, output_track_stat_badge_all %}
+    {% from "template/zh_cn/_macro.html" import tracktype_to_name, generate_album_anchor, generate_track_anchor, nothing_to_show, output_track_stat_badge_all, generate_character_anchor_flat %}
     {% from "template/zh_cn/_macro_page2.html" import track_stats_table %}
 
     <h1>曲子/{{ track.no }}. {{ track.name.realname.en }}{% if track.name.realname.zh_cn %}&nbsp;({{ track.name.realname.zh_cn }}){% endif %} {{ output_track_stat_badge_all(track.stats) }}</h1>
@@ -41,6 +38,9 @@
 
     <h2>曲子详细信息</h2>
     {{ track_stats_table(track.stats) }}
+    <h3>回忆大厅角色</h3>
+    <p>以下角色的回忆大厅使用了本音乐。</p>
+    {{ generate_character_anchor_flat(track.bond_chars) }}
 
     <h2>使用信息</h2>
     <p>此处显示引用了这首曲子的实例。</p>
