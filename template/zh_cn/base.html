@@ -1,4 +1,6 @@
 {% extends "template/base/base.html" %}
+{% from "template/zh_cn/_macro.html" import auto_zhcn_gen %}
+
 {% set current_lang = "zh_cn" %}
 {% block body_langcode %}zh-Hans{% endblock %}
 
@@ -6,7 +8,6 @@
     {% include "template/zh_cn/header.html" %}
 {% endblock header %}
 
-{% macro get_zhcn(data) %}{% if data.zh_cn %}{{ data.zh_cn }}{% else %}{{ data.zh_cn_jp }}{% endif %}{% endmacro %}
 {% set navi_var %}
     {% block navi %}
         {# Entry mapping #}
@@ -42,13 +43,13 @@
                         <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- 上一页：{{ _prev.name.realname.en }} {% if _prev.name.realname.zh_cn %}({{ _prev.name.realname.zh_cn }}){% endif %}</a></p>
                     {% elif entry_.filetype in [52] %}
                         {# why am i doing this #}
-                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|lower }}">&lt;-- 上一页: {{ get_zhcn(_prev.name) }}</a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|lower }}">&lt;-- 上一页: {{ auto_zhcn_gen(_prev.name) }}</a></p>
                     {% elif 11 <= entry_.filetype <= 16 and entry_.filetype not in [14, 15] %}
-                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|int|string }}.html">&lt;-- 上一页: {{ get_zhcn(_prev.name) }}</a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|int|string }}.html">&lt;-- 上一页: {{ auto_zhcn_gen(_prev.name) }}</a></p>
                     {% elif entry_.filetype == -53 %}
-                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}/">&lt;-- 上一页：{{ get_zhcn(_prev.name.name) }}</a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}/">&lt;-- 上一页：{{ auto_zhcn_gen(_prev.name.name) }}</a></p>
                     {% else %}
-                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- 上一页：{{ get_zhcn(_prev.name) }}</a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- 上一页：{{ auto_zhcn_gen(_prev.name) }}</a></p>
                     {% endif %}
                 {% else %}
                     <p class="navi-p">未找到上一页</p>
@@ -63,13 +64,13 @@
                         <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">--&gt; 下一页：{{ _next.name.realname.en }} {% if _next.name.realname.zh_cn %}({{ _next.name.realname.zh_cn }}){% endif %}</a></p>
                     {% elif entry_.filetype in [52] %}
                         {# why am i doing this #}
-                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|lower }}">--&gt; 下一页: {{ get_zhcn(_next.name) }}</a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|lower }}">--&gt; 下一页: {{ auto_zhcn_gen(_next.name) }}</a></p>
                     {% elif 11 <= entry_.filetype <= 16 and entry_.filetype not in [14, 15] %}
-                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|int|string }}.html">--&gt; 下一页: {{ get_zhcn(_next.name) }}</a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|int|string }}.html">--&gt; 下一页: {{ auto_zhcn_gen(_next.name) }}</a></p>
                     {% elif entry_.filetype == -53 %}
-                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}/">&lt;-- 下一页：{{ get_zhcn(_next.name.name) }}</a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}/">&lt;-- 下一页：{{ auto_zhcn_gen(_next.name.name) }}</a></p>
                     {% else %}
-                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">--&gt; 下一页: {{ get_zhcn(_next.name) }}</a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">--&gt; 下一页: {{ auto_zhcn_gen(_next.name) }}</a></p>
                     {% endif %}
                 {% else %}
                     <p class="navi-p">未找到下一页</p>
