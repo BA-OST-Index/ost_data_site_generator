@@ -81,5 +81,8 @@
 {% endset %}
 {% block footer %}
     {% include "template/zh_cn/footer.html" %}
-    <script>displayCharLangElement('zh');</script>
+    <script>
+        displayCharLangElement('zh');
+        displayZhcnString();
+    </script>
 {% endblock footer %}
