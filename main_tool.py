@@ -129,10 +129,8 @@ class TemplateTool:
     @staticmethod
     def py_generate_story_url(lang: str, story: dict):
         ft = story["filetype"]
-        if ft == 15:
-            return f"/{lang}/character/student/{story['pos']['student'].lower()}/bond/{str(story['pos']['no'])}.html"
-        elif ft == 14:
-            return f"/{lang}/event/{str(story['pos']['event_id'])}/story/{str(story['pos']['segment'])}.html"
+        if ft in [14, 15]:
+            return f"/{lang}/{'/'.join(story['namespace'])}.html"
         else:
             if ft == 11:
                 story_type = "main"
