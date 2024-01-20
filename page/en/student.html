@@ -40,6 +40,9 @@
     <h3>Direct Backgrounds</h3>
     <p>The following backgrounds are ones with the characters in them.</p>
     {{ output_usedby_background(char.student.used_by.data_background_direct, char.student.uuid + "-direct", char.student.uuid, "character", True) }}
+    <h4>Indirect Backgrounds</h4>
+    <p>The following backgrounds are the ones that the character appears with it, but not exactly in the scene (e.g. when in communication).</p>
+    {{ output_usedby_background(char.student.used_by.data_background_by_comm, char.student.uuid, char.student.uuid, "character", True) }}
     <h3>Other Backgrounds</h3>
     {{ output_usedby_background(char.student.used_by.data_background, char.student.uuid, char.student.uuid, "character", True) }}
 

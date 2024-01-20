@@ -127,6 +127,12 @@ class JinjaTool:
 
 class TemplateTool:
     @staticmethod
+    def _get_character_instance_id(data: dict) -> str:
+        if data.get("filetype", "") == 52:  # NPC
+            return data["namespace"][-1]
+        return data["uuid"]
+
+    @staticmethod
     def py_generate_story_url(lang: str, story: dict):
         ft = story["filetype"]
         if ft in [14, 15]:
@@ -160,10 +166,21 @@ class TemplateTool:
 
             for (index, part) in enumerate(story["part"], 1):
                 add_part, seg_index = 0, -1
+                is_by_comm, is_narrative = False, False
+
                 for (index2, segment) in enumerate(part["data"], 1):
                     is_exit = 0
                     for bg in segment["background"]:
                         if bg["uuid"] == background["uuid"]:
+                            # bg-char
+                            for char in segment["character"]:
+                                if TemplateTool._get_character_instance_id(char) == instance_id:
+                                    if char["is_comm"]:
+                                        is_by_comm = True
+                                    if char["is_narrative"]:
+                                        is_narrative = True
+
+                            # 其它代码
                             if instance_type == "story" or instance_type == "character":
                                 is_exit = 1
                                 break
@@ -179,7 +196,7 @@ class TemplateTool:
                         break
 
                 if seg_index != -1:
-                    story_parts.append([part, index, seg_index, 0])
+                    story_parts.append([part, index, seg_index, 0, is_by_comm, is_narrative])
             if len(story_parts) != 0:
                 all_story.append([story, story_parts])
 
@@ -202,23 +219,27 @@ class TemplateTool:
 
             for (index, part) in enumerate(story["part"], 1):
                 seg_index = -1
+                is_by_comm, is_narrative = False, False
+
                 for (index2, segment) in enumerate(part["data"], 1):
                     is_exit = 0
                     for story_track in segment["track"]:
+                        # print(story_track)
                         if story_track["instance_id"] == track["instance_id"]:
                             if instance_type == "story" or instance_type == "album":
                                 is_exit = 1
                                 break
                             elif instance_type == "character":
                                 for char in segment["character"]:
-                                    if char.get("filetype", "") == 52:  # NPC
-                                        if char["namespace"][-1] == instance_id:
-                                            is_exit = 1
-                                            break
-                                    else:
-                                        if char["uuid"] == instance_id:
-                                            is_exit = 1
-                                            break
+                                    # bg-char
+                                    if char["is_comm"]:
+                                        is_by_comm = True
+                                    if char["is_narrative"]:
+                                        is_narrative = True
+
+                                    if TemplateTool._get_character_instance_id(char) == instance_id:
+                                        is_exit = 1
+                                        break
                             elif instance_type == "background":
                                 for bg in segment["background"]:
                                     if bg["uuid"] == instance_id:
@@ -232,7 +253,7 @@ class TemplateTool:
                         break
 
                 if seg_index != -1:
-                    related_parts.append([part, index, seg_index, 0])
+                    related_parts.append([part, index, seg_index, 0, is_by_comm, is_narrative])
 
             if len(related_parts) != 0:
                 all_story.append([story, related_parts])
@@ -264,16 +285,22 @@ class TemplateTool:
             related_parts = []
             for (index, part) in enumerate(story["part"], 1):
                 seg_index = -1
+                is_by_comm, is_narrative = False, False
 
                 # 针对 char-char (in-story) 设计，这部分只精确到part
                 if instance_type == "character":
                     is_exit = 0
                     for char2 in JinjaTool.storypart_extract_all_data_characters(part):
                         if char2["uuid"] == instance_id:
+                            if char2["is_comm"]:
+                                is_by_comm = True
+                            if char2["is_narrative"]:
+                                is_narrative = True
+
                             is_exit = 1
                             break
                     if is_exit == 1:
-                        related_parts.append([part, index, seg_index, 0])
+                        related_parts.append([part, index, seg_index, 0, is_by_comm, is_narrative])
 
                     # 直接跳过剩下循环
                     continue
@@ -283,6 +310,11 @@ class TemplateTool:
                     is_exit = 0
                     for char in segment["character"]:
                         if char["uuid"] == char_data["uuid"]:
+                            if char["is_comm"]:
+                                is_by_comm = True
+                            if char["is_narrative"]:
+                                is_narrative = True
+
                             if instance_type == "track":
                                 for track in segment["track"]:
                                     if track["instance_id"] == instance_id:
@@ -298,7 +330,7 @@ class TemplateTool:
                         seg_index = index2
 
                 if seg_index != -1:
-                    related_parts.append([part, index, seg_index, 0])
+                    related_parts.append([part, index, seg_index, 0, is_by_comm, is_narrative])
 
             if len(related_parts) != 0:
                 all_story.append([story, related_parts])
@@ -332,17 +364,26 @@ class TemplateTool:
 
                 for (index, part) in enumerate(value["part"], 1):
                     seg_index = -1
+                    is_by_comm, is_narrative = False, False  # bg-char
+
                     for (index2, segment) in enumerate(part["data"], 1):
                         is_exit = 0
                         for obj in segment[instance_key]:
                             if obj["uuid"] == instance_uuid:
+                                # bg-char
+                                if instance_key == "character":
+                                    if obj["is_comm"]:
+                                        is_by_comm = True
+                                    if obj["is_narrative"]:
+                                        is_narrative = True
+
                                 is_exit = 1
 
                         if is_exit:
                             seg_index = index2
 
                     if seg_index != -1:
-                        related_parts.append([part, index, seg_index, JinjaTool.generate_tooltip_id()])
+                        related_parts.append([part, index, seg_index, JinjaTool.generate_tooltip_id(), is_by_comm, is_narrative])
 
                 if len(related_parts) != 0:
                     all_story_with_filetype[_curr_filetype].append([value, related_parts])

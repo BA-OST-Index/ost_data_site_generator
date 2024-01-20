@@ -17,6 +17,9 @@
     <h4>Direct Backgrounds</h4>
     <p>The following backgrounds are ones with the characters in them.</p>
     {{ output_usedby_background(char.used_by.data_background_direct, char.namespace[-1] + "-direct", char.namespace[-1], "character", True) }}
+    <h4>Indirect Backgrounds</h4>
+    <p>The following backgrounds are the ones that the character appears with it, but not exactly in the scene (e.g. when in communication).</p>
+    {{ output_usedby_background(char.used_by.data_background_by_comm, char.namespace[-1], char.namespace[-1], "character", True) }}
     <h4>In-Story Backgrounds</h4>
     {{ output_usedby_background(char.used_by.data_background, char.namespace[-1], char.namespace[-1], "character", True) }}
     <h3>Stories</h3>
