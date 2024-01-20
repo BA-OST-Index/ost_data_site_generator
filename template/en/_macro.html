@@ -46,10 +46,10 @@
 {% endmacro %}
 
 {# 通用的Character <a>生成 #}
-{% macro generate_character_anchor(char, with_school, with_club, html_id, tooltip_id, show_combatant_info, is_leader, new_tab) %}
+{% macro generate_character_anchor(char, with_school, with_club, html_id, tooltip_id, show_combatant_info, is_leader, is_comm, is_new_tab) %}
     {% if char.filetype == 52 %}
-        <a href="/{{ curr_lang }}/character/npc/{{ char.namespace[-1]|lower }}/{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} {{ anchor_new_tab(new_tab) }}>
-            <span>{{ char.name.en|js_string_safe }}</span>
+        <a href="/{{ curr_lang }}/character/npc/{{ char.namespace[-1]|lower }}/{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} {{ anchor_new_tab(is_new_tab) }}>
+            <span {% if arg_check(is_comm) %}class="stu-name-by-comm"{% endif %}>{{ char.name.en|js_string_safe }}</span>
         </a>
         {% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}
     {% else %}
@@ -61,9 +61,9 @@
             <img src="{{ get_static('images/schoolicon/School_Icon_' + char.school_id|upper + '_W.png') }}" class="invert-light schoolicon-p">
         {% endif %}
         <span>
-            <a href="/{{ curr_lang }}/character/student/{{ char.name.path_name|lower }}/{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} {{ anchor_new_tab(new_tab) }}>
+            <a href="/{{ curr_lang }}/character/student/{{ char.name.path_name|lower }}/{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} {{ anchor_new_tab(is_new_tab) }}>
                 <img src="{{ get_static('images/student/icon/' + char.image.collection_texture + '.webp') }}" class="icon-stu">
-                <span>{{ char.name.name.en|js_string_safe }}</span>
+                <span {% if arg_check(is_comm) %}class="stu-name-by-comm"{% endif %}>{{ char.name.name.en|js_string_safe }}</span>
             </a>
         </span>
         {% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}
@@ -110,6 +110,8 @@
         {% set loop_index = i.1 %}
         {% set seg_index = i.2 %}
         {% set tooltip_id = i.3 %}
+        {% set is_comm = i.4 %}
+        {% set is_narrative = i.5 %}
         {% set ele_class = get_storypart_text_color_css(part) %}
 
         {% if loop.index == 1 %}
@@ -118,7 +120,7 @@
         <span>,&nbsp;</span>
         {% endif %}
 
-        <span><a href="{{ generate_story_url(base_story) }}#story-part-{{ loop_index }}{% if seg_index != -1 %}-seg-{{ seg_index }}{% endif %}" class="{{ ele_class }}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %}><i>&#91;{{ loop_index }}&#93;&nbsp;{{ part.name.en|js_string_safe }}</i></a>{% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}</span>
+        <span><a href="{{ generate_story_url(base_story) }}#story-part-{{ loop_index }}{% if seg_index != -1 %}-seg-{{ seg_index }}{% endif %}" class="{{ ele_class }}{% if arg_check(is_comm) %} story-by-comm{% endif %}{% if arg_check(is_narrative) %} story-by-narr{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %}><i>&#91;{{ loop_index }}&#93;&nbsp;{{ part.name.en|js_string_safe }}</i></a>{% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}</span>
     {% endfor %}
     <span>)</span>
 {% endmacro %}
@@ -142,8 +144,8 @@
             {% endif %}
         {% endfor %}
 
-        {% for char in char_for_show[:-1] %}<span>{{ generate_character_anchor(char, 0, 0, 0, 0, 0, 0, 0) }}&nbsp;|&nbsp;</span>{% endfor %}
-        {{ generate_character_anchor(char_for_show[-1], 0, 0, 0, 0, 0, 0, 0) }}
+        {% for char in char_for_show[:-1] %}{% set char_is_comm = False %}{% if char.is_comm and avg_check(char.is_comm) %}{% set char_is_comm = True %}{% endif %}<span>{{ generate_character_anchor(char, 0, 0, 0, 0, 0, 0, 0) }}&nbsp;|&nbsp;</span>{% endfor %}
+        {{ generate_character_anchor(char_for_show[-1], 0, 0, 0, 0, 0, 0, char_is_comm, 0) }}
         {% if characters|length > char_for_show|length %}<span>&nbsp;and more.</span>{% endif %}
     {% endif %}
 {% endmacro %}

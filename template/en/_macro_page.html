@@ -249,10 +249,17 @@
                 {% set html_id = "" %}
             {% endif %}
 
+            {% set char_by_comm = False %}
+            {% if instance_type == "story" %}
+                {% if arg_check(char.is_comm) %}
+                    {% set char_by_comm = True %}
+                {% endif %}
+            {% endif %}
+
             {% if arg_check(output_combat_info) and loop.index0 == combat_leader_pos %}
-                <li {% if arg_check(character_html_id) %}id="{{ character_html_id }}-direct"{% endif %}>{{ generate_character_anchor(char, 1, 1, html_id, tooltip_id, output_combat_info, 1, 0) }}</li>
+                <li {% if arg_check(character_html_id) %}id="{{ character_html_id }}-direct"{% endif %}>{{ generate_character_anchor(char, 1, 1, html_id, tooltip_id, output_combat_info, 1, char_by_comm, 0) }}</li>
             {% else %}
-                <li {% if arg_check(character_html_id) %}id="{{ character_html_id }}-direct"{% endif %}>{{ generate_character_anchor(char, 1, 1, html_id, tooltip_id, output_combat_info, 0, 0) }}</li>
+                <li {% if arg_check(character_html_id) %}id="{{ character_html_id }}-direct"{% endif %}>{{ generate_character_anchor(char, 1, 1, html_id, tooltip_id, output_combat_info, 0, char_by_comm, 0) }}</li>
             {% endif %}
 
             {% if enable_tooltip == 1 %}
@@ -282,7 +289,7 @@
         {% for char in data_character.character %}
             {% if use_ul == 1 %}<li>{% endif %}
 
-            {{ generate_character_anchor(char, 0, 0, 0, 0, 0, 0, 1) }}
+            {{ generate_character_anchor(char, 0, 0, 0, 0, 0, 0, 0, 1) }}
 
             {% if use_ul == 1 %}</li>{% else %}{% if not loop.last %}<br />{% endif %}{% endif %}
         {% else %}
@@ -304,7 +311,7 @@
 
             {% set tooltip_id = generate_tooltip_id() %}
 
-            <li id="{{ char.uuid }}{% if arg_check(is_direct) %}-direct{% endif %}"><span>【{{ ref_counter }}】</span>{{ generate_character_anchor(char, 1, 1, html_id, tooltip_id, 0, 0, 0) }}</li>
+            <li id="{{ char.uuid }}{% if arg_check(is_direct) %}-direct{% endif %}"><span>【{{ ref_counter }}】</span>{{ generate_character_anchor(char, 1, 1, html_id, tooltip_id, 0, 0, 0, 0) }}</li>
             {% do tooltip_data.update({tooltip_id: tooltip_character(char, instance_id, instance_type)}) %}
         {% else %}
             <li>Nothing to show!</li>
