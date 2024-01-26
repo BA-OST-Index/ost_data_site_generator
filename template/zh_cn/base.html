@@ -7,7 +7,13 @@
 {% block header %}
     {% include "template/zh_cn/header.html" %}
 {% endblock header %}
-
+{% block other_head %}
+    <script async src="/static/js/auto/tooltip/data_zh_cn_album_{{ get_init_time() }}.js"></script>
+    <script async src="/static/js/auto/tooltip/data_zh_cn_background_{{ get_init_time() }}.js"></script>
+    <script async src="/static/js/auto/tooltip/data_zh_cn_character_{{ get_init_time() }}.js"></script>
+    <script async src="/static/js/auto/tooltip/data_zh_cn_track_{{ get_init_time() }}.js"></script>
+    <script async src="/static/js/auto/tooltip/data_zh_cn_story_{{ get_init_time() }}.js"></script>
+{% endblock other_head %}
 {% set navi_var %}
     {% block navi %}
         {# Entry mapping #}

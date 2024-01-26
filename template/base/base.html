@@ -7,11 +7,12 @@
 
     <title>{% block title %}{% endblock title %}- BA OST Index</title>
 
-    <script src="{{ get_static('jsdelivr/jquery.min.js') }}"></script>
+    <script defer src="{{ get_static('jsdelivr/jquery.min.js') }}"></script>
     <link rel="stylesheet" href="{{ get_static('jsdelivr/tippy.light.min.css') }}">
-    <script src="{{ get_static('jsdelivr/popper.min.js') }}"></script>
-    <script src="{{ get_static('jsdelivr/tippy-bundle.umd.min.js') }}"></script>
-    <script src="{{ get_static('jsdelivr/popup-js.min.js') }}"></script>
+    <script defer src="{{ get_static('jsdelivr/popper.min.js') }}"></script>
+    <script defer src="{{ get_static('jsdelivr/tippy-bundle.umd.min.js') }}"></script>
+    <script defer src="{{ get_static('jsdelivr/popup-js.min.js') }}"></script>
+    <script defer src="{{ get_static('jsdelivr/lazysizes.min.js') }}"></script>
 
     <link rel="stylesheet" href="{{ get_static('css/git-wiki-style.css') }}">
     <link rel="stylesheet" href="{{ get_static('css/wikipedialize.css') }}">
@@ -37,11 +38,11 @@
     <script src="{{ get_static('js/common.js') }}"></script>
     <script src="{{ get_static('js/zhcn_switch.js') }}"></script>
     <script src="{{ get_static('js/highlight_element.js') }}"></script>
-    <script src="{{ get_static('js/tooltip.js') }}"></script>
+    <script defer src="{{ get_static('js/tooltip.js') }}"></script>
     <script src="{{ get_static('js/lang_switch.js') }}"></script>
     <script src="{{ get_static('js/time_show.js') }}"></script>
-    <script src="{{ get_static('js/popup.js') }}"></script>
-    <script src="{{ get_static('js/cn_popup.js') }}"></script>
+    <script defer src="{{ get_static('js/popup.js') }}"></script>
+    <script defer src="{{ get_static('js/cn_popup.js') }}"></script>
     <script src="{{ get_static('js/track_player.js') }}"></script>
     <script src="{{ get_static('js/story_video_player.js') }}"></script>
     <script src="{{ get_static('js/interpage_bottom.js') }}"></script>
@@ -66,11 +67,6 @@
             y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
         })(window, document, "clarity", "script", "kdlc104n0n");
     </script>
-    <script>var tooltip_data = {};
-
-    function add_tooltip_data(dictionary) {
-        tooltip_data = Object.assign({}, tooltip_data, dictionary)
-    }</script>
     {% block other_head %}{% endblock other_head %}
 </head>
 
@@ -119,10 +115,12 @@
 
 <!--全局JS，用于显示跳转到加速站的弹窗-->
 <script>
-    addEventListener("load", function () {
+    addEventListener("DOMContentLoaded", function () {
         checkCnIP();
-        interpageBottomAdjust();
     });
+    addEventListener("load", function () {
+        interpageBottomAdjust();
+    })
     addEventListener("resize", function () {
         interpageBottomAdjust();
     })

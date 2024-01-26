@@ -5,6 +5,13 @@
 {% block header %}
     {% include "template/en/header.html" %}
 {% endblock header %}
+{% block other_head %}
+    <script async src="/static/js/auto/tooltip/data_en_album_{{ get_init_time() }}.js"></script>
+    <script async src="/static/js/auto/tooltip/data_en_background_{{ get_init_time() }}.js"></script>
+    <script async src="/static/js/auto/tooltip/data_en_character_{{ get_init_time() }}.js"></script>
+    <script async src="/static/js/auto/tooltip/data_en_track_{{ get_init_time() }}.js"></script>
+    <script async src="/static/js/auto/tooltip/data_en_story_{{ get_init_time() }}.js"></script>
+{% endblock other_head %}
 {% set navi_var %}
     {% block navi %}
         {# Entry mapping #}

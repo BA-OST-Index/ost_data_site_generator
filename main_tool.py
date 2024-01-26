@@ -9,10 +9,22 @@ from jinja2 import UndefinedError
 from functools import lru_cache
 from main_cache import GenerationCache
 
+__all__ = ["TOOLTIP_ID", "TOOLTIP_ID_RATIONAL", "INIT_TIME",
+           "JinjaTool", "TemplateTool", "get_curr_time_printable"]
+
 TOOLTIP_ID = set()
 TOOLTIP_CHAR_SET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_"
+TOOLTIP_ID_RATIONAL = set()  # 有理编号的tooltip
 
 STATIC_BASE_URL = "/static/"
+
+INIT_TIME = int(time.time_ns())
+
+
+def get_curr_time_printable() -> str:
+    """精确到毫秒的后四位"""
+    global INIT_TIME
+    return f"{(time.time_ns() - INIT_TIME) / 1e+6:0.4f}ms ({(time.time_ns() - INIT_TIME) / 1e+9:0.4f}s)"
 
 
 class JinjaTool:
@@ -21,13 +33,84 @@ class JinjaTool:
         return time.time()
 
     @staticmethod
-    def generate_tooltip_id():
-        global TOOLTIP_ID
-        while True:
-            id = "".join(ran_choices(TOOLTIP_CHAR_SET, k=6))
-            if id not in TOOLTIP_ID:
-                TOOLTIP_ID.add(id)
-                return id
+    def get_init_time():
+        return INIT_TIME
+
+    @staticmethod
+    def generate_tooltip_id(*args):
+        """args 以 先type后id 的方式传递"""
+
+        def raise_exception(type: int = 2):
+            if type == 1:
+                raise ValueError(f"unknown data_type {args[0]}")
+            elif type == 2:
+                raise ValueError(args)
+
+        if len(args) != 0:
+            global TOOLTIP_ID_RATIONAL
+            data_type = args[0]
+            data_id = args[1]  # 全部都是 uuid (通用)，除了 npc=namespace[-1] (过于nt)
+
+            if len(args) == 2:
+                # track/background/character/album
+                if data_type in ["track", "background", "character", "album"]:
+                    return f"{data_type}-{data_id}-all"
+                # story
+                elif data_type in ["story"]:
+                    return f"story-{data_id}-all"
+                else:
+                    raise_exception(1)
+            elif len(args) == 3:
+                if args[0] == "storypart":
+                    return f"story-{args[1]}-part-{args[2]}"
+                raise_exception(1)
+            elif len(args) == 4:
+                # data_type 取值如下：
+                # bg, bg_direct, char, track
+                first, second = (args[0], args[1]), (args[2], args[3])
+                if first[0] > second[0]:
+                    second, first = first, second
+
+                if first[0] == "background_direct":
+                    return f"char-{second[1]}-bg"
+                # 针对 story -> track/character/background 情况
+                elif first[0] == "story":
+                    return JinjaTool.generate_tooltip_id(*second)
+                elif second[0] == "story":
+                    return JinjaTool.generate_tooltip_id(*first)
+                # 针对 char -> background (direct)
+                elif second[0] == "character_bg_direct":
+                    return JinjaTool.generate_tooltip_id(*first)
+                # 其它
+                else:
+                    id_1 = "-".join(first + second)
+                    id_2 = "-".join(second + first)
+                    # 检测tooltip id情况
+                    if id_1 not in TOOLTIP_ID_RATIONAL:
+                        # 如果第一个id不存在，检测第二个id
+                        if id_2 not in TOOLTIP_ID_RATIONAL:
+                            # 如果第二个id不存在，说明两个都不存在
+                            # 即，是第一次创建这两数据的关系
+                            # 返回第一个id
+                            TOOLTIP_ID_RATIONAL.add(id_1)
+                            return id_1
+                        else:
+                            # 否则，第二个id存在
+                            # 第二个id，此时，也就是第一次创建关系时的id_1(这里是id_2)
+                            return id_2
+                    else:
+                        # 谨防意外情况，虽然好像不该运行到这（？）
+                        TOOLTIP_ID_RATIONAL.add(id_1)
+                        return id_1
+            else:
+                raise ValueError(args)
+        else:
+            global TOOLTIP_ID
+            while True:
+                id = "".join(ran_choices(TOOLTIP_CHAR_SET, k=6))
+                if id not in TOOLTIP_ID:
+                    TOOLTIP_ID.add(id)
+                    return id
 
     @staticmethod
     def js_string_safe(value):
@@ -127,7 +210,7 @@ class JinjaTool:
 
 class TemplateTool:
     @staticmethod
-    def _get_character_instance_id(data: dict) -> str:
+    def get_character_instance_id(data: dict) -> str:
         if data.get("filetype", "") == 52:  # NPC
             return data["namespace"][-1]
         return data["uuid"]
@@ -174,7 +257,7 @@ class TemplateTool:
                         if bg["uuid"] == background["uuid"]:
                             # bg-char
                             for char in segment["character"]:
-                                if TemplateTool._get_character_instance_id(char) == instance_id:
+                                if TemplateTool.get_character_instance_id(char) == instance_id:
                                     if char["is_comm"]:
                                         is_by_comm = True
                                     if char["is_narrative"]:
@@ -237,7 +320,7 @@ class TemplateTool:
                                     if char["is_narrative"]:
                                         is_narrative = True
 
-                                    if TemplateTool._get_character_instance_id(char) == instance_id:
+                                    if TemplateTool.get_character_instance_id(char) == instance_id:
                                         is_exit = 1
                                         break
                             elif instance_type == "background":
@@ -322,9 +405,17 @@ class TemplateTool:
                                         break
                                 if is_exit == 1:
                                     break
+                            elif instance_type == "background":
+                                for bg in segment["background"]:
+                                    if bg["uuid"] == instance_id:
+                                        is_exit = 1
+                                        break
+                                if is_exit == 1:
+                                    break
                             else:
                                 is_exit = 1
                                 break
+
 
                     if is_exit:
                         seg_index = index2
@@ -383,7 +474,10 @@ class TemplateTool:
                             seg_index = index2
 
                     if seg_index != -1:
-                        related_parts.append([part, index, seg_index, JinjaTool.generate_tooltip_id(), is_by_comm, is_narrative])
+                        related_parts.append(
+                            [part, index, seg_index,
+                             JinjaTool.generate_tooltip_id("storypart", value["instance_id"], index),
+                             is_by_comm, is_narrative])
 
                 if len(related_parts) != 0:
                     all_story_with_filetype[_curr_filetype].append([value, related_parts])

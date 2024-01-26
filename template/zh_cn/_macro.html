@@ -42,7 +42,7 @@
 {# 通用的Background <a>生成 #}
 {% macro generate_background_anchor(bg, html_id, tooltip_id, bg_count, disable_div_id) %}
     <div {% if not disable_div_id %}id="{{ bg.uuid }}"{% endif %}>
-        <img src="{{ bg.image.value }}" {% if arg_check(tooltip_id) %}onmouseover="showTooltipGallerySmall(this)" data-tooltip="{{ tooltip_id }}"{% endif %}>
+        <img class="lazyload" data-src="{{ bg.image.value }}" {% if arg_check(tooltip_id) %}onmouseover="showTooltipGallerySmall(this)" data-tooltip="{{ tooltip_id }}"{% endif %}>
         <p class="gallery-caption">{% if arg_check(bg_count) %}<span>【{{ bg_count }}】</span>{% endif %}<span><a href="/{{ curr_lang }}/background/{{ bg.filename }}.html{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} target="_blank">{{ bg.filename|js_string_safe }}</a>{% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}</span></p>
     </div>
 {% endmacro %}
