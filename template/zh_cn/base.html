@@ -45,15 +45,43 @@
                 {% set _prev = entry_.interpage.prev %}
 
                 {% if _prev.name != "[NO_PREV]" %}
+                    {# track #}
                     {% if 1 <= entry_.filetype <= 5 %}
                         <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- 上一页：{{ _prev.name.realname.en }} {% if _prev.name.realname.zh_cn %}({{ _prev.name.realname.zh_cn }}){% endif %}</a></p>
+                    {# npc #}
                     {% elif entry_.filetype in [52] %}
                         {# why am i doing this #}
                         <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|lower }}">&lt;-- 上一页: {{ auto_zhcn_gen(_prev.name) }}</a></p>
+                    {# story (excluding bond & event) #}
                     {% elif 11 <= entry_.filetype <= 16 and entry_.filetype not in [14, 15] %}
-                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|int|string }}.html">&lt;-- 上一页: {{ auto_zhcn_gen(_prev.name) }}</a></p>
+                        {% if arg_check(_prev.is_battle) == True %}
+                            {% set target_css = "text-danger" %}
+                        {% else %}
+                            {% set target_css = "text-primary" %}
+                        {% endif %}
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|int|string }}.html">&lt;-- 上一页: <span class="{{ target_css }}">V{{ _prev.pos.volume }}C{{ _prev.pos.chapter }}E{{ _prev.pos.segment }}. {{ auto_zhcn_gen(_prev.name) }}</span></a></p>
+                    {% elif entry_.filetype in [14, 15] %}
+                        {% if entry_.filetype == 15 and arg_check(_prev.is_memory) == True %}
+                            {% set target_css = "text-momo" %}
+                        {% elif entry_.filetype == 14 and arg_check(_prev.is_battle) == True %}
+                            {% set target_css = "text-danger" %}
+                        {% else %}
+                            {% set target_css = "text-primary" %}
+                        {% endif %}
+
+                        {% if entry_.filetype == 14 %}
+                            {% set _temp = "E" + _prev.pos.segment|string %}
+                        {% elif entry_.filetype == 15 %}
+                            {% set _temp = "E" + _prev.pos.no|string %}
+                        {% endif %}
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- 上一页: <span class="{{ target_css }}">{{ _temp }}. {{ auto_zhcn_gen(_prev.name) }}</span></a></p>
+                    {# student #}
                     {% elif entry_.filetype == -53 %}
                         <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}/">&lt;-- 上一页：{{ auto_zhcn_gen(_prev.name.name) }}</a></p>
+                    {# battle only main #}
+                    {% elif entry_.filetype in [21] %}
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- 上一页: <span class="text-danger">主线 C{{ _prev.chapter }} {{ _prev.no }} {{ auto_zhcn_gen(_prev.name) }}</span></a></p>
+                    {# other #}
                     {% else %}
                         <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- 上一页：{{ auto_zhcn_gen(_prev.name) }}</a></p>
                     {% endif %}
@@ -66,15 +94,43 @@
                 {% set _next = entry_.interpage.next %}
 
                 {% if _next.name != "[NO_NEXT]" %}
+                    {# track #}
                     {% if 1 <= entry_.filetype <= 5 %}
                         <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">--&gt; 下一页：{{ _next.name.realname.en }} {% if _next.name.realname.zh_cn %}({{ _next.name.realname.zh_cn }}){% endif %}</a></p>
+                    {# npc #}
                     {% elif entry_.filetype in [52] %}
                         {# why am i doing this #}
                         <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|lower }}">--&gt; 下一页: {{ auto_zhcn_gen(_next.name) }}</a></p>
+                    {# story (excluding bond & event) #}
                     {% elif 11 <= entry_.filetype <= 16 and entry_.filetype not in [14, 15] %}
-                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|int|string }}.html">--&gt; 下一页: {{ auto_zhcn_gen(_next.name) }}</a></p>
+                        {% if arg_check(_next.is_battle) == True %}
+                            {% set target_css = "text-danger" %}
+                        {% else %}
+                            {% set target_css = "text-primary" %}
+                        {% endif %}
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|int|string }}.html">&lt;-- 下一页: <span class="{{ target_css }}">V{{ _next.pos.volume }}C{{ _next.pos.chapter }}E{{ _next.pos.segment }}. {{ auto_zhcn_gen(_next.name) }}</span></a></p>
+                    {% elif entry_.filetype in [14, 15] %}
+                        {% if entry_.filetype == 15 and arg_check(_next.is_memory) == True %}
+                            {% set target_css = "text-momo" %}
+                        {% elif entry_.filetype == 14 and arg_check(_next.is_battle) == True %}
+                            {% set target_css = "text-danger" %}
+                        {% else %}
+                            {% set target_css = "text-primary" %}
+                        {% endif %}
+
+                        {% if entry_.filetype == 14 %}
+                            {% set _temp = "E" + _next.pos.segment|string %}
+                        {% elif entry_.filetype == 15 %}
+                            {% set _temp = "E" + _next.pos.no|string %}
+                        {% endif %}
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">&lt;-- 下一页: <span class="{{ target_css }}">{{ _temp }}. {{ auto_zhcn_gen(_next.name) }}</span></a></p>
+                    {# student #}
                     {% elif entry_.filetype == -53 %}
                         <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}/">&lt;-- 下一页：{{ auto_zhcn_gen(_next.name.name) }}</a></p>
+                    {# battle only main #}
+                    {% elif entry_.filetype in [21] %}
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">&lt;-- 下一页: <span class="text-danger">主线 C{{ _next.chapter }} {{ _next.no }} {{ auto_zhcn_gen(_next.name) }}</span></a></p>
+                    {# other #}
                     {% else %}
                         <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">--&gt; 下一页: {{ auto_zhcn_gen(_next.name) }}</a></p>
                     {% endif %}

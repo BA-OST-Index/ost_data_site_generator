@@ -1,9 +1,9 @@
 {% extends "template/zh_cn/base.html" %}
 
-{% block title %}任务/{% if battle.filetype == 21 %}{{ battle.chapter }}-{{ battle.no[:2] }} {% endif %}{{ battle.name.zh_cn }}{% endblock title %}
+{% block title %}任务/{% if battle.filetype == 21 %}{{ battle.chapter }}-{{ battle.no }} {% endif %}{{ battle.name.zh_cn }}{% endblock title %}
 {% block article_content %}
     {% from "template/zh_cn/_macro.html" import get_social_for_composer, auto_zhcn_gen, generate_track_anchor %}
-    <h1>战斗/<span>{% if battle.filetype == 21 %}{{ battle.chapter }}-{{ battle.no[:2] }}&nbsp;{% endif %}{{ auto_zhcn_gen(battle.name) }}</span></h1>
+    <h1>战斗/<span>{% if battle.filetype == 21 %}{{ battle.chapter }}-{{ battle.no }}&nbsp;{% endif %}{{ auto_zhcn_gen(battle.name) }}</span></h1>
     {% include "template/zh_cn/infobox/battle.html" %}
 
     {% if battle.filetype in [24, 28] %}

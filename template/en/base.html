@@ -43,15 +43,43 @@
                 {% set _prev = entry_.interpage.prev %}
 
                 {% if _prev.name != "[NO_PREV]" %}
+                    {# track #}
                     {% if 1 <= entry_.filetype <= 5 %}
                         <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- Previous page: {{ _prev.name.realname.en }}</a></p>
+                    {# npc #}
                     {% elif entry_.filetype in [52] %}
                         {# why am i doing this #}
                         <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|lower }}">&lt;-- Previous page: {{ _prev.name.en }}</a></p>
+                    {# story (excluding bond & event) #}
                     {% elif 11 <= entry_.filetype <= 16 and entry_.filetype not in [14, 15] %}
-                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|int|string }}.html">&lt;-- Previous page: {{ _prev.name.en }}</a></p>
+                        {% if arg_check(_prev.is_battle) == True %}
+                            {% set target_css = "text-danger" %}
+                        {% else %}
+                            {% set target_css = "text-primary" %}
+                        {% endif %}
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|int|string }}.html">&lt;-- Previous page: <span class="{{ target_css }}">V{{ _prev.pos.volume }}C{{ _prev.pos.chapter }}E{{ _prev.pos.segment }}. {{ _prev.name.en }}</span></a></p>
+                    {% elif entry_.filetype in [14, 15] %}
+                        {% if entry_.filetype == 15 and arg_check(_prev.is_memory) == True %}
+                            {% set target_css = "text-momo" %}
+                        {% elif entry_.filetype == 14 and arg_check(_prev.is_battle) == True %}
+                            {% set target_css = "text-danger" %}
+                        {% else %}
+                            {% set target_css = "text-primary" %}
+                        {% endif %}
+
+                        {% if entry_.filetype == 14 %}
+                            {% set _temp = "E" + _prev.pos.segment|string %}
+                        {% elif entry_.filetype == 15 %}
+                            {% set _temp = "E" + _prev.pos.no|string %}
+                        {% endif %}
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- Previous page: <span class="{{ target_css }}">{{ _temp }}. {{ _prev.name.en }}</span></a></p>
+                    {# student #}
                     {% elif entry_.filetype == -53 %}
                         <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}/">&lt;-- Previous Page: {{ _prev.name.name.en }}</a></p>
+                    {# battle only main #}
+                    {% elif entry_.filetype in [21] %}
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- Previous page: <span class="text-danger">MAIN C{{ _prev.chapter }} {{ _prev.no }} {{ _prev.name.en }}</span></a></p>
+                    {# other #}
                     {% else %}
                         <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- Previous page: {{ _prev.name.en }}</a></p>
                     {% endif %}
@@ -64,15 +92,43 @@
                 {% set _next = entry_.interpage.next %}
 
                 {% if _next.name != "[NO_NEXT]" %}
+                    {# track #}
                     {% if 1 <= entry_.filetype <= 5 %}
                         <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">--&gt; Next page: {{ _next.name.realname.en }}</a></p>
+                    {# npc #}
                     {% elif entry_.filetype in [52] %}
                         {# why am i doing this #}
                         <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|lower }}">--&gt; Next page: {{ _next.name.en }}</a></p>
+                    {# story (excluding bond & event) #}
                     {% elif 11 <= entry_.filetype <= 16 and entry_.filetype not in [14, 15] %}
-                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|int|string }}.html">--&gt; Next Page: {{ _next.name.en }}</a></p>
+                        {% if arg_check(_next.is_battle) == True %}
+                            {% set target_css = "text-danger" %}
+                        {% else %}
+                            {% set target_css = "text-primary" %}
+                        {% endif %}
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|int|string }}.html">&lt;-- Next page: <span class="{{ target_css }}">V{{ _next.pos.volume }}C{{ _next.pos.chapter }}E{{ _next.pos.segment }}. {{ _next.name.en }}</span></a></p>
+                    {% elif entry_.filetype in [14, 15] %}
+                        {% if entry_.filetype == 15 and arg_check(_next.is_memory) == True %}
+                            {% set target_css = "text-momo" %}
+                        {% elif entry_.filetype == 14 and arg_check(_next.is_battle) == True %}
+                            {% set target_css = "text-danger" %}
+                        {% else %}
+                            {% set target_css = "text-primary" %}
+                        {% endif %}
+
+                        {% if entry_.filetype == 14 %}
+                            {% set _temp = "E" + _next.pos.segment|string %}
+                        {% elif entry_.filetype == 15 %}
+                            {% set _temp = "E" + _next.pos.no|string %}
+                        {% endif %}
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">&lt;-- Next page: <span class="{{ target_css }}">{{ _temp }}. {{ _next.name.en }}</span></a></p>
+                    {# student #}
                     {% elif entry_.filetype == -53 %}
                         <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}/">&lt;-- Next Page: {{ _next.name.name.en }}</a></p>
+                    {# battle only main #}
+                    {% elif entry_.filetype in [21] %}
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">&lt;-- Next page: <span class="text-danger">MAIN C{{ _next.chapter }} {{ _next.no }} {{ _next.name.en }}</span></a></p>
+                    {# other #}
                     {% else %}
                         <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">--&gt; Next page: {{ _next.name.en }}</a></p>
                     {% endif %}

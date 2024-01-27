@@ -145,7 +145,7 @@
             {% endif %}
         {% endfor %}
 
-        {% for char in char_for_show[:-1] %}{% set char_is_comm = False %}{% if char.is_comm and avg_check(char.is_comm) %}{% set char_is_comm = True %}{% endif %}<span>{{ generate_character_anchor(char, 0, 0, 0, 0, 0, 0, char_is_comm, 0) }}&nbsp;|&nbsp;</span>{% endfor %}
+        {% for char in char_for_show[:-1] %}{% set char_is_comm = False %}{% if char.is_comm and arg_check(char.is_comm) %}{% set char_is_comm = True %}{% endif %}<span>{{ generate_character_anchor(char, 0, 0, 0, 0, 0, 0, char_is_comm, 0) }}&nbsp;|&nbsp;</span>{% endfor %}
         {{ generate_character_anchor(char_for_show[-1], 0, 0, 0, 0, 0, 0, char_is_comm, 0) }}
         {% if characters|length > char_for_show|length %}<span>&nbsp;及更多人。</span>{% endif %}
     {% endif %}
