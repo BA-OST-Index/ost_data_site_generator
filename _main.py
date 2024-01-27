@@ -4,7 +4,7 @@ import webbrowser
 import shutil
 import subprocess
 import time
-from main_tool import JinjaTool, TemplateTool
+from main_tool import JinjaTool, TemplateTool, get_curr_time_printable
 from main_lang import ALL_FUNC_EN as TemplateEnFunc, ALL_FUNC_ZHCN as TemplateZhCnFunc
 from main_changelog import ChangelogGeneration
 from jinja2 import Environment, FileSystemLoader
@@ -87,8 +87,7 @@ class GeneratorTool:
     @staticmethod
     def get_curr_time_printable() -> str:
         """精确到毫秒的后四位"""
-        global START_TIME
-        return f"{(time.time_ns() - START_TIME) / 1e+6:0.4f}ms ({(time.time_ns() - START_TIME) / 1e+9:0.4f}s)"
+        return get_curr_time_printable()
 
 
 def start_server(port: int = 9000):
@@ -118,6 +117,7 @@ def get_jinja_env(filters: dict = None, globals: dict = None):
     environment.filters["is_list"] = lambda obj: isinstance(obj, list)
     # Globals - JinjaTool
     environment.globals["get_current_utc"] = JinjaTool.get_current_utc
+    environment.globals["get_init_time"] = JinjaTool.get_init_time
     environment.globals["generate_tooltip_id"] = JinjaTool.generate_tooltip_id
     environment.globals["get_outer_json"] = JinjaTool.get_outer_json
     environment.globals["arg_check"] = JinjaTool.arg_check
@@ -132,6 +132,7 @@ def get_jinja_env(filters: dict = None, globals: dict = None):
     environment.globals["py_tooltip_character"] = TemplateTool.py_tooltip_character
     environment.globals["py_tooltip_background"] = TemplateTool.py_tooltip_background
     environment.globals["py_output_usedby_story"] = TemplateTool.py_output_usedby_story
+    environment.globals["get_char_instance_id"] = TemplateTool.get_character_instance_id
     # Globals - Template
     environment.globals["template_en"] = TemplateEnFunc
     environment.globals["template_zhcn"] = TemplateZhCnFunc

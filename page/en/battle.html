@@ -1,9 +1,9 @@
 {% extends "template/en/base.html" %}
 
-{% block title %}Battle/{% if battle.filetype == 21 %}{{ battle.chapter }}-{{ battle.no[:2] }} {% endif %}{{ battle.name.en }}{% endblock title %}
+{% block title %}Battle/{% if battle.filetype == 21 %}{{ battle.chapter }}-{{ battle.no }} {% endif %}{{ battle.name.en }}{% endblock title %}
 {% block article_content %}
     {% from "template/en/_macro.html" import get_social_for_composer, generate_track_anchor %}
-    <h1>Battle/<span>{% if battle.filetype == 21 %}{{ battle.chapter }}-{{ battle.no[:2] }}&nbsp;{% endif %}{{ battle.name.en }}</span></h1>
+    <h1>Battle/<span>{% if battle.filetype == 21 %}{{ battle.chapter }}-{{ battle.no }}&nbsp;{% endif %}{{ battle.name.en }}</span></h1>
     {% include "template/en/infobox/battle.html" %}
 
     {% if battle.filetype in [24, 28] %}

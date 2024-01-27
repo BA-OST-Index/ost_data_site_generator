@@ -48,10 +48,10 @@
     <h2>背景</h2>
     <h3>直接背景</h3>
     <p>以下背景中均有此人物直接出现。</p>
-    {{ output_usedby_background(char.student.used_by.data_background_direct, char.student.uuid + "-direct", char.student.uuid, "character", True) }}
+    {{ output_usedby_background(char.student.used_by.data_background_direct, char.student.uuid + "-direct", "", "character_bg_direct", True) }}
     <h3>间接出现背景</h3>
     <p>以下背景中，人物虽与背景一同出现，但并非在背景所在场景中（如，通过通讯接入时）。</p>
-    {{ output_usedby_background(char.student.used_by.data_background_by_comm, char.student.uuid, char.student.uuid, "character", True) }}
+    {{ output_usedby_background(char.student.used_by.data_background_by_comm, char.student.uuid + "-indirect", char.student.uuid, "character", True) }}
     <h3>其它背景</h3>
     {{ output_usedby_background(char.student.used_by.data_background, char.student.uuid, char.student.uuid, "character", True) }}
 

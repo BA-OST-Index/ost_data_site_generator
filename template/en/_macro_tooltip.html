@@ -143,18 +143,29 @@
             {# NPC #}
             {% set char_data = loop_data.data %}
             {% set char_type = "npc" %}
+            {% set char_name = char_data.name.en %}
         {% else %}
             {# Student #}
             {% set char_data = loop_data.data.student %}
             {% set char_type = "stu" %}
+            {% set char_name = char_data.name.name.en %}
         {% endif %}
         {% set outer_data = char_data.used_by %}
 
-        {# 大标题 #}
-        {% if char_type == "npc" %}
-            <p class="tooltip-title tooltip-ellipsis">{{ char_data.name.en|js_string_safe }}</p>
+
+        {% if instance_type == "character" %}
+            {# 为 char-char 进行的特殊设置 #}
+            {% set _other_char_data = get_outer_json(instance_id, "character") %}
+            {% if _other_char_data.filetype == 52 %}
+                {# NPC #}
+                {% set _other_char_name = _other_char_data.name.en %}
+            {% else %}
+                {% set _other_char_name = _other_char_data.student.name.name.en %}
+            {% endif %}
+            <p class="tooltip-title tooltip-ellipsis">{{ char_name|js_string_safe }} &#38; {{ _other_char_name|js_string_safe }}</p>
         {% else %}
-            <p class="tooltip-title tooltip-ellipsis">{{ char_data.name.name.en|js_string_safe }}</p>
+            {# 大标题 #}
+            <p class="tooltip-title tooltip-ellipsis">{{ char_name|js_string_safe }}</p>
         {% endif %}
         <hr />
 
@@ -167,11 +178,14 @@
             {% endfor %}
         </ol>
 
-        <p class="tooltip-subtitle">Related Characters:</p>
-        {% if char_type == "stu" %}
-        <p>Other Variants: {{ generate_character_anchor_flat(char_data.related_to.character_variant, MAX_CHAR_FOR_OTHER_CHAR) }}</p>
+        {# 针对 char-char 问题，规避因 tooltip id 冲突导致的数据显示问题 #}
+        {% if instance_type not in ["character"] %}
+            <p class="tooltip-subtitle">Related Characters:</p>
+            {% if char_type == "stu" %}
+            <p>Other Variants: {{ generate_character_anchor_flat(char_data.related_to.character_variant, MAX_CHAR_FOR_OTHER_CHAR) }}</p>
+            {% endif %}
+            <p>Other Characters: {{ generate_character_anchor_flat(char_data.related_to.character_other, MAX_CHAR_FOR_OTHER_CHAR) }}</p>
         {% endif %}
-        <p>Other Characters: {{ generate_character_anchor_flat(char_data.related_to.character_other, MAX_CHAR_FOR_OTHER_CHAR) }}</p>
     </div>
 {% endmacro %}
 

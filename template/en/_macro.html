@@ -40,7 +40,7 @@
 {# 通用的Background <a>生成 #}
 {% macro generate_background_anchor(bg, html_id, tooltip_id, bg_count, is_disable_div_id) %}
     <div {% if not is_disable_div_id %}id="{{ bg.uuid }}"{% endif %}>
-        <img src="{{ bg.image.value }}" {% if arg_check(tooltip_id) %}onmouseover="showTooltipGallerySmall(this)" data-tooltip="{{ tooltip_id }}"{% endif %}>
+        <img class="lazyload" data-src="{{ bg.image.value }}" {% if arg_check(tooltip_id) %}onmouseover="showTooltipGallerySmall(this)" data-tooltip="{{ tooltip_id }}"{% endif %}>
         <p class="gallery-caption">{% if arg_check(bg_count) %}<span>【{{ bg_count }}】</span>{% endif %}<span><a href="/{{ curr_lang }}/background/{{ bg.filename }}.html{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} target="_blank">{{ bg.filename|js_string_safe }}</a>{% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}</span></p>
     </div>
 {% endmacro %}
@@ -144,7 +144,7 @@
             {% endif %}
         {% endfor %}
 
-        {% for char in char_for_show[:-1] %}{% set char_is_comm = False %}{% if char.is_comm and avg_check(char.is_comm) %}{% set char_is_comm = True %}{% endif %}<span>{{ generate_character_anchor(char, 0, 0, 0, 0, 0, 0, 0) }}&nbsp;|&nbsp;</span>{% endfor %}
+        {% for char in char_for_show[:-1] %}{% set char_is_comm = False %}{% if char.is_comm  and arg_check(char.is_comm) %}{% set char_is_comm = True %}{% endif %}<span>{{ generate_character_anchor(char, 0, 0, 0, 0, 0, 0, 0) }}&nbsp;|&nbsp;</span>{% endfor %}
         {{ generate_character_anchor(char_for_show[-1], 0, 0, 0, 0, 0, 0, char_is_comm, 0) }}
         {% if characters|length > char_for_show|length %}<span>&nbsp;and more.</span>{% endif %}
     {% endif %}

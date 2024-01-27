@@ -19,17 +19,17 @@
     {{ output_usedby_background(char.used_by.data_background, char.namespace[-1], char.namespace[-1], "character", True) }}
     <h4>直接背景</h4>
     <p>以下背景中均有此人物直接出现。</p>
-    {{ output_usedby_background(char.used_by.data_background_direct, char.namespace[-1] + "-direct", char.namespace[-1], "character", True) }}
+    {{ output_usedby_background(char.used_by.data_background_direct, char.namespace[-1] + "-direct", "", "character_bg_direct", True) }}
     <h4>间接出现背景</h4>
     <p>以下背景中，人物虽与背景一同出现，但并非在背景所在场景中（如，通过通讯接入时）。</p>
-    {{ output_usedby_background(char.used_by.data_background_by_comm, char.namespace[-1], char.namespace[-1], "character", True) }}
+    {{ output_usedby_background(char.used_by.data_background_by_comm, char.namespace[-1] + "-indirect", char.namespace[-1], "character", True) }}
     <h3>故事</h3>
     {{ output_usedby_story(char.used_by.data_story, char.uuid, "character") }}
     <h3>曲目</h3>
     {{ output_usedby_track(char.used_by.data_track, 1, char.uuid, char.namespace[-1], "character") }}
     <h3>一同出现的人物</h3>
     <p>以下均为与该人物一起出现过的人物。</p>
-    {{ output_usedby_character_dict(char.used_by.data_character, char.uuid + "-direct", char.uuid, "character", True)  }}
+    {{ output_usedby_character_dict(char.used_by.data_character, char.uuid + "-direct", char.namespace[-1], "character", True)  }}
 
     <h2>相关人物</h2>
     {{ output_relatedto_character({"character": char.related_to.character_other}, "True") }}
