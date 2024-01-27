@@ -47,7 +47,7 @@
                 {% if _prev.name != "[NO_PREV]" %}
                     {# track #}
                     {% if 1 <= entry_.filetype <= 5 %}
-                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- 上一页：{{ _prev.name.realname.en }} {% if _prev.name.realname.zh_cn %}({{ _prev.name.realname.zh_cn }}){% endif %}</a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- 上一页：{{ _prev.no }}. {{ _prev.name.realname.en }} {% if _prev.name.realname.zh_cn %}({{ _prev.name.realname.zh_cn }}){% endif %}</a></p>
                     {# npc #}
                     {% elif entry_.filetype in [52] %}
                         {# why am i doing this #}
@@ -96,7 +96,7 @@
                 {% if _next.name != "[NO_NEXT]" %}
                     {# track #}
                     {% if 1 <= entry_.filetype <= 5 %}
-                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">--&gt; 下一页：{{ _next.name.realname.en }} {% if _next.name.realname.zh_cn %}({{ _next.name.realname.zh_cn }}){% endif %}</a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">--&gt; 下一页：{{ _next.no }}. {{ _next.name.realname.en }} {% if _next.name.realname.zh_cn %}({{ _next.name.realname.zh_cn }}){% endif %}</a></p>
                     {# npc #}
                     {% elif entry_.filetype in [52] %}
                         {# why am i doing this #}

@@ -300,7 +300,7 @@ class TooltipHtmlGenerator:
                 content = self.get_json(filename)
 
                 # background itself
-                tooltip_id = self.get_tooltip("track", content["uuid"])
+                tooltip_id = self.get_tooltip("track", content["instance_id"])
                 self.add_render_result_by_lang("track", tooltip_id, "track",
                                                track=content, instance_id=content["instance_id"],
                                                instance_type="story")

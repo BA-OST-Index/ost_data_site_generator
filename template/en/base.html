@@ -45,7 +45,7 @@
                 {% if _prev.name != "[NO_PREV]" %}
                     {# track #}
                     {% if 1 <= entry_.filetype <= 5 %}
-                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- Previous page: {{ _prev.name.realname.en }}</a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- Previous page: {{ _prev.no }}. {{ _prev.name.realname.en }}</a></p>
                     {# npc #}
                     {% elif entry_.filetype in [52] %}
                         {# why am i doing this #}
@@ -94,7 +94,7 @@
                 {% if _next.name != "[NO_NEXT]" %}
                     {# track #}
                     {% if 1 <= entry_.filetype <= 5 %}
-                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">--&gt; Next page: {{ _next.name.realname.en }}</a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">--&gt; Next page: {{ _next.no }}. {{ _next.name.realname.en }}</a></p>
                     {# npc #}
                     {% elif entry_.filetype in [52] %}
                         {# why am i doing this #}
