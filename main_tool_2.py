@@ -222,13 +222,15 @@ class TooltipHtmlGenerator:
         print("tooltip generation: character")
         all_walker = []
         all_walker.append(self.walk_dir("character", "npc"))
-        all_walker.append(
+        temp = []
+        for stu_id in self.list_dir("character", "student"):
             # 意思就是，每个学生id都有一个学生自己的文件
             # 例如 yuuka -> yuuka/yuuka.json
-            [self.join_dir("character", "student", stu_id, stu_id + ".json")
-             for stu_id in self.list_dir("character", "student")]
-        )
-        del all_walker[-1][-1]
+            if stu_id == "_all.json":
+                continue
+            temp.append(self.join_dir("character", "student", stu_id, stu_id + ".json"))
+        all_walker.append(temp)
+
         for generator in all_walker:
             for filepath in generator:
                 print(f"filename: {filepath}", get_curr_time_printable())
