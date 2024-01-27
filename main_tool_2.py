@@ -343,9 +343,11 @@ class TooltipHtmlGenerator:
         if not self.is_generated:
             raise RuntimeError
 
+        print("start writing tooltip")
         shutil.rmtree(self.BASE_OUTPUT_PATH, ignore_errors=True)
 
         for type in self.data_types:
+            print("writing tooltip", type)
             js_writer(f"data_zh_cn_{type}_{INIT_TIME}.js", self.data["zh_cn"][type], type)
             js_writer(f"data_en_{type}_{INIT_TIME}.js", self.data["en"][type], type)
 
