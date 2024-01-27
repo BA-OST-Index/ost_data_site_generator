@@ -107,10 +107,11 @@ class TooltipHtmlGenerator:
     def add_render_result_by_lang(self, template_keyname: str, tooltip_id: str, data_type: str, lang_list=None, **data):
         if lang_list is None:
             lang_list = self.LANGCODE_LIST
-        if tooltip_id in self.data.keys():
-            return
 
         for lang in lang_list:
+            if tooltip_id in self.data[lang][data_type].keys():
+                print("skipping tooltip id", tooltip_id)
+                continue
             self.data[lang][data_type][tooltip_id] = self.get_render_result(self.jinja_template[lang][template_keyname],
                                                                             **data)
 

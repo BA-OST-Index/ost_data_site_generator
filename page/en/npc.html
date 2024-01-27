@@ -28,7 +28,7 @@
     {{ output_usedby_track(char.used_by.data_track, 1, char.uuid, char.namespace[-1], "character") }}
     <h3>Characters along the way</h3>
     <p>The following characters are the ones who have appeared with this character.</p>
-    {{ output_usedby_character_dict(char.used_by.data_character, char.uuid + "-direct", char.uuid, "character", True)  }}
+    {{ output_usedby_character_dict(char.used_by.data_character, char.uuid + "-direct", char.namespace[-1], "character", True)  }}
 
     <h2>Related Characters</h2>
     {{ output_relatedto_character({"character": char.related_to.character_other}, "True") }}

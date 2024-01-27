@@ -54,53 +54,68 @@ class JinjaTool:
             if len(args) == 2:
                 # track/background/character/album
                 if data_type in ["track", "background", "character", "album"]:
-                    return f"{data_type}-{data_id}-all"
+                    id_1 = f"{data_type}-{data_id}-all"
+                    TOOLTIP_ID_RATIONAL.add(id_1)
+                    return id_1
                 # story
                 elif data_type in ["story"]:
-                    return f"story-{data_id}-all"
+                    id_1 = f"story-{data_id}-all"
+                    TOOLTIP_ID_RATIONAL.add(id_1)
+                    return id_1
                 else:
                     raise_exception(1)
             elif len(args) == 3:
                 if args[0] == "storypart":
-                    return f"story-{args[1]}-part-{args[2]}"
+                    id_1 = f"story-{args[1]}-part-{args[2]}"
+                    TOOLTIP_ID_RATIONAL.add(id_1)
+                    return id_1
                 raise_exception(1)
             elif len(args) == 4:
                 # data_type 取值如下：
                 # bg, bg_direct, char, track
                 first, second = (args[0], args[1]), (args[2], args[3])
                 if first[0] > second[0]:
-                    second, first = first, second
+                    second_, first_ = first, second
+                else:
+                    second_, first_ = second, first
 
-                if first[0] == "background_direct":
-                    return f"char-{second[1]}-bg"
+                if first_[0] == "background_direct":
+                    id_1 = f"char-{second_[1]}-bg"
+                    TOOLTIP_ID_RATIONAL.add(id_1)
+                    return id_1
                 # 针对 story -> track/character/background 情况
-                elif first[0] == "story":
-                    return JinjaTool.generate_tooltip_id(*second)
-                elif second[0] == "story":
-                    return JinjaTool.generate_tooltip_id(*first)
+                elif first_[0] == "story":
+                    return JinjaTool.generate_tooltip_id(*second_)
+                elif second_[0] == "story":
+                    return JinjaTool.generate_tooltip_id(*first_)
                 # 针对 char -> background (direct)
-                elif second[0] == "character_bg_direct":
-                    return JinjaTool.generate_tooltip_id(*first)
+                elif second_[0] == "character_bg_direct":
+                    return JinjaTool.generate_tooltip_id(*first_)
                 # 其它
                 else:
                     id_1 = "-".join(first + second)
                     id_2 = "-".join(second + first)
-                    # 检测tooltip id情况
-                    if id_1 not in TOOLTIP_ID_RATIONAL:
-                        # 如果第一个id不存在，检测第二个id
-                        if id_2 not in TOOLTIP_ID_RATIONAL:
-                            # 如果第二个id不存在，说明两个都不存在
-                            # 即，是第一次创建这两数据的关系
-                            # 返回第一个id
+
+                    if first_[0] == "character" and second_ == "character":
+                        # 针对 char-char 设计
+                        # 检测tooltip id情况
+                        if id_1 not in TOOLTIP_ID_RATIONAL:
+                            # 如果第一个id不存在，检测第二个id
+                            if id_2 not in TOOLTIP_ID_RATIONAL:
+                                # 如果第二个id不存在，说明两个都不存在
+                                # 即，是第一次创建这两数据的关系
+                                # 返回第一个id
+                                TOOLTIP_ID_RATIONAL.add(id_1)
+                                return id_1
+                            else:
+                                # 否则，第二个id存在
+                                # 第二个id，此时，也就是第一次创建关系时的id_1(这里是id_2)
+                                return id_2
+                        else:
+                            # 谨防意外情况，虽然好像不该运行到这（？）
                             TOOLTIP_ID_RATIONAL.add(id_1)
                             return id_1
-                        else:
-                            # 否则，第二个id存在
-                            # 第二个id，此时，也就是第一次创建关系时的id_1(这里是id_2)
-                            return id_2
                     else:
-                        # 谨防意外情况，虽然好像不该运行到这（？）
-                        TOOLTIP_ID_RATIONAL.add(id_1)
                         return id_1
             else:
                 raise ValueError(args)
@@ -211,7 +226,7 @@ class JinjaTool:
 class TemplateTool:
     @staticmethod
     def get_character_instance_id(data: dict) -> str:
-        if data.get("filetype", "") == 52:  # NPC
+        if data.get("filetype", "") == 52 or data.get("student", "None") != "None":  # NPC
             return data["namespace"][-1]
         return data["uuid"]
 
@@ -356,6 +371,7 @@ class TemplateTool:
             char_data = extra_data["student"]
             char_type = "stu"
         outer_data = char_data["used_by"]
+        character_id = TemplateTool.get_character_instance_id(character)
 
         # if instance_type == "story":
         #     cache_id = f"character-{char_data['uuid']}-story"
@@ -374,14 +390,24 @@ class TemplateTool:
                 if instance_type == "character":
                     is_exit = 0
                     for char2 in JinjaTool.storypart_extract_all_data_characters(part):
-                        if char2["uuid"] == instance_id:
-                            if char2["is_comm"]:
-                                is_by_comm = True
-                            if char2["is_narrative"]:
-                                is_narrative = True
+                        # 探测对方（传入的 character 变量）在不在里面
+                        if TemplateTool.get_character_instance_id(char2) == character_id:
+                            # 探测 character 自己在不在起头
+                            for char3 in JinjaTool.storypart_extract_all_data_characters(part):
+                                if TemplateTool.get_character_instance_id(char3) == instance_id:
+                                    if char2["is_comm"]:
+                                        is_by_comm = True
+                                    if char2["is_narrative"]:
+                                        is_narrative = True
 
-                            is_exit = 1
-                            break
+                                    is_exit = 1
+                                    break
+
+                                if is_exit == 1:
+                                    break
+
+                            if is_exit == 1:
+                                break
                     if is_exit == 1:
                         related_parts.append([part, index, seg_index, 0, is_by_comm, is_narrative])
 

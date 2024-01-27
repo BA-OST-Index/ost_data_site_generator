@@ -29,7 +29,7 @@
     {{ output_usedby_track(char.used_by.data_track, 1, char.uuid, char.namespace[-1], "character") }}
     <h3>一同出现的人物</h3>
     <p>以下均为与该人物一起出现过的人物。</p>
-    {{ output_usedby_character_dict(char.used_by.data_character, char.uuid + "-direct", char.uuid, "character", True)  }}
+    {{ output_usedby_character_dict(char.used_by.data_character, char.uuid + "-direct", char.namespace[-1], "character", True)  }}
 
     <h2>相关人物</h2>
     {{ output_relatedto_character({"character": char.related_to.character_other}, "True") }}
