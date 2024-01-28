@@ -69,6 +69,10 @@ class JinjaTool:
                     id_1 = f"story-{args[1]}-part-{args[2]}"
                     TOOLTIP_ID_RATIONAL.add(id_1)
                     return id_1
+                elif args[0] == "storypart_source":
+                    id_1 = f"story-{args[1]}-source-{args[2]}"
+                    TOOLTIP_ID_RATIONAL.add(id_1)
+                    return id_1
                 raise_exception(1)
             elif len(args) == 4:
                 # data_type 取值如下：

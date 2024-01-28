@@ -58,7 +58,7 @@
         {% set enable_source = False %}
         {% if part.source.en|length != 0 or part.source.zh_tw|length != 0 or part.source.zh_cn_cn|length != 0 or part.source.zh_cn_jp|length != 0 %}
             {% set enable_source = True %}
-            {% set tooltip_id = generate_tooltip_id("storypart", part, loop.index) %}
+            {% set tooltip_id = generate_tooltip_id("storypart_source", story.instance_id, loop.index) %}
             {% do story_part_tooltip_data.update({tooltip_id: tooltip_storypart_source(part)}) %}
         {% endif %}
 

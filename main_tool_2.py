@@ -32,6 +32,8 @@ class TooltipHtmlGenerator:
                      "{{ tooltip_storyinfo(story) }}",
         "storypart": "{% from 'template/[LANG]/_macro_tooltip.html' import tooltip_storypart %}"
                      "{{ tooltip_storypart(story, story_part) }}",
+        "storypart_source": "{% from 'template/[LANG]/_macro_tooltip.html' import tooltip_storypart_source %}"
+                            "{{ tooltip_storypart_source(part) }}",
         "album": "{% from 'template/[LANG]/_macro_tooltip.html' import tooltip_album %}"
                  "{{ tooltip_album(album) }}",
         "character": "{% from 'template/[LANG]/_macro_tooltip.html' import tooltip_character %}"
@@ -142,11 +144,15 @@ class TooltipHtmlGenerator:
                 tooltip_id = self.get_tooltip("story", content["instance_id"])
                 self.add_render_result_by_lang("storyinfo", tooltip_id, "story", story=content)
 
-                # storypart
+                # storypart (part/source)
                 for (no, data) in enumerate(content["part"], 1):
                     tooltip_id = self.get_tooltip("storypart", content["instance_id"], no)
                     self.add_render_result_by_lang("storypart", tooltip_id, "story",
                                                    story=content, story_part=data)
+
+                    tooltip_id = self.get_tooltip("storypart_source", content["instance_id"], no)
+                    self.add_render_result_by_lang("storypart_source", tooltip_id, "story",
+                                                   part=data)
 
     def _generate_album(self):
         # album (album)
