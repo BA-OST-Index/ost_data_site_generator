@@ -148,6 +148,7 @@ def get_jinja_env(filters: dict = None, globals: dict = None):
 
 def generate_page_per_lang(lang: list, environment: Environment, namespace: list):
     """相当于以前的 traverse_path 但是可供外界调用"""
+
     def traverse_path(namespace: list, lang: str):
         current_path = "/".join(namespace)
         print(f"Page generation (lang {lang}, path {current_path}): {GeneratorTool.get_curr_time_printable()}")
@@ -200,21 +201,6 @@ def generate_page_per_lang(lang: list, environment: Environment, namespace: list
                             [OUTPUT_FOLDER, lang, *namespace[1:], GeneratorTool.change_extension_name(i, "html")])
                     if "_all" in i:
                         target_path = "/".join([OUTPUT_FOLDER, lang, *namespace[1:], "index.html"])
-
-                    # 对 target_path 作处理，若html文件名为数据，放弃前导0
-                    # 因为直接读的 segment 是 int 并不会带前导0
-                    # 前导0是后端给故事排序时所需要的
-                    temp = os.path.split(target_path)
-                    if "story" in temp[0]:
-                        # 只针对故事进行处理，其他不进行
-                        try:
-                            temp2 = int(temp[1][:-5])
-                        except Exception:
-                            # not a number
-                            pass
-                        else:
-                            if temp2 < 10 and temp2 != 0 and temp[1].startswith("0"):
-                                target_path = os.path.join(temp[0], temp[1][1:])
 
                     template_content = GeneratorTool.return_template(template_name, template, content)
                 else:
