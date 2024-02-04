@@ -70,42 +70,48 @@
 {% endmacro %}
 
 {% macro background_to_track(track, instance_id, instance_id2) %}
-    <div class="tooltip-variable-content tooltip-variable-content-background">
-        {{ generate_background_tooltip_header(get_outer_json(instance_id2, "background")) }}
-    </div>
-    <div class="tooltip-variable-content tooltip-variable-content-track">
-        {{ generate_track_tooltip_header(track) }}
-    </div>
+    <div class="tooltip-div">
+        <div class="tooltip-variable-content tooltip-variable-content-background">
+            {{ generate_background_tooltip_header(get_outer_json(instance_id2, "background")) }}
+        </div>
+        <div class="tooltip-variable-content tooltip-variable-content-track">
+            {{ generate_track_tooltip_header(track) }}
+        </div>
+        <hr />
 
-    <p class="tooltip-subtitle">Story:</p>
-    <ol class="tooltip-ol">
-        {# 遍历数据 #}
-        {% set processed_data = py_tooltip_track(track, instance_id, "background", get_outer_json(track.instance_id, "track").used_by) %}
-        {% for i in processed_data %}
-            <li>{{ generate_story_anchor(i.0)|page_minify_html }}&nbsp;{{ generate_appearedat_html(i.0, i.1)|page_minify_html }}</li>
-        {% endfor %}
-    </ol>
+        <p class="tooltip-subtitle">Story:</p>
+        <ol class="tooltip-ol">
+            {# 遍历数据 #}
+            {% set processed_data = py_tooltip_track(track, instance_id, "background", get_outer_json(track.instance_id, "track").used_by) %}
+            {% for i in processed_data %}
+                <li>{{ generate_story_anchor(i.0)|page_minify_html }}&nbsp;{{ generate_appearedat_html(i.0, i.1)|page_minify_html }}</li>
+            {% endfor %}
+        </ol>
+    </div>
 {% endmacro %}
 
 {% macro character_to_track(track, instance_id) %}
-    {% set _temp_char = get_outer_json(instance_id, "character") %}
-    <div class="tooltip-variable-content tooltip-variable-content-character">
-        {{ generate_character_tooltip_header(_temp_char) }}
-    </div>
-    <div class="tooltip-variable-content tooltip-variable-content-track">
-        {{ generate_track_tooltip_header(track) }}
-    </div>
+    <div class="tooltip-div">
+        {% set _temp_char = get_outer_json(instance_id, "character") %}
+        <div class="tooltip-variable-content tooltip-variable-content-character">
+            {{ generate_character_tooltip_header(_temp_char) }}
+        </div>
+        <div class="tooltip-variable-content tooltip-variable-content-track">
+            {{ generate_track_tooltip_header(track) }}
+        </div>
+        <hr />
 
-    <p class="tooltip-subtitle">Story:</p>
-    <ol class="tooltip-ol">
-        {# 遍历数据 #}
-        {% set processed_data = py_tooltip_track(track, instance_id, "character", get_outer_json(track.instance_id, "track").used_by) %}
-        {% for i in processed_data %}
-            <li>{{ generate_story_anchor(i.0)|page_minify_html }}&nbsp;{{ generate_appearedat_html(i.0, i.1)|page_minify_html }}</li>
-        {% endfor %}
-    </ol>
+        <p class="tooltip-subtitle">Story:</p>
+        <ol class="tooltip-ol">
+            {# 遍历数据 #}
+            {% set processed_data = py_tooltip_track(track, instance_id, "character", get_outer_json(track.instance_id, "track").used_by) %}
+            {% for i in processed_data %}
+                <li>{{ generate_story_anchor(i.0)|page_minify_html }}&nbsp;{{ generate_appearedat_html(i.0, i.1)|page_minify_html }}</li>
+            {% endfor %}
+        </ol>
 
-    <div class="tooltip-variable-content tooltip-variable-content-character">
-        {{ generate_character_tooltip_footer(_temp_char) }}
+        <div class="tooltip-variable-content tooltip-variable-content-character">
+            {{ generate_character_tooltip_footer(_temp_char) }}
+        </div>
     </div>
 {% endmacro %}
