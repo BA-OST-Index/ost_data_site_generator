@@ -42,6 +42,12 @@ class TooltipHtmlGenerator:
                  "{{ tooltip_track(track, instance_id, instance_type) }}",
         "background": "{% from 'template/[LANG]/_macro_tooltip.html' import tooltip_background %}"
                       "{{ tooltip_background(background, instance_id, instance_type) }}",
+        "background_to_char": "{% from 'template/[LANG]/_macro_tooltip2.html' import background_to_character_in_story %}"
+                              "{{ background_to_character_in_story(character, instance_id, instance_id2) }}",
+        "background_to_track": "{% from 'template/[LANG]/_macro_tooltip2.html' import background_to_track %}"
+                               "{{ background_to_track(track, instance_id, instance_id2) }}",
+        "character_to_track": "{% from 'template/[LANG]/_macro_tooltip2.html' import character_to_track %}"
+                              "{{ character_to_track(track, instance_id) }}"
     }
 
     @staticmethod
@@ -190,8 +196,9 @@ class TooltipHtmlGenerator:
 
                     tooltip_id = self.get_tooltip("character", TemplateTool.get_character_instance_id(data),
                                                   "background", content["uuid"])
-                    self.add_render_result_by_lang("character", tooltip_id, "background",
-                                                   char=data, instance_id=content["uuid"], instance_type="background")
+                    self.add_render_result_by_lang("background_to_char", tooltip_id, "background",
+                                                   character=data, instance_id=content["uuid"],
+                                                   instance_id2=content["filename"])
 
                 # background to character (direct)
                 # output_usedby_character
@@ -220,8 +227,8 @@ class TooltipHtmlGenerator:
 
                     tooltip_id = self.get_tooltip("track", data["instance_id"],
                                                   "background", content["uuid"])
-                    self.add_render_result_by_lang("track", tooltip_id, "background",
-                                                   track=data, instance_id=content["uuid"], instance_type="background")
+                    self.add_render_result_by_lang("background_to_track", tooltip_id, "background",
+                                                   track=data, instance_id=content["uuid"], instance_id2=content["filename"])
 
     def _generate_character(self):
         # character (char)
@@ -261,8 +268,8 @@ class TooltipHtmlGenerator:
 
                     tooltip_id = self.get_tooltip("track", data["instance_id"],
                                                   "character", content["uuid"])
-                    self.add_render_result_by_lang("track", tooltip_id, "character",
-                                                   track=data, instance_id=content["uuid"], instance_type="character")
+                    self.add_render_result_by_lang("character_to_track", tooltip_id, "character",
+                                                   track=data, instance_id=content["uuid"])
 
                 # character to background (direct)
                 # output_usedby_background

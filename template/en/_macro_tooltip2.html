@@ -1,0 +1,111 @@
+{% from "template/en/_macro.html" import filetype_to_name, tracktype_to_name, generate_track_anchor, generate_story_anchor, generate_appearedat_html, generate_character_anchor_flat, generate_character_anchor, output_track_stat_badge_p2p3, output_storypart_source_by_lang %}
+{% set curr_lang = "zh_cn" %}
+
+{# -------------------------------------------------------------------------- #}
+{# -------------------------------------------------------------------------- #}
+
+{% macro generate_background_tooltip_header(background) %}
+    <p class="tooltip-title tooltip-ellipsis">{{ background.name.en }}</p>
+    <p>{{ background.desc.en }}</p>
+    <button type="button" class="btn btn-info"><a href="{{ background.image.value }}" target="_blank">View Full Image</a></button>
+{% endmacro %}
+
+{% macro generate_character_tooltip_header(character) %}
+    {% set char_data = get_character_data(character) %}
+    <p class="tooltip-title tooltip-ellipsis">{{ char_data.char_name.en }}</p>
+{% endmacro %}
+
+{% macro generate_character_tooltip_footer(character) %}
+    {% set char = get_character_data(character) %}
+
+    <p class="tooltip-subtitle">Related Characters: </p>
+    {% if char.char_type == "stu" %}
+        <p>Other Version: {{ generate_character_anchor_flat(char.char_info.related_to.character_variant, MAX_CHAR_FOR_OTHER_CHAR) }}</p>
+    {% endif %}
+    <p>Other Characters: {{ generate_character_anchor_flat(char.char_info.related_to.character_other, MAX_CHAR_FOR_OTHER_CHAR) }}</p>
+{% endmacro %}
+
+{% macro generate_track_tooltip_header(track) %}
+    {% set track_json = get_outer_json(track.instance_id, "track") %}
+
+    <p class="tooltip-title tooltip-ellipsis">{{ tracktype_to_name(track.track_type) }}&nbsp;{{ track.no }}.&nbsp;{{ track.name.realname.en|js_string_safe }} <span class="track-stats-badge stats-badge">{{ output_track_stat_badge_p2p3(track.stats) }}</span></p>
+    <hr />
+
+    {% if track_json.bond_chars|length != 0 %}
+    <p class="tooltip-subtitle">Recollection Lobby Characters:</p>
+    <p>{{ generate_character_anchor_flat(track_json.bond_chars)|page_minify_html }}</p>
+    <hr />
+    {% endif %}
+{% endmacro %}
+
+{# -------------------------------------------------------------------------- #}
+{# -------------------------------------------------------------------------- #}
+
+{# bg -> char (in story) #}
+{# char -> bg (in story) #}
+{# 只允许background单向调用 #}
+{% macro background_to_character_in_story(character, instance_id, instance_id2) %}
+    <div class="tooltip-div">
+        <div class="tooltip-variable-content tooltip-variable-content-background">
+            {{ generate_background_tooltip_header(get_outer_json(instance_id2, "background")) }}
+        </div>
+        <div class="tooltip-variable-content tooltip-variable-content-character">
+            {{ generate_character_tooltip_header(character) }}
+        </div>
+        <hr />
+
+        <p class="tooltip-subtitle">Story:</p>
+        {# 同时关联的故事 #}
+        <ol class="tooltip-ol">
+            {% set processed_data = py_tooltip_character(character, instance_id, "background", get_character_data(character).char_data) %}
+            {% for i in processed_data %}
+                <li>{{ generate_story_anchor(i.0)|page_minify_html }}&nbsp;{{ generate_appearedat_html(i.0, i.1)|page_minify_html }}</li>
+            {% endfor %}
+        </ol>
+
+        <div class="tooltip-variable-content tooltip-variable-content-character">
+            {{ generate_character_tooltip_footer(character) }}
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro background_to_track(track, instance_id, instance_id2) %}
+    <div class="tooltip-variable-content tooltip-variable-content-background">
+        {{ generate_background_tooltip_header(get_outer_json(instance_id2, "background")) }}
+    </div>
+    <div class="tooltip-variable-content tooltip-variable-content-track">
+        {{ generate_track_tooltip_header(track) }}
+    </div>
+
+    <p class="tooltip-subtitle">Story:</p>
+    <ol class="tooltip-ol">
+        {# 遍历数据 #}
+        {% set processed_data = py_tooltip_track(track, instance_id, "background", get_outer_json(track.instance_id, "track").used_by) %}
+        {% for i in processed_data %}
+            <li>{{ generate_story_anchor(i.0)|page_minify_html }}&nbsp;{{ generate_appearedat_html(i.0, i.1)|page_minify_html }}</li>
+        {% endfor %}
+    </ol>
+{% endmacro %}
+
+{% macro character_to_track(track, instance_id) %}
+    {% set _temp_char = get_outer_json(instance_id, "character") %}
+    <div class="tooltip-variable-content tooltip-variable-content-character">
+        {{ generate_character_tooltip_header(_temp_char) }}
+    </div>
+    <div class="tooltip-variable-content tooltip-variable-content-track">
+        {{ generate_track_tooltip_header(track) }}
+    </div>
+
+    <p class="tooltip-subtitle">Story:</p>
+    <ol class="tooltip-ol">
+        {# 遍历数据 #}
+        {% set processed_data = py_tooltip_track(track, instance_id, "character", get_outer_json(track.instance_id, "track").used_by) %}
+        {% for i in processed_data %}
+            <li>{{ generate_story_anchor(i.0)|page_minify_html }}&nbsp;{{ generate_appearedat_html(i.0, i.1)|page_minify_html }}</li>
+        {% endfor %}
+    </ol>
+
+    <div class="tooltip-variable-content tooltip-variable-content-character">
+        {{ generate_character_tooltip_footer(_temp_char) }}
+    </div>
+{% endmacro %}

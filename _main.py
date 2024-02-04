@@ -127,6 +127,7 @@ def get_jinja_env(filters: dict = None, globals: dict = None):
     environment.globals["extract_storypart_data_background"] = JinjaTool.storypart_extract_all_data_background
     environment.globals["get_static"] = JinjaTool.get_static
     # Globals - TemplateTool
+    environment.globals["get_character_data"] = TemplateTool.get_character_data
     environment.globals["py_generate_story_url"] = TemplateTool.py_generate_story_url
     environment.globals["py_tooltip_track"] = TemplateTool.py_tooltip_track
     environment.globals["py_tooltip_character"] = TemplateTool.py_tooltip_character

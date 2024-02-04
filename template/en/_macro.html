@@ -30,10 +30,10 @@
 
 {# 通用的Track <a>生成 #}
 {% macro generate_track_anchor(track, with_counter, count_num, html_id, tooltip_id, enable_author) %}
-    <a href="/{{ curr_lang }}/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}.html{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %}>
+    <a href="/{{ curr_lang }}/track/{{ track.namespace.1 }}/{{ track.namespace.2 }}.html{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id, "tooltip-variable-content-track") }}{% endif %}>
         <span>{% if arg_check(with_counter) %}【{{ count_num }}】{% endif %}{{ filetype_to_name(track.filetype) }}&nbsp;{{ track.no }}.&nbsp;{{ track.name.realname.en|js_string_safe }}</span>
     </a>
-    {% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}
+    {% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id, "tooltip-variable-content-track") }}{% endif %}
     {% if arg_check(enable_author) %}<span>&nbsp;by&nbsp;{{ track.composer.nickname }}</span>{% endif %}
 {% endmacro %}
 
@@ -41,17 +41,17 @@
 {% macro generate_background_anchor(bg, html_id, tooltip_id, bg_count, is_disable_div_id) %}
     <div {% if not is_disable_div_id %}id="{{ bg.uuid }}"{% endif %}>
         <img class="lazyload" data-src="{{ bg.image.value }}" {% if arg_check(tooltip_id) %}onmouseover="showTooltipGallerySmall(this)" data-tooltip="{{ tooltip_id }}"{% endif %}>
-        <p class="gallery-caption">{% if arg_check(bg_count) %}<span>【{{ bg_count }}】</span>{% endif %}<span><a href="/{{ curr_lang }}/background/{{ bg.filename }}.html{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} target="_blank">{{ bg.filename|js_string_safe }}</a>{% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}</span></p>
+        <p class="gallery-caption">{% if arg_check(bg_count) %}<span>【{{ bg_count }}】</span>{% endif %}<span><a href="/{{ curr_lang }}/background/{{ bg.filename }}.html{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id, "tooltip-variable-content-background") }}{% endif %} target="_blank">{{ bg.filename|js_string_safe }}</a>{% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id, "tooltip-variable-content-background") }}{% endif %}</span></p>
     </div>
 {% endmacro %}
 
 {# 通用的Character <a>生成 #}
 {% macro generate_character_anchor(char, with_school, with_club, html_id, tooltip_id, show_combatant_info, is_leader, is_comm, is_new_tab) %}
     {% if char.filetype == 52 %}
-        <a href="/{{ curr_lang }}/character/npc/{{ char.namespace[-1]|lower }}/{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} {{ anchor_new_tab(is_new_tab) }}>
+        <a href="/{{ curr_lang }}/character/npc/{{ char.namespace[-1]|lower }}/{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id, "tooltip-variable-content-character") }}{% endif %} {{ anchor_new_tab(is_new_tab) }}>
             <span {% if arg_check(is_comm) %}class="stu-name-by-comm"{% endif %}>{{ char.name.en|js_string_safe }}</span>
         </a>
-        {% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}
+        {% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id, "tooltip-variable-content-character") }}{% endif %}
     {% else %}
         {% if arg_check(show_combatant_info) %}
             {% if arg_check(is_leader) %}<img src="{{ get_static('images/ui/Image_Conquest_Leader.png') }}" class="story-battle-leader">{% endif %}
@@ -66,7 +66,7 @@
                 <span {% if arg_check(is_comm) %}class="stu-name-by-comm"{% endif %}>{{ char.name.name.en|js_string_safe }}</span>
             </a>
         </span>
-        {% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}
+        {% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id, "tooltip-variable-content-character") }}{% endif %}
         {% if arg_check(show_combatant_info) %}
             <span>&nbsp;
                 <span class="{{ get_stu_type_text_color_css(char.combatant_info.attack_type.type) }}">{{ char.combatant_info.attack_type.lang.en }}</span>&nbsp;/&nbsp;<span class="{{ get_stu_type_text_color_css(char.combatant_info.armor_type.type) }}">{{ char.combatant_info.armor_type.lang.en }}</span>
