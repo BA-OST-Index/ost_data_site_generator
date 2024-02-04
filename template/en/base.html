@@ -57,7 +57,7 @@
                         {% else %}
                             {% set target_css = "text-primary" %}
                         {% endif %}
-                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|int|string }}.html">&lt;-- Previous page: <span class="{{ target_css }}">V{{ _prev.pos.volume }}C{{ _prev.pos.chapter }}E{{ _prev.pos.segment }}. {{ _prev.name.en }}</span></a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- Previous page: <span class="{{ target_css }}">V{{ _prev.pos.volume }}C{{ _prev.pos.chapter }}E{{ _prev.pos.segment }}. {{ _prev.name.en }}</span></a></p>
                     {% elif entry_.filetype in [14, 15] %}
                         {% if entry_.filetype == 15 and arg_check(_prev.is_memory) == True %}
                             {% set target_css = "text-momo" %}
@@ -106,7 +106,7 @@
                         {% else %}
                             {% set target_css = "text-primary" %}
                         {% endif %}
-                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|int|string }}.html">&lt;-- Next page: <span class="{{ target_css }}">V{{ _next.pos.volume }}C{{ _next.pos.chapter }}E{{ _next.pos.segment }}. {{ _next.name.en }}</span></a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">&lt;-- Next page: <span class="{{ target_css }}">V{{ _next.pos.volume }}C{{ _next.pos.chapter }}E{{ _next.pos.segment }}. {{ _next.name.en }}</span></a></p>
                     {% elif entry_.filetype in [14, 15] %}
                         {% if entry_.filetype == 15 and arg_check(_next.is_memory) == True %}
                             {% set target_css = "text-momo" %}

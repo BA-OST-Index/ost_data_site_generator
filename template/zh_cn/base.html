@@ -59,7 +59,7 @@
                         {% else %}
                             {% set target_css = "text-primary" %}
                         {% endif %}
-                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace[:-1]|join('/') }}/{{ _prev.namespace[-1]|int|string }}.html">&lt;-- 上一页: <span class="{{ target_css }}">V{{ _prev.pos.volume }}C{{ _prev.pos.chapter }}E{{ _prev.pos.segment }}. {{ auto_zhcn_gen(_prev.name) }}</span></a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _prev.namespace|join('/') }}.html">&lt;-- 上一页: <span class="{{ target_css }}">V{{ _prev.pos.volume }}C{{ _prev.pos.chapter }}E{{ _prev.pos.segment }}. {{ auto_zhcn_gen(_prev.name) }}</span></a></p>
                     {% elif entry_.filetype in [14, 15] %}
                         {% if entry_.filetype == 15 and arg_check(_prev.is_memory) == True %}
                             {% set target_css = "text-momo" %}
@@ -108,7 +108,7 @@
                         {% else %}
                             {% set target_css = "text-primary" %}
                         {% endif %}
-                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace[:-1]|join('/') }}/{{ _next.namespace[-1]|int|string }}.html">&lt;-- 下一页: <span class="{{ target_css }}">V{{ _next.pos.volume }}C{{ _next.pos.chapter }}E{{ _next.pos.segment }}. {{ auto_zhcn_gen(_next.name) }}</span></a></p>
+                        <p class="navi-p"><a href="/{{ current_lang }}/{{ _next.namespace|join('/') }}.html">&lt;-- 下一页: <span class="{{ target_css }}">V{{ _next.pos.volume }}C{{ _next.pos.chapter }}E{{ _next.pos.segment }}. {{ auto_zhcn_gen(_next.name) }}</span></a></p>
                     {% elif entry_.filetype in [14, 15] %}
                         {% if entry_.filetype == 15 and arg_check(_next.is_memory) == True %}
                             {% set target_css = "text-momo" %}

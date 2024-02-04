@@ -100,26 +100,22 @@ class JinjaTool:
                     id_1 = "-".join(first + second)
                     id_2 = "-".join(second + first)
 
-                    if first_[0] == "character" and second_ == "character":
-                        # 针对 char-char 设计
-                        # 检测tooltip id情况
-                        if id_1 not in TOOLTIP_ID_RATIONAL:
-                            # 如果第一个id不存在，检测第二个id
-                            if id_2 not in TOOLTIP_ID_RATIONAL:
-                                # 如果第二个id不存在，说明两个都不存在
-                                # 即，是第一次创建这两数据的关系
-                                # 返回第一个id
-                                TOOLTIP_ID_RATIONAL.add(id_1)
-                                return id_1
-                            else:
-                                # 否则，第二个id存在
-                                # 第二个id，此时，也就是第一次创建关系时的id_1(这里是id_2)
-                                return id_2
-                        else:
-                            # 谨防意外情况，虽然好像不该运行到这（？）
+                    # 检测tooltip id情况
+                    if id_1 not in TOOLTIP_ID_RATIONAL:
+                        # 如果第一个id不存在，检测第二个id
+                        if id_2 not in TOOLTIP_ID_RATIONAL:
+                            # 如果第二个id不存在，说明两个都不存在
+                            # 即，是第一次创建这两数据的关系
+                            # 返回第一个id
                             TOOLTIP_ID_RATIONAL.add(id_1)
                             return id_1
+                        else:
+                            # 否则，第二个id存在
+                            # 第二个id，此时，也就是第一次创建关系时的id_1(这里是id_2)
+                            return id_2
                     else:
+                        # 谨防意外情况，虽然好像不该运行到这（？）
+                        TOOLTIP_ID_RATIONAL.add(id_1)
                         return id_1
             else:
                 raise ValueError(args)
@@ -150,6 +146,7 @@ class JinjaTool:
             replace("'", "&#x27")
 
     @staticmethod
+    @lru_cache
     def get_outer_json(instance_id: str, instance_type: str):
         def read_file(filepath):
             with open(os.path.join("exported_data", filepath), mode="r", encoding="UTF-8") as file:
@@ -235,6 +232,36 @@ class TemplateTool:
         return data["uuid"]
 
     @staticmethod
+    def get_character_data(data: dict):
+        """tooltip_character 前半部分的 python 实现版"""
+        if data.get("filetype", -1) == 52:
+            # npc
+            char_data = JinjaTool.get_outer_json(data["namespace"][-1], "character")
+        else:
+            try:
+                char_data = JinjaTool.get_outer_json(data["uuid"], "character")
+            except Exception:
+                # for unknown case
+                char_data = JinjaTool.get_outer_json(data["student"]["uuid"], "character")
+
+        if char_data.get("filetype", -1) == 52:
+            # npc
+            char_info = char_data
+            char_type = "npc"
+            char_name = char_info["name"]
+        else:
+            # student
+            char_info = char_data["student"]
+            char_type = "stu"
+            char_name = char_info["name"]["name"]
+
+        outer_data = char_info["used_by"]
+
+        return {"char_data": char_data, "char_info": char_info,
+                "char_type": char_type, "char_name": char_name,
+                "outer_data": outer_data}
+
+    @staticmethod
     def py_generate_story_url(lang: str, story: dict):
         ft = story["filetype"]
         if ft in [14, 15]:
@@ -249,8 +276,7 @@ class TemplateTool:
             else:
                 story_type = "other"
 
-            return f"/{lang}/main/story/{story_type}/{str(story['pos']['volume'])}/{str(story['pos']['chapter'])}/" \
-                   f"{str(story['pos']['segment'])}.html"
+            return f"/{lang}/main/story/{'/'.join(story['namespace'][1:])}.html"
 
     @staticmethod
     def py_tooltip_background(background, instance_id, instance_type, extra_data):
