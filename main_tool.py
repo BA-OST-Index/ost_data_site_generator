@@ -276,7 +276,7 @@ class TemplateTool:
             else:
                 story_type = "other"
 
-            return f"/{lang}/main/story/{'/'.join(story['namespace'][1:])}.html"
+            return f"/{lang}/main/story/{'/'.join(story['namespace'][2:])}.html"
 
     @staticmethod
     def py_tooltip_background(background, instance_id, instance_type, extra_data):
