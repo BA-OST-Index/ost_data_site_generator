@@ -1,6 +1,8 @@
 {% extends "template/en/base.html" %}
 {% block title %}Welcome {% endblock title %}
 
+{% set curr_lang = "en" %}
+
 {#
 {% block toc %}
 Contents:
@@ -28,7 +30,7 @@ Contents:
             <h4 style="margin-top: 0;">Quick links:</h4>
             <ul class="homepage-list">
                 <li>Main Story (<a href="/{{ curr_lang }}/main/story/main/">Main</a>、<a href="/{{ curr_lang }}/main/story/side/">Club</a>、<a href="/{{ curr_lang }}/main/story/short/">Short</a>、<a href="/{{ curr_lang }}/main/story/other/">Other</a>)</li>
-                <li>Main Battle (<a href="/{{ curr_lang }}/main/battle/main/">Main</a>、<a href="/{{ curr_lang }}/main/battle/total_assault/">Total Assault</a>、<a href="/{{ curr_lang }}/main/battle/">Other</a>)</li>
+                <li>Main Battle (<a href="/{{ curr_lang }}/main/battle/main/">Main</a>、<a href="/{{ curr_lang }}/main/battle/total_assault/">Total Assault</a>、<a href="/{{ curr_lang }}/main/battle/">Other</a>、<a href="/{{ curr_lang }}/event/"><b>Event</b></a>)</li>
                 <li>Tracks (<a href="/{{ curr_lang }}/track/ost/">OST</a>、<a href="/{{ curr_lang }}/track/short/">Short Animation</a>、<a href="/{{ curr_lang }}/track/other/">Other</a>)</li>
                 <li>Characters (<a href="/{{ curr_lang }}/character/npc/">NPC</a>、<a href="/{{ curr_lang }}/character/student">Student</a>)</li>
                 <li><a href="/{{ curr_lang }}/background/">Background Image</a></li>
