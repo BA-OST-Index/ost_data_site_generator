@@ -61,7 +61,7 @@
             <img src="{{ get_static('images/schoolicon/School_Icon_' + char.school_id|upper + '_W.png') }}" class="invert-light schoolicon-p">
         {% endif %}
         <span>
-            <a href="/{{ curr_lang }}/character/student/{{ char.name.path_name|lower }}/{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} {{ anchor_new_tab(is_new_tab) }}>
+            <a href="/{{ curr_lang }}/character/student/{{ char.name.path_name|lower }}/{% if arg_check(html_id) %}#{{ html_id }}{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id, "tooltip-variable-content-character") }}{% endif %} {{ anchor_new_tab(is_new_tab) }}>
                 <img src="{{ get_static('images/student/icon/' + char.image.collection_texture + '.webp') }}" class="icon-stu">
                 <span {% if arg_check(is_comm) %}class="stu-name-by-comm"{% endif %}>{{ char.name.name.en|js_string_safe }}</span>
             </a>
