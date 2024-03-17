@@ -1,0 +1,45 @@
+{% from "template/zh_cn/_macro_page.html" import output_usedby_track, output_usedby_background %}
+{% set actual_data = story.part %}
+
+<h2>故事数据</h2>
+<p>本篇故事数据为<b>脚本自动生成</b>，未进行人工校对及划分剧情，但我们仍设法获得了一部分数据之间的关系。</p>
+<h3>全部数据</h3>
+{% set actual_data_all = actual_data.all %}
+<h4>人物</h4>
+{{ output_usedby_character(actual_data_all.character, "story-" + story.instance_id, story.instance_id, "story") }}
+<h4>歌曲</h4>
+{{ output_usedby_track(actual_data_all.track, "story-" + story.instance_id, "story", story.instance_id) }}
+<h4>背景</h4>
+{{ output_usedby_background(actual_data_all.background, "story-" + story.instance_id, story.instance_id, "story") }}
+<h3>部分数据间关联</h3>
+<p>以下展示数据间的关系。请注意，此处的内容使用了项目内部的对象“实例ID”（instance_id）表达形式；此部分内容仅供快速参考。</p>
+<h4>歌曲</h4>
+<ul>
+    {% for track_id in actual_data.all.track.keys() %}
+        <li><code>{{ track_id }}</code></li>
+        <ul>
+            <li>背景：{% for bg_id in actual_data.track_to_bg[track_id] %}<code>{{ bg_id }}</code>、{% endfor %}</li>
+            <li>歌曲：{% for char_id in actual_data.track_to_char[track_id] %}<code>{{ char_id }}</code>、{% endfor %}</li>
+        </ul>
+    {% endfor %}
+</ul>
+<h4>人物</h4>
+<ul>
+    {% for char_id in actual_data.all.character.keys() %}
+        <li><code>{{ char_id }}</code></li>
+        <ul>
+            <li>背景：{% for bg_id in actual_data.char_to_bg[char_id] %}<code>{{ bg_id }}</code>、{% endfor %}</li>
+            <li>歌曲：{% for track_id in actual_data.char_to_track[char_id] %}<code>{{ track_id }}</code>、{% endfor %}</li>
+        </ul>
+    {% endfor %}
+</ul>
+<h4>背景</h4>
+<ul>
+    {% for bg_id in actual_data.all.background.keys() %}
+        <li><code>{{ bg_id }}</code></li>
+        <ul>
+            <li>人物：{% for char_id in actual_data.bg_to_char[bg_id] %}<code>{{ char_id }}</code>、{% endfor %}</li>
+            <li>歌曲：{% for track_id in actual_data.bg_to_track[bg_id] %}<code>{{ track_id }}</code>、{% endfor %}</li>
+        </ul>
+    {% endfor %}
+</ul>

@@ -1,0 +1,43 @@
+{# For normal story (manually adjusted) #}
+
+<h2>故事部分</h2>
+{% set story_part_tooltip_data = {} %}
+{% for part in story.part %}
+    {% set part_index = loop.index %}
+
+    {# 检测有没有source #}
+    {% set enable_source = False %}
+    {% if part.source.en|length != 0 or part.source.zh_tw|length != 0 or part.source.zh_cn_cn|length != 0 or part.source.zh_cn_jp|length != 0 %}
+        {% set enable_source = True %}
+        {% set tooltip_id = generate_tooltip_id("storypart_source", story.instance_id, loop.index) %}
+        {% do story_part_tooltip_data.update({tooltip_id: tooltip_storypart_source(part)}) %}
+    {% endif %}
+
+    {# 检测是不是学生羁绊剧情，如果是且为L2D片段，显示favor rank #}
+    {% if story.filetype == 15 and part.is_memory %}
+        {% set enable_favor_rank = True %}
+    {% else %}
+        {% set enable_favor_rank = False %}
+    {% endif %}
+
+    <h3 class="{{ get_storypart_text_color_css(part) }}" id="story-part-{{ loop.index }}">{{ loop.index }}. {{ auto_zhcn_gen(part.name) }}{% if enable_favor_rank %}&nbsp;<p class="student-lobby-unlock">{{ story.pos.favor_rank }}</p>{% endif %}{% if enable_source %}&nbsp;{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}</h3>
+
+    {% for segment in part.data %}
+        <ul style="margin: 0;">
+            <li id="story-part-{{ part_index }}-seg-{{ loop.index }}">{{ auto_zhcn_gen(segment.desc) }}</li>
+            <h4>人物</h4>
+            {% if part.is_battle %}
+                {{ output_usedby_character(segment, "story-" + story.instance_id, story.instance_id, "story", "True", part.battle_leader_pos) }}
+            {% else %}
+                {{ output_usedby_character(segment, "story-" + story.instance_id, story.instance_id, "story") }}
+            {% endif %}
+            <h4>歌曲</h4>
+            {{ output_usedby_track_list(segment.track, "story-" + story.instance_id, "story", story.instance_id) }}
+            <h4>背景</h4>
+            {{ output_usedby_background_list(segment.background, "story-" + story.instance_id, story.instance_id, "story") }}
+        </ul>
+    {% endfor %}
+{% else %}
+    <p>{{ nothing_to_show }}</p>
+{% endfor %}
+{{ tooltip_add_data_js(story_part_tooltip_data) }}
