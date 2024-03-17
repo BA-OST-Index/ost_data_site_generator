@@ -16,12 +16,12 @@
     {% from "template/zh_cn/_macro_page.html" import output_usedby_character, output_usedby_track_list, output_usedby_background_list, output_storyinfo_source %}
     {% from "template/zh_cn/_macro.html" import auto_zhcn_gen, nothing_to_show, filetype_to_name, generate_track_anchor %}
 
-    <h1>故事/[{{ _story_no_string }}] <span class="{{ get_story_text_color_css(story) }}">{{ auto_zhcn_gen(story.name) }}</span></h1>
+    <h1>故事/[{{ _story_no_string }}] <span class="{{ get_story_text_color_css(story) }}">{{ auto_zhcn_gen(story.name) }}</span>{% if story.filetype == 15 %}&nbsp;<p class="student-lobby-unlock student-lobby-unlock-title">{{ story.pos.favor_rank }}</p>{% endif %}</h1>
     {% include "template/zh_cn/infobox/story.html" %}
     {% if story.filetype == 11 %}
         <p>“<b>{{ auto_zhcn_gen(story.name) }}</b>”是主线故事第{{ story.pos.volume }}篇第{{ story.pos.chapter }}章的第{{ story.pos.segment }}个故事。</p>
     {% elif story.filetype == 15 %}
-        <p>“<b>{{ auto_zhcn_gen(story.name) }}</b>”是学生<img src="{{ get_static('images/student/icon/' + story.student.image.collection_texture + '.webp') }}" class="icon-stu"/>{{ auto_zhcn_gen(story.student.name.personal_name) }}的第{{ story.pos.no }}个羁绊故事。</p>
+        <p>“<b>{{ auto_zhcn_gen(story.name) }}</b>”是学生<img src="{{ get_static('images/student/icon/' + story.student.image.collection_texture + '.webp') }}" class="icon-stu"/>{{ auto_zhcn_gen(story.student.name.personal_name) }}的第{{ story.pos.no }}个羁绊故事（要求最低羁绊等级为{{ story.pos.favor_rank }}）。</p>
     {% elif story.filetype == 14 %}
         <p>“<b>{{ auto_zhcn_gen(story.name) }}</b>”是活动“{{ auto_zhcn_gen(story.parent_data.0.name) }}” 的第{{ story.pos.segment }}个故事。</p>
     {% else %}
@@ -49,38 +49,9 @@
     <p>以下列出可供引用的故事来源。</p>
     {{ output_storyinfo_source(story.source) }}
 
-    <h2>故事部分</h2>
-    {% set story_part_tooltip_data = {} %}
-    {% for part in story.part %}
-        {% set part_index = loop.index %}
-
-        {# 检测有没有source #}
-        {% set enable_source = False %}
-        {% if part.source.en|length != 0 or part.source.zh_tw|length != 0 or part.source.zh_cn_cn|length != 0 or part.source.zh_cn_jp|length != 0 %}
-            {% set enable_source = True %}
-            {% set tooltip_id = generate_tooltip_id("storypart_source", story.instance_id, loop.index) %}
-            {% do story_part_tooltip_data.update({tooltip_id: tooltip_storypart_source(part)}) %}
-        {% endif %}
-
-        <h3 class="{{ get_storypart_text_color_css(part) }}" id="story-part-{{ loop.index }}">{{ loop.index }}. {{ auto_zhcn_gen(part.name) }} {% if enable_source %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}</h3>
-
-        {% for segment in part.data %}
-            <ul style="margin: 0;">
-                <li id="story-part-{{ part_index }}-seg-{{ loop.index }}">{{ auto_zhcn_gen(segment.desc) }}</li>
-                <h4>人物</h4>
-                {% if part.is_battle %}
-                    {{ output_usedby_character(segment, "story-" + story.instance_id, story.instance_id, "story", "True", part.battle_leader_pos) }}
-                {% else %}
-                    {{ output_usedby_character(segment, "story-" + story.instance_id, story.instance_id, "story") }}
-                {% endif %}
-                <h4>歌曲</h4>
-                {{ output_usedby_track_list(segment.track, "story-" + story.instance_id, "story", story.instance_id) }}
-                <h4>背景</h4>
-                {{ output_usedby_background_list(segment.background, "story-" + story.instance_id, story.instance_id, "story") }}
-            </ul>
-        {% endfor %}
+    {% if story.filetype_sub == 0 %}
+        {% include "page/zh_cn/story/normal.html" %}
     {% else %}
-        <p>{{ nothing_to_show }}</p>
-    {% endfor %}
-    {{ tooltip_add_data_js(story_part_tooltip_data) }}
+        {% include "page/zh_cn/story/auto.html" %}
+    {% endif %}
 {% endblock %}

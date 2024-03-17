@@ -184,15 +184,23 @@ class JinjaTool:
 
     @staticmethod
     @lru_cache()
-    def arg_check(arg):
+    def arg_check(arg, strict=False):
+        """
+
+        :param arg:
+        :param strict: 严格模式，为True时只有未定义才会返回False
+        :return:
+        """
         # test if is undefined
         if hasattr(arg, "_undefined_exception"):
             exc = getattr(arg, "_undefined_exception")
             if exc is UndefinedError:
                 return False
-        # other common cases
-        if arg == "" or arg == 0 or arg == "False":
-            return False
+
+        if not strict:
+            # other common cases
+            if arg == "" or arg == 0 or arg == "False":
+                return False
 
         return True
 
@@ -292,6 +300,11 @@ class TemplateTool:
             story = story[0]
             story_parts = []
 
+            if story["filetype_sub"] == 1:
+                # auto generated story
+                all_story.append([story, []])
+                continue
+
             for (index, part) in enumerate(story["part"], 1):
                 add_part, seg_index = 0, -1
                 is_by_comm, is_narrative = False, False
@@ -344,6 +357,11 @@ class TemplateTool:
         for story in extra_data["data_story"].values():
             story = story[0]
             related_parts = []
+
+            if story["filetype_sub"] == 1:
+                # auto generated story
+                all_story.append([story, []])
+                continue
 
             for (index, part) in enumerate(story["part"], 1):
                 seg_index = -1
@@ -412,6 +430,12 @@ class TemplateTool:
         for story in outer_data["data_story"].values():
             story = story[0]
             related_parts = []
+
+            if story["filetype_sub"] == 1:
+                # auto generated story
+                all_story.append([story, []])
+                continue
+
             for (index, part) in enumerate(story["part"], 1):
                 seg_index = -1
                 is_by_comm, is_narrative = False, False
@@ -504,6 +528,10 @@ class TemplateTool:
                     all_story_with_filetype[_curr_filetype] = []
 
             value = value[0]
+
+            if value["filetype_sub"] == 1:
+                all_story_with_filetype[_curr_filetype].append([value, []])
+                continue
 
             # appearedAt snippet
             if instance_uuid:

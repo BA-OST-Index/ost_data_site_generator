@@ -117,7 +117,15 @@
                 {% set tooltip_id = generate_tooltip_id("background", value.0.uuid, instance_type, instance_id) %}
             {% endif %}
 
-            <div class="gallery-img" id="{{ value.0.uuid }}{% if arg_check(bg_direct) %}-direct{% endif %}">{{ generate_background_anchor(value.0, html_id, tooltip_id, value.1, True) }}</div>
+            {% if value|is_list %}
+                {# 自己写的屎山代码，出于某种原因要往value里头放个列表，第1个(zero-indexed)是instance_id #}
+                {% set bg = value.0 %}
+            {% else %}
+                {% set bg = value %}
+            {% endif %}
+            {% set bg_instance_id = bg.instance_id %}
+
+            <div class="gallery-img" id="{{ bg.uuid }}{% if arg_check(bg_direct) %}-direct{% endif %}">{{ generate_background_anchor(bg, html_id, tooltip_id, bg_instance_id, True) }}</div>
 
 {#            {% if enable_tooltip == 1 %}#}
 {#                {% do tooltip_data.update({tooltip_id: tooltip_background(value.0, instance_id, instance_type)}) %}#}
@@ -168,7 +176,11 @@
 
     <ul>
         {% for key, value in data_track.items() %}
-            {% set track = value.0 %}
+            {% if value|is_list %}
+                {% set track = value.0 %}
+            {% else %}
+                {% set track = value %}
+            {% endif %}
 
             {% if enable_tooltip == 1 %}
                 {% set tooltip_id = generate_tooltip_id("track", track.instance_id, instance_type, instance_id) %}

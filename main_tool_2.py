@@ -151,14 +151,15 @@ class TooltipHtmlGenerator:
                 self.add_render_result_by_lang("storyinfo", tooltip_id, "story", story=content)
 
                 # storypart (part/source)
-                for (no, data) in enumerate(content["part"], 1):
-                    tooltip_id = self.get_tooltip("storypart", content["instance_id"], no)
-                    self.add_render_result_by_lang("storypart", tooltip_id, "story",
-                                                   story=content, story_part=data)
+                if content["filetype_sub"] == 0:
+                    for (no, data) in enumerate(content["part"], 1):
+                        tooltip_id = self.get_tooltip("storypart", content["instance_id"], no)
+                        self.add_render_result_by_lang("storypart", tooltip_id, "story",
+                                                       story=content, story_part=data)
 
-                    tooltip_id = self.get_tooltip("storypart_source", content["instance_id"], no)
-                    self.add_render_result_by_lang("storypart_source", tooltip_id, "story",
-                                                   part=data)
+                        tooltip_id = self.get_tooltip("storypart_source", content["instance_id"], no)
+                        self.add_render_result_by_lang("storypart_source", tooltip_id, "story",
+                                                       part=data)
 
     def _generate_album(self):
         # album (album)
