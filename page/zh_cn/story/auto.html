@@ -30,6 +30,7 @@
         <ul>
             <li>背景：{% for bg_id in actual_data.char_to_bg[char_id] %}<code>{{ bg_id }}</code>、{% endfor %}</li>
             <li>歌曲：{% for track_id in actual_data.char_to_track[char_id] %}<code>{{ track_id }}</code>、{% endfor %}</li>
+            <li>人物：{% for char2_id in actual_data.char_to_char[char_id] %}<code>{{ char2_id }}</code>、{% endfor %}</li>
         </ul>
     {% endfor %}
 </ul>

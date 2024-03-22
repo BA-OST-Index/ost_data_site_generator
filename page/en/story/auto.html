@@ -8,9 +8,9 @@
 <h4>Characters</h4>
 {{ output_usedby_character({"character": actual_data_all.character.values()}, "story-" + story.instance_id, story.instance_id, "story") }}
 <h4>Tracks</h4>
-{{ output_usedby_track(actual_data_all.track.values(), "story-" + story.instance_id, "story", story.instance_id) }}
+{{ output_usedby_track_list(actual_data_all.track.values(), "story-" + story.instance_id, "story", story.instance_id) }}
 <h4>Backgrounds</h4>
-{{ output_usedby_background(actual_data_all.background.values(), "story-" + story.instance_id, story.instance_id, "story") }}
+{{ output_usedby_background_list(actual_data_all.background.values(), "story-" + story.instance_id, story.instance_id, "story") }}
 <h3>Inter-data Relationships</h3>
 <p>Below shows the inter-data relationships. Be reminded that we're using internal "instance_id" for display; the data shown is for quick reference only.</p>
 <h4>Tracks</h4>
@@ -30,6 +30,7 @@
         <ul>
             <li>Backgrounds：{% for bg_id in actual_data.char_to_bg[char_id] %}<code>{{ bg_id }}</code>、{% endfor %}</li>
             <li>Tracks：{% for track_id in actual_data.char_to_track[char_id] %}<code>{{ track_id }}</code>、{% endfor %}</li>
+            <li>Characters：{% for char2_id in actual_data.char_to_char[char_id] %}<code>{{ char2_id }}</code>、{% endfor %}</li>
         </ul>
     {% endfor %}
 </ul>
