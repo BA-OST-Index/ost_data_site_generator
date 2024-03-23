@@ -25,16 +25,18 @@
     {% for segment in part.data %}
         <ul style="margin: 0;">
             <li id="story-part-{{ part_index }}-seg-{{ loop.index }}">{{ auto_zhcn_gen(segment.desc) }}</li>
-            <h4>人物</h4>
-            {% if part.is_battle %}
-                {{ output_usedby_character(segment, "story-" + story.instance_id, story.instance_id, "story", "True", part.battle_leader_pos) }}
-            {% else %}
-                {{ output_usedby_character(segment, "story-" + story.instance_id, story.instance_id, "story") }}
-            {% endif %}
-            <h4>歌曲</h4>
-            {{ output_usedby_track_list(segment.track, "story-" + story.instance_id, "story", story.instance_id) }}
-            <h4>背景</h4>
-            {{ output_usedby_background_list(segment.background, "story-" + story.instance_id, story.instance_id, "story") }}
+            <div class="story-segment-data">
+                <h4>人物</h4>
+                {% if part.is_battle %}
+                    {{ output_usedby_character(segment, "story-" + story.instance_id, story.instance_id, "story", "True", part.battle_leader_pos) }}
+                {% else %}
+                    {{ output_usedby_character(segment, "story-" + story.instance_id, story.instance_id, "story") }}
+                {% endif %}
+                <h4>歌曲</h4>
+                {{ output_usedby_track_list(segment.track, "story-" + story.instance_id, "story", story.instance_id) }}
+                <h4>背景</h4>
+                {{ output_usedby_background_list(segment.background, "story-" + story.instance_id, story.instance_id, "story") }}
+            </div>
         </ul>
     {% endfor %}
 {% else %}
