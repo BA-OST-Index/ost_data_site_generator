@@ -302,7 +302,17 @@ class TemplateTool:
 
             if story["filetype_sub"] == 1:
                 # auto generated story
-                all_story.append([story, []])
+                if instance_type == "story":
+                    if background["filename"] in story["part"]["all"]["background"].keys():
+                        all_story.append([story, []])
+                elif instance_type == "character":
+                    if background["filename"] in story["part"]["bg_to_char"].keys():
+                        if instance_id in story["part"]["bg_to_char"][background["filename"]]:
+                            all_story.append([story, []])
+                elif instance_type == "track":
+                    if background["filename"] in story["part"]["bg_to_track"].keys():
+                        if instance_id in story["part"]["bg_to_track"][background["filename"]]:
+                            all_story.append([story, []])
                 continue
 
             for (index, part) in enumerate(story["part"], 1):
@@ -360,7 +370,17 @@ class TemplateTool:
 
             if story["filetype_sub"] == 1:
                 # auto generated story
-                all_story.append([story, []])
+                if instance_type == "story":
+                    if track["instance_id"] == story["part"]["all"]["track"].keys():
+                        all_story.append([story, []])
+                elif instance_type == "character":
+                    if track["instance_id"] == story["part"]["track_to_char"].keys():
+                        if instance_id in story["part"]["track_to_char"][track["instance_id"]]:
+                            all_story.append([story, []])
+                elif instance_type == "background":
+                    if track["instance_id"] == story["part"]["track_to_bg"].keys():
+                        if instance_id in story["part"]["track_to_bg"][track["instance_id"]]:
+                            all_story.append([story, []])
                 continue
 
             for (index, part) in enumerate(story["part"], 1):
@@ -433,7 +453,21 @@ class TemplateTool:
 
             if story["filetype_sub"] == 1:
                 # auto generated story
-                all_story.append([story, []])
+                if instance_type == "story":
+                    if character_id in story["part"]["all"]["character"].keys():
+                        all_story.append([story, []])
+                elif instance_type == "character":
+                    if character_id in story["part"]["char_to_char"].keys():
+                        if instance_id in story["part"]["char_to_char"][character_id]:
+                            all_story.append([story, []])
+                elif instance_type == "track":
+                    if character_id in story["part"]["char_to_track"].keys():
+                        if instance_id in story["part"]["char_to_track"][character_id]:
+                            all_story.append([story, []])
+                elif instance_type == "background":
+                    if character_id in story["part"]["char_to_bg"].keys():
+                        if instance_id in story["part"]["char_to_bg"][character_id]:
+                            all_story.append([story, []])
                 continue
 
             for (index, part) in enumerate(story["part"], 1):

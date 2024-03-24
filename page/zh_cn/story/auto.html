@@ -6,11 +6,11 @@
 <h3>全部数据</h3>
 {% set actual_data_all = actual_data.all %}
 <h4>人物</h4>
-{{ output_usedby_character(actual_data_all.character, "story-" + story.instance_id, story.instance_id, "story") }}
+{{ output_usedby_character({"character": actual_data_all.character.values()}, "story-" + story.instance_id, story.instance_id, "story") }}
 <h4>歌曲</h4>
-{{ output_usedby_track(actual_data_all.track, "story-" + story.instance_id, "story", story.instance_id) }}
+{{ output_usedby_track_list(actual_data_all.track.values(), "story-" + story.instance_id, "story", story.instance_id) }}
 <h4>背景</h4>
-{{ output_usedby_background(actual_data_all.background, "story-" + story.instance_id, story.instance_id, "story") }}
+{{ output_usedby_background_list(actual_data_all.background.values(), "story-" + story.instance_id, story.instance_id, "story") }}
 <h3>部分数据间关联</h3>
 <p>以下展示数据间的关系。请注意，此处的内容使用了项目内部的对象“实例ID”（instance_id）表达形式；此部分内容仅供快速参考。</p>
 <h4>歌曲</h4>
@@ -30,6 +30,7 @@
         <ul>
             <li>背景：{% for bg_id in actual_data.char_to_bg[char_id] %}<code>{{ bg_id }}</code>、{% endfor %}</li>
             <li>歌曲：{% for track_id in actual_data.char_to_track[char_id] %}<code>{{ track_id }}</code>、{% endfor %}</li>
+            <li>人物：{% for char2_id in actual_data.char_to_char[char_id] %}<code>{{ char2_id }}</code>、{% endfor %}</li>
         </ul>
     {% endfor %}
 </ul>
