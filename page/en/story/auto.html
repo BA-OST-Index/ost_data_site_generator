@@ -39,7 +39,7 @@
     {% for bg_id in actual_data.all.background.keys() %}
         <li><code>{{ bg_id }}</code></li>
         <ul>
-            <li>Characters：{% for char_id in actual_data._bg_to_char[bg_id] %}<code>{{ char_id }}</code>、{% endfor %}</li>
+            <li>Characters：{% for char_id in actual_data.bg_to_char[bg_id] %}<code>{{ char_id }}</code>、{% endfor %}</li>
             <li>Tracks：{% for track_id in actual_data.bg_to_track[bg_id] %}<code>{{ track_id }}</code>、{% endfor %}</li>
         </ul>
     {% endfor %}

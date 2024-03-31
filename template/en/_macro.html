@@ -122,7 +122,9 @@
 
         <span><a href="{{ generate_story_url(base_story) }}#story-part-{{ loop_index }}{% if seg_index != -1 %}-seg-{{ seg_index }}{% endif %}" class="{{ ele_class }}{% if arg_check(is_comm) %} story-by-comm{% endif %}{% if arg_check(is_narrative) %} story-by-narr{% endif %}" {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %}><i>&#91;{{ loop_index }}&#93;&nbsp;{{ part.name.en|js_string_safe }}</i></a>{% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}</span>
     {% endfor %}
-    <span>)</span>
+    {% if parts|length != 0 %}
+        <span>)</span>
+    {% endif %}
 {% endmacro %}
 
 {# 通用的Tag <a>生成 #}
