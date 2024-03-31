@@ -18,7 +18,7 @@
     {% for track_id in actual_data.all.track.keys() %}
         <li><code>{{ track_id }}</code></li>
         <ul>
-            <li>Backgrounds：{% for bg_id in actual_data.track_to_bg[track_id] %}<code>{{ bg_id }}</code>、{% endfor %}</li>
+            <li>Backgrounds：{% for bg_id in actual_data._track_to_bg[track_id] %}<code>{{ bg_id }}</code>、{% endfor %}</li>
             <li>Characters：{% for char_id in actual_data.track_to_char[track_id] %}<code>{{ char_id }}</code>、{% endfor %}</li>
         </ul>
     {% endfor %}
@@ -28,7 +28,7 @@
     {% for char_id in actual_data.all.character.keys() %}
         <li><code>{{ char_id }}</code></li>
         <ul>
-            <li>Backgrounds：{% for bg_id in actual_data.char_to_bg[char_id] %}<code>{{ bg_id }}</code>、{% endfor %}</li>
+            <li>Backgrounds：{% for bg_id in actual_data._char_to_bg[char_id] %}<code>{{ bg_id }}</code>、{% endfor %}</li>
             <li>Tracks：{% for track_id in actual_data.char_to_track[char_id] %}<code>{{ track_id }}</code>、{% endfor %}</li>
             <li>Characters：{% for char2_id in actual_data.char_to_char[char_id] %}<code>{{ char2_id }}</code>、{% endfor %}</li>
         </ul>
@@ -39,7 +39,7 @@
     {% for bg_id in actual_data.all.background.keys() %}
         <li><code>{{ bg_id }}</code></li>
         <ul>
-            <li>Characters：{% for char_id in actual_data.bg_to_char[bg_id] %}<code>{{ char_id }}</code>、{% endfor %}</li>
+            <li>Characters：{% for char_id in actual_data._bg_to_char[bg_id] %}<code>{{ char_id }}</code>、{% endfor %}</li>
             <li>Tracks：{% for track_id in actual_data.bg_to_track[bg_id] %}<code>{{ track_id }}</code>、{% endfor %}</li>
         </ul>
     {% endfor %}
