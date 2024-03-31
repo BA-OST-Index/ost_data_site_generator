@@ -371,14 +371,14 @@ class TemplateTool:
             if story["filetype_sub"] == 1:
                 # auto generated story
                 if instance_type == "story":
-                    if track["instance_id"] == story["part"]["all"]["track"].keys():
+                    if track["instance_id"] in story["part"]["all"]["track"].keys():
                         all_story.append([story, []])
                 elif instance_type == "character":
-                    if track["instance_id"] == story["part"]["track_to_char"].keys():
+                    if track["instance_id"] in story["part"]["track_to_char"].keys():
                         if instance_id in story["part"]["track_to_char"][track["instance_id"]]:
                             all_story.append([story, []])
                 elif instance_type == "background":
-                    if track["instance_id"] == story["part"]["track_to_bg"].keys():
+                    if track["instance_id"] in story["part"]["track_to_bg"].keys():
                         if instance_id in story["part"]["track_to_bg"][track["instance_id"]]:
                             all_story.append([story, []])
                 continue
