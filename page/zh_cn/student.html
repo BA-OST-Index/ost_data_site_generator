@@ -32,7 +32,7 @@
     {% set bond = char.include.0.1.include %}
     {% for i in bond %}
         {% set value = i.1 %}
-        <h3><a {% if i.is_memory %}class="text-momo"{% endif %} href="bond/{{ value.namespace[-1] }}.html">{{ value.pos.no }}. {{ auto_zhcn_gen(value.name) }}</a></h3>
+        <h3><a {% if value.is_memory %}class="text-momo"{% endif %} href="bond/{{ value.namespace[-1] }}.html">{{ value.pos.no }}. {{ auto_zhcn_gen(value.name) }}</a></h3>
         {% if value.is_memory %}
             {% set track = value.bgm_special[0] %}
             <big><p>可在该故事中收集到回忆大厅。大厅BGM：{{ generate_track_anchor(track, 0, 0, 0, 0, 0) }}</p></big>

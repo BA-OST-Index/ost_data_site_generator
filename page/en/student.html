@@ -23,7 +23,7 @@
     {% for i in bond %}
         {% set value = i.1 %}
 
-        <h3><a {% if i.is_memory %}class="text-momo"{% endif %} href="bond/{{ value.namespace[-1] }}.html">{{ value.pos.no }}. {{ value.name.en }}</a></h3>
+        <h3><a {% if value.is_memory %}class="text-momo"{% endif %} href="bond/{{ value.namespace[-1] }}.html">{{ value.pos.no }}. {{ value.name.en }}</a></h3>
         {% if value.is_memory %}
             {% set track = value.bgm_special[0] %}
             <big><p>Recollection Lobby can be collected from this story. Lobby BGM: {{ generate_track_anchor(track, 0, 0, 0, 0, 0) }}</p></big>
