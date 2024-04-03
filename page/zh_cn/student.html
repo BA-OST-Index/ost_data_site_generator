@@ -13,6 +13,7 @@
         <div id="char_intro_text">
             <!-- Manual Implementation of `multi_zhcn_gen` with `replace_newline_for_p` -->
             <p class="lang-zh-cn-cn-block">{{ replace_newline_for_p(student.profile.profile.zh_cn_cn, "lang-zh-cn-cn-block") }}</p><span class="lang-zh-cn-splitter">(zh_cn_cn)&nbsp;/&nbsp;</span><p class="lang-zh-cn-tw-block">{{ replace_newline_for_p(student.profile.profile.zh_cn_tw, "lang-zh-cn-tw-block") }}</p><span class="lang-zh-cn-splitter">(zh_cn_tw)&nbsp;/&nbsp;</span><p class="lang-zh-cn-jp-block">{{ replace_newline_for_p(student.profile.profile.zh_cn_jp, "lang-zh-cn-jp-block") }}</p><span class="lang-zh-cn-splitter">(zh_cn_jp)&nbsp;</span>
+
             {% if student.profile.gacha.zh_cn_cn != "None" %}
                 <br class="lang-zh-cn-cn-block-br" />
                 <b><p class="lang-zh-cn-cn-block">{{ replace_newline_for_p(student.profile.gacha.zh_cn_cn, "lang-zh-cn-cn-block") }}</p></b>
@@ -24,6 +25,19 @@
             {% if student.profile.gacha.zh_cn_jp != "None" %}
                 <br class="lang-zh-cn-jp-block-br"/>
                 <b><p class="lang-zh-cn-jp-block">{{ replace_newline_for_p(student.profile.gacha.zh_cn_jp, "lang-zh-cn-jp-block") }}</p></b>
+            {% endif %}
+
+            {% if student.profile.intro.zh_cn_cn != "None" %}
+                <br class="lang-zh-cn-cn-block-br" />
+                <p class="lang-zh-cn-cn-block">“{{ replace_newline_for_p(student.profile.intro.zh_cn_cn, "lang-zh-cn-cn-block") }}”</p>
+            {% endif %}
+            {% if student.profile.intro.zh_cn_tw != "None" %}
+                <br class="lang-zh-cn-tw-block-br"/>
+                <p class="lang-zh-cn-tw-block">“{{ replace_newline_for_p(student.profile.intro.zh_cn_tw, "lang-zh-cn-tw-block") }}”</p>
+            {% endif %}
+            {% if student.profile.intro.zh_cn_jp != "None" %}
+                <br class="lang-zh-cn-jp-block-br"/>
+                <p class="lang-zh-cn-jp-block">“{{ replace_newline_for_p(student.profile.intro.zh_cn_jp, "lang-zh-cn-jp-block") }}”</p>
             {% endif %}
         </div>
     </div>
