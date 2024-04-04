@@ -15,6 +15,9 @@
             {% if student.profile.gacha.en != "None" %}
                 <br /><b><p>{{ replace_newline_for_p(student.profile.gacha.en) }}</p></b>
             {% endif %}
+            {% if student.profile.intro.en != "None" %}
+                <br /><p>“{{ replace_newline_for_p(student.profile.intro.en) }}”</p>
+            {% endif %}
         </div>
     </div>
     <p><b>{{ student.name.family_name.en }} {{ student.name.personal_name.en }}</b> <span lang="jp">(JP: {{ student.name.family_name.jp }} {{ student.name.personal_name.jp }})</span> is a {{ student.age.en }} student from {{ student.club.en }} of {{ student.school.long.en }}. She enjoys {{ student.hobby.en }}.</p>
@@ -23,7 +26,7 @@
     {% for i in bond %}
         {% set value = i.1 %}
 
-        <h3><a {% if i.is_memory %}class="text-momo"{% endif %} href="bond/{{ value.namespace[-1] }}.html">{{ value.pos.no }}. {{ value.name.en }}</a></h3>
+        <h3><a {% if value.is_memory %}class="text-momo"{% endif %} href="bond/{{ value.namespace[-1] }}.html">{{ value.pos.no }}. {{ value.name.en }}</a></h3>
         {% if value.is_memory %}
             {% set track = value.bgm_special[0] %}
             <big><p>Recollection Lobby can be collected from this story. Lobby BGM: {{ generate_track_anchor(track, 0, 0, 0, 0, 0) }}</p></big>
