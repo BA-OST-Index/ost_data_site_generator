@@ -95,9 +95,6 @@
             {% block article_content %}{% endblock article_content %}{{ content }}
         </div>
     </div>
-    <script>
-        displayZhcnString();
-    </script>
 </div>
 
 <div id="interpage-navi-bottom">
@@ -118,6 +115,9 @@
     addEventListener("DOMContentLoaded", function () {
         checkCnIP();
         showStoryByViewMode();
+
+        initZhcnConversionDB();
+        displayZhcnString();
     });
     addEventListener("load", function () {
         interpageBottomAdjust();
