@@ -6,7 +6,7 @@
 {# ------------------------------- 通用函数 --------------------------- #}
 {# ------------------------------------------------------------------- #}
 {% macro multi_zhcn_gen(data) %}<span class="lang-zh-cn-cn">{{ data.zh_cn_cn|js_string_safe }}</span><span class="lang-zh-cn-splitter">(zh_cn_cn)&nbsp;/&nbsp;</span><span class="lang-zh-cn-tw">{{ data.zh_cn_tw|js_string_safe }}</span><span class="lang-zh-cn-splitter">(zh_cn_tw)&nbsp;/&nbsp;</span><span class="lang-zh-cn-jp">{{ data.zh_cn_jp|js_string_safe }}</span><span class="lang-zh-cn-splitter">(zh_cn_jp)&nbsp;</span>{% endmacro %}
-{%- macro auto_zhcn_gen(data) -%}{%- if "zh_cn" in data -%}{{ data.zh_cn|js_string_safe }}{%- else -%}{{ multi_zhcn_gen(data) }}{%- endif -%}{%- endmacro -%}
+{%- macro auto_zhcn_gen(data) -%}{%- if "zh_cn" in data -%}<span class="i18n-zhcn-text">{{ data.zh_cn|js_string_safe }}</span>{%- else -%}{{ multi_zhcn_gen(data) }}{%- endif -%}{%- endmacro -%}
 
 {% macro replace_newline_for_p(text, class_name) %}{{ text|replace("\n\n", '</p><br class="' + class_name + '-br"/><p class="' + class_name + '">')|replace("\n", '</p><p class="' + class_name + '">') }}{% endmacro %}
 
