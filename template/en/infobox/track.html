@@ -31,7 +31,7 @@
         <td class="infobox-col-title">Track Type</td>
         <td class="infobox-col-value">{{ tracktype_to_name(track.track_type) }}</td>
     </tr>
-    {% if track.composer.composer_id == "0" %}
+    {% if track.composer.composer_id != "0" %}
     <tr><td colspan="2" class="infobox-subtitle">Composer Information</td></tr>
     <tr>
         <td class="infobox-col-title">Nickname</td>
@@ -39,7 +39,7 @@
     </tr>
     <tr>
         <td class="infobox-col-title">Contact</td>
-        <td class="infobox-col-value">{{ get_social_for_composer(track.composer) }}</td>
+        <td class="infobox-col-value"><a href="/en/composer/{{ track.composer.namespace[-1] }}.html">{{ track.composer.no }}. {{ track.composer.nickname }}</a></td>
     </tr>
     {% endif %}
     <tr><td colspan="2" class="infobox-subtitle">Version Information</td></tr>
