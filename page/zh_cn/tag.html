@@ -1,5 +1,5 @@
 {% extends "template/zh_cn/base.html" %}
-{% from 'template/zh_cn/_macro_page.html' import output_usedby_track_list, output_usedby_background_list %}
+{% from 'template/zh_cn/_macro_page.html' import output_usedby_track, output_usedby_background %}
 
 {% block title %}标签/{{ tag.name.zh_cn }}{% endblock title %}
 {% block article_content %}
@@ -9,7 +9,7 @@
     {% include "template/zh_cn/infobox/tag.html" %}
     <h2>使用情况</h2>
     <h3>曲目</h3>
-    {{ output_usedby_track_list(tag.used_by.data_track, "", "tag") }}
+    {{ output_usedby_track(tag.used_by.data_track) }}
     <h3>背景</h3>
-    {{ output_usedby_background_list(tag.used_by.data_background, "", "story") }}
+    {{ output_usedby_background(tag.used_by.data_background) }}
 {% endblock %}

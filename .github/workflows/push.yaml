@@ -3,10 +3,10 @@ name: Push
 on:
   push:
     branches:
-      - 'main_v2'
+      - 'main'
   workflow_dispatch:
   repository_dispatch:
-    types: [ost-data-parser-push-direct]
+    types: [ost-data-export-update-event]
 
 jobs:
   build:
@@ -28,42 +28,21 @@ jobs:
       run: |
         git submodule update --remote
 
-    # Parser part
-    - name: Init encironment for Parser
-      run: bash push_init.sh
-    - name: Run Parser's main.py
-      run: |
-        cd data_parser
-        python main.py
-        cd ..
-
-    # Generator part
-    - name: Run generator's custom prechecking
+    # Custom script
+    - name: Run custom prechecking
       run: python prechecker.py
-    - name: Run generator's main.py
+    - name: Run main.py
       run: python main_prod.py
 
-    # Deployment
-    - name: Setup Pages
-        uses: actions/configure-pages@v3
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v2
-      with:
-        # Upload entire repository
-        path: './data_html'
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v2
-    - name: CloudFlare Page Purge
-      uses: jakejarvis/cloudflare-purge-action@master
+    # Push changes
+    - name: Push changes
+      run: |
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]"
+        cd data_html
+        git add .
+        git commit -m "Update: ost_data_export SHA ${{ github.event.after }}"
+        git config -l | grep 'http\..*\.extraheader' | cut -d= -f1 | xargs -L1 git config --unset-all
+        git push https://github-actions[bot]:$REPO_KEY@github.com/BA-OST-Index/ost_data_site.git HEAD:main
       env:
-        CLOUDFLARE_ZONE: ${{ secrets.CF_PURGE_ZONE }}
-        CLOUDFLARE_TOKEN: ${{ secrets.CF_TOKEN }}
-    - name: Invalidate CloudFront
-      uses: chetan/invalidate-cloudfront-action@v2
-      env:
-        DISTRIBUTION: ${{ secrets.AWS_CF_DISTRIBUTION }}
-        PATHS: "/*"
-        AWS_REGION: "us-east-1"
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        REPO_KEY: ${{secrets.ACTION_SCRIPT}}

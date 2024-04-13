@@ -1,9 +1,9 @@
-name: Dev Branch
+name: Debugging GitHub Action
 
 on:
   push:
     branches:
-      - 'dev'
+      - 'debug_action'
 
 jobs:
   build:
@@ -28,3 +28,5 @@ jobs:
     # Custom script
     - name: Run custom prechecking
       run: python prechecker.py
+    - name: Run main.py
+      run: python main_prod.py

@@ -12,11 +12,11 @@
 {% block title %}故事/[{{ _story_no_string }}] {% if story.name.zh_cn_jp %}{{ story.name.zh_cn_jp }}{% else %}{{ story.name.zh_cn }}{% endif %}{% endblock title %}
 {% block article_content %}
     {% from "template/zh_cn/_macro_tooltip.html" import tooltip_storypart_source, tooltip_add_data_js %}
-    {% from "template/base/_macro.html" import get_story_text_color_css, get_storypart_text_color_css, generate_popup_for_tooltip_anchor, generate_tag_badge %}
+    {% from "template/base/_macro.html" import get_story_text_color_css, get_storypart_text_color_css, generate_popup_for_tooltip_anchor %}
     {% from "template/zh_cn/_macro_page.html" import output_usedby_character, output_usedby_track_list, output_usedby_background_list, output_storyinfo_source %}
     {% from "template/zh_cn/_macro.html" import auto_zhcn_gen, nothing_to_show, filetype_to_name, generate_track_anchor %}
 
-    <h1>故事/[{{ _story_no_string }}] <span class="{{ get_story_text_color_css(story) }}">{{ auto_zhcn_gen(story.name) }}</span>{% if story.filetype == 15 %}&nbsp;<p class="student-lobby-unlock student-lobby-unlock-title">{{ story.pos.favor_rank }}</p>{% endif %}{% if story.filetype_sub == 1 %}&nbsp;<a href="/zh_cn/technical_autogen.html">{{ generate_tag_badge("warning", "自动生成") }}</a>{% endif %}</h1>
+    <h1>故事/[{{ _story_no_string }}] <span class="{{ get_story_text_color_css(story) }}">{{ auto_zhcn_gen(story.name) }}</span>{% if story.filetype == 15 %}&nbsp;<p class="student-lobby-unlock student-lobby-unlock-title">{{ story.pos.favor_rank }}</p>{% endif %}</h1>
     {% include "template/zh_cn/infobox/story.html" %}
     {% if story.filetype == 11 %}
         <p>“<b>{{ auto_zhcn_gen(story.name) }}</b>”是主线故事第{{ story.pos.volume }}篇第{{ story.pos.chapter }}章的第{{ story.pos.segment }}个故事。</p>

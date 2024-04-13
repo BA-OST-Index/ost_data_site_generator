@@ -14,9 +14,9 @@
     {% from "template/en/_macro_tooltip.html" import tooltip_storypart_source, tooltip_add_data_js %}
     {% from "template/en/_macro_page.html" import output_usedby_character, output_usedby_track_list, output_usedby_background_list, output_storyinfo_source %}
     {% from "template/en/_macro.html" import get_ordinal_number, filetype_to_name, generate_track_anchor %}
-    {% from "template/base/_macro.html" import get_story_text_color_css, get_storypart_text_color_css, generate_popup_for_tooltip_anchor, generate_tag_badge %}
+    {% from "template/base/_macro.html" import get_story_text_color_css, get_storypart_text_color_css, generate_popup_for_tooltip_anchor %}
 
-    <h1>Story/[{{ _story_no_string }}] <span class="{{ get_story_text_color_css(story) }}">{{ story.name.en }}</span>{% if story.filetype == 15 %}&nbsp;<p class="student-lobby-unlock student-lobby-unlock-title">{{ story.pos.favor_rank }}</p>{% endif %}{% if story.filetype_sub == 1 %}&nbsp;<a href="/en/technical_autogen.html">{{ generate_tag_badge("warning", "AutoGen") }}</a>{% endif %}</h1>
+    <h1>Story/[{{ _story_no_string }}] <span class="{{ get_story_text_color_css(story) }}">{{ story.name.en }}</span>{% if story.filetype == 15 %}&nbsp;<p class="student-lobby-unlock student-lobby-unlock-title">{{ story.pos.favor_rank }}</p>{% endif %}</h1>
     {% include "template/en/infobox/story.html" %}
     {% if story.filetype == 11 %}
         <p><b>{{ story.name.en }}</b> is the {{ get_ordinal_number(story.pos.segment) }} story of Chapter {{ story.pos.chapter }}, Volume {{ story.pos.volume }} of the main story (min favor rank {{ story.pos.favor_rank }}).</p>

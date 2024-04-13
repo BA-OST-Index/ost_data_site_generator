@@ -18,8 +18,6 @@ filename_to_filetype = {
     "battle.html": [21, 22, 23, 24, 25, 26, 27, 28],
     "battle_all.html": [-26, -27, -28, -29, -30],
     "character_all.html": [-51, -52],
-    "composer.html": [6],
-    "composer_all.html": [-14],
     "event_all.html": [-41, -42],
     "event_battle_all.html": [-44],
     "event_story_all.html": [-43],
@@ -85,8 +83,6 @@ class GeneratorTool:
             return template.render(ui=content)
         elif "video" in template_name:
             return template.render(video=content)
-        elif "composer" in template_name:
-            return template.render(composer=content)
 
     @staticmethod
     def get_curr_time_printable() -> str:
