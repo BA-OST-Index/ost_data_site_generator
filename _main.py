@@ -299,8 +299,11 @@ def delete_old_page():
 
 def copy_static_file(delete_first: bool = True):
     if delete_first:
-        shutil.rmtree("data_html/static")
-        print(f"Deleted all static files: {GeneratorTool.get_curr_time_printable()}")
+        try:
+            shutil.rmtree("data_html/static")
+            print(f"Deleted all static files: {GeneratorTool.get_curr_time_printable()}")
+        except Exception:
+            pass
 
     shutil.copytree("static/static", "data_html/static", dirs_exist_ok=True, copy_function=shutil.copy)
     os.remove("data_html/static/js/.gitignore")
