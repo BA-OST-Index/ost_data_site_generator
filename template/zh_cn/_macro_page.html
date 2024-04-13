@@ -1,5 +1,5 @@
 {% from 'template/base/_macro.html' import a_new_tab, get_storypart_text_color_css, get_stu_type_text_color_css, generate_popup_for_tooltip_anchor %}
-{% from 'template/zh_cn/_macro.html' import generate_ui_anchor, generate_track_anchor, generate_track_anchor, generate_background_anchor, generate_character_anchor, generate_story_anchor, generate_appearedat_html, filetype_to_name, get_social_for_composer, auto_zhcn_gen, nothing_to_show, generate_album_anchor, output_track_stat_badge_with_tags, generate_general_urlmodel_anchor, output_story_source_by_lang %}
+{% from 'template/zh_cn/_macro.html' import generate_ui_anchor, generate_track_anchor, generate_track_anchor, generate_background_anchor, generate_character_anchor, generate_story_anchor, generate_appearedat_html, filetype_to_name, get_social_for_composer, auto_zhcn_gen, nothing_to_show, generate_album_anchor, output_track_stat_badge, generate_general_urlmodel_anchor, output_story_source_by_lang %}
 {% from 'template/zh_cn/_macro_tooltip.html' import tooltip_add_data_js, tooltip_storyinfo, tooltip_storypart, tooltip_background, tooltip_track, tooltip_character, tooltip_album %}
 {% set curr_lang = "zh_cn" %}
 
@@ -201,7 +201,7 @@
                 {% set tooltip_id = generate_tooltip_id("track", track.instance_id, instance_type, instance_id) %}
             {% endif %}
 
-            <li id="track-{{ track.instance_id }}">{{ generate_track_anchor(track, _with_counter, value.1, html_id, tooltip_id) }}  {{ output_track_stat_badge_with_tags(track.tags) }}</li>
+            <li id="track-{{ track.instance_id }}">{{ generate_track_anchor(track, _with_counter, value.1, html_id, tooltip_id) }}  {{ output_track_stat_badge(track.tags) }}</li>
 
 {#            {% if enable_tooltip == 1 %}#}
 {#                {% do tooltip_data.update({tooltip_id: tooltip_track(track, instance_id, instance_type)}) %}#}
@@ -218,7 +218,7 @@
 
 {% macro output_usedby_track_list(data_track, html_id, instance_type, instance_id) %}
     <ul>
-        {% if instance_type == "story" or instance_type == "album" %}
+        {% if instance_type in ["story", "album", "tag", "composer"] %}
             {% set tooltip_data = {} %}
             {% set enable_tooltip = 1 %}
         {% endif %}
@@ -228,7 +228,7 @@
                 {% set tooltip_id = generate_tooltip_id("track", value.instance_id) %}
             {% endif %}
 
-            <li id="track-{{ value.instance_id }}">{{ generate_track_anchor(value, 0, 0, html_id, tooltip_id) }} {{ output_track_stat_badge_with_tags(value.tags) }}</li>
+            <li id="track-{{ value.instance_id }}">{{ generate_track_anchor(value, 0, 0, html_id, tooltip_id) }} {{ output_track_stat_badge(value.tags) }}</li>
 
 {#            {% if enable_tooltip == 1 %}#}
 {#                {% do tooltip_data.update({tooltip_id: tooltip_track(value, instance_id, instance_type)}) %}#}

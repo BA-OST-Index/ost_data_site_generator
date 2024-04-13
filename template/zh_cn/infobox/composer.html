@@ -1,0 +1,19 @@
+{% from 'template/zh_cn/_macro.html' import get_social_for_composer %}
+<table id="infobox">
+    <tr>
+        <td colspan="2" class="infobox-title">{{ composer.nickname }}</td>
+    </tr>
+    <tr><td colspan="2" class="infobox-subtitle">一般信息</td></tr>
+    <tr>
+        <td class="infobox-col-title">真实姓名</td>
+        <td class="infobox-col-value">{{ composer.realname }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">昵称</td>
+        <td class="infobox-col-value">{{ composer.nickname }}</td>
+    </tr>
+    <tr>
+        <td class="infobox-col-title">联系方式</td>
+        <td class="infobox-col-value">{{ get_social_for_composer(composer) }}</td>
+    </tr>
+</table>
