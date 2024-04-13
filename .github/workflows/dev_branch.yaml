@@ -3,7 +3,7 @@ name: Dev Branch
 on:
   push:
     branches:
-      - 'dev'
+      - 'dev_v2'
 
 jobs:
   build:
@@ -25,6 +25,15 @@ jobs:
       run: |
         git submodule update --remote
 
-    # Custom script
-    - name: Run custom prechecking
+    # Parser part
+    - name: Init encironment for Parser
+      run: bash push_init.sh
+    - name: Run Parser's main.py
+      run: |
+        cd data_parser
+        python main.py
+        cd ..
+
+    # Generator part
+    - name: Run generator's custom prechecking
       run: python prechecker.py
