@@ -15,6 +15,7 @@ git clone https://github.com/BA-OST-Index/ost_data_parser.git data_parser
 # clone 一下 ost_data
 cd data_parser
 git clone https://github.com/BA-OST-Index/ost_data.git data
+mkdir -p data_export
 
 # 继续装requirements
 pip install -r requirements.txt
