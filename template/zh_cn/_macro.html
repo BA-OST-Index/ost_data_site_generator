@@ -101,7 +101,7 @@
 {% endmacro %}
 
 {% macro get_social_for_composer(composer) %}
-    <a href="{{ composer.contact.url.value }}" target="_blank"><img src="{{ get_static('images/social/' + composer.contact.platform.en + '.png') }}" class="social-logo">{{ auto_zhcn_gen(composer.contact.url.platform) }}: {{ composer.nickname }}</a>
+    <a href="{{ composer.contact.value }}" target="_blank"><img src="{{ get_static('images/social/' + composer.contact.platform.en + '.png') }}" class="social-logo">{{ auto_zhcn_gen(composer.contact.platform) }}: {{ composer.name.nickname.en }}</a>
 {% endmacro %}
 
 {# 生成story parts “出现于”(appearedAt) HTML代码 #}
