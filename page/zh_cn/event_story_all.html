@@ -5,6 +5,7 @@
 {% block article_content %}
     <h1>活动/{{ auto_zhcn_gen(event.parent_data.last_parent.name) }}/故事</h1>
     <p>本页列出 活动“{{ auto_zhcn_gen(event.parent_data.last_parent.name) }}” 的全部故事。</p>
+    <p><b><i>{{ auto_zhcn_gen(event.parent_data.last_parent.desc) }}</i></b></p>
     <h2>全部故事</h2>
     <ul>
         {% for i in event.include %}
