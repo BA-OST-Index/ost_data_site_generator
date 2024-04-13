@@ -1,19 +1,45 @@
 {% extends "template/en/base.html" %}
-{% from 'template/en/_macro.html' import output_track_stat_badge_with_tags %}
+{% from 'template/base/_macro.html' import generate_tooltip_anchor, generate_popup_for_tooltip_anchor %}
+{% from 'template/en/_macro.html' import output_track_stat_badge, output_track_stat_badge_all %}
 
 {% block title %}{% if track.filetype == -12 %}All Tracks from {{ track.namespace.1 }}{% else %}All Track Types{% endif %}{% endblock title %}
+{% block other_head %}
+    <script src="{{ get_static('js/page_all_track_display.js') }}"></script>
+{% endblock other_head %}
 {% block article_content %}
     <h1>{% if track.filetype == -12 %}All Tracks from {{ track.namespace.1 }}{% else %}All Track Types{% endif %}</h1>
     <p>This page lists all the {% if track.filetype == -12 %}tracks{% else %}track types{% endif %} available to view.</p>
+
+    <div>
+        <p>Select a mode to display a track's badges：
+            <select id="track_badge_display" onchange="setTrackBadgeDisplayStatus(this)">
+                <option value="0">Hide all</option>
+                <option value="1">Show Track Usages</option>
+                <option value="2">Show Track Tags</option>
+            </select>
+        </p>
+        <script>
+            (() => {
+                const ele = document.getElementById("track_badge_display");
+                if (localStorage.getItem("track_badge") === null) {
+                    setDefaultTrackBadgePreference();
+                }
+                ele.value = localStorage.getItem("track_badge");
+            })();
+        </script>
+    </div>
     <ul>
         {% for i in track.include %}
+            {% set tooltip_id = generate_tooltip_id("track", i.instance_id) %}
+
             {% if 1 <= i.1.filetype <= 4 %}
-                <li><a href="{{ i.1.no }}.html">{{ i.1.no }}. {{ i.1.name.realname.en }}</a> {{ output_track_stat_badge_with_tags(i.1.tags, i.1.stats) }}
+                <li><a href="{{ i.1.no }}.html" {{ generate_tooltip_anchor(tooltip_id) }}>{{ i.1.no }}. {{ i.1.name.realname.en }}</a> {{ generate_popup_for_tooltip_anchor(tooltip_id) }} <div class="page-all-track-badge page-all-track-badge-stats">{{ output_track_stat_badge_all(i.1.stats) }}</div><div class="page-all-track-badge page-all-track-badge-tags">{{ output_track_stat_badge(i.1.tags) }}</div>
                     {% if i.1.desc.en != "" %}<br/>{{ i.1.desc.en }}{% endif %}</li>
             {% else %}
-                <li><a href="{{ i.1.namespace.1 }}/index.html">{{ i.1.name.en }}</a> {{ output_track_stat_badge_with_tags(i.1.tags, i.1.stats) }}
+                <li><a href="{{ i.1.namespace.1 }}/index.html" onmouseover="showTooltipById({{ tooltip_id }})">{{ i.1.name.en }}</a>
                     {% if i.1.desc.en != "" %}<br/>{{ i.1.desc.en }}{% endif %}</li>
             {% endif %}
         {% endfor %}
     </ul>
+    <script>displayTrackBadgeElement();</script>
 {% endblock article_content %}

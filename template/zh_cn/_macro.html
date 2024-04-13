@@ -205,7 +205,7 @@
 {% endmacro %}
 
 {# usage: track_all.html #}
-{% macro output_track_stat_badge_with_tags(tags, stat) %}
+{% macro output_track_stat_badge(tags) %}
     <div class="track-stats-badge stats-badge">{% if tags|length != 0 %}{% for i in tags %}{% if loop.index == MAX_TRACK_TAG_OUTPUT %}{% break %}{% endif %}{{ generate_tag_span(i) }}&nbsp;{% endfor %}{% endif %}</div>
 {% endmacro %}
 
