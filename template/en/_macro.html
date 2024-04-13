@@ -16,7 +16,7 @@
 {% macro generate_story_url(story) %}{{ py_generate_story_url(curr_lang, story) }}{% endmacro %}
 
 {# 通用的Story名称生成 #}
-{% macro generate_story_name(story) %}{% set ft = story.filetype %}{% if ft == 15 %}<span><img src="{{ get_static('images/student/icon/' + story.student.image.collection_texture + '.webp') }}" class="icon-stu">{{ story.student.name.name.en|js_string_safe }}&nbsp;Bond&nbsp;Story&nbsp;{{ story.pos.no }}&nbsp;<p class="student-lobby-unlock student-lobby-unlock-p">{{ story.pos.favor_rank }}</p>:&nbsp;{{ story.name.en|js_string_safe }}</span>{% elif ft == 14 %}<span>Event&nbsp;{{ story.parent_data.0.name.en|js_string_safe }}&nbsp;Story&nbsp;{{ story.pos.segment }}:&nbsp;{{ story.name.en|js_string_safe }}</span>{% else %}{{ filetype_to_name(ft) }}&nbsp;Story&nbsp;Volume&nbsp;{{ story.pos.volume }}&nbsp;Chapter&nbsp;{{ story.pos.chapter }}&nbsp;Episode&nbsp;{{ story.pos.segment }}:&nbsp;{{ story.name.en|js_string_safe }}{% endif %}{% endmacro %}
+{% macro generate_story_name(story) %}{% set ft = story.filetype %}{% if ft == 15 %}<span><img src="{{ get_static('images/student/icon/' + story.student.image.collection_texture + '.webp') }}" class="icon-stu">{{ story.student.name.name.en|js_string_safe }}&nbsp;Bond&nbsp;Story&nbsp;{{ story.pos.no }}&nbsp;<p class="student-lobby-unlock student-lobby-unlock-p">{{ story.pos.favor_rank }}</p>:&nbsp;{{ story.name.en|js_string_safe }}</span>{% elif ft == 14 %}<span>Event&nbsp;{{ story.parent_data.0.name.en|js_string_safe }}&nbsp;Story&nbsp;{{ story.pos.segment }}:&nbsp;{{ story.name.en|js_string_safe }}</span>{% else %}{{ filetype_to_name(ft) }}&nbsp;Story&nbsp;Volume&nbsp;{{ story.pos.volume }}&nbsp;Chapter&nbsp;{{ story.pos.chapter }}&nbsp;Episode&nbsp;{{ story.pos.segment }}:&nbsp;{{ story.name.en|js_string_safe }}{% if story.is_battle %}<span class="icon-type-container"><img class="icon-type-story-battle" src="{{ get_static('images/ui/Type_Attack.png') }}"></span>{% endif %}{% endif %}{% endmacro %}
 
 {# 通用的UI <a>生成 #}
 {% macro generate_ui_anchor(ui) %}
@@ -80,14 +80,20 @@
 {% endmacro %}
 
 {# 通用的Story <a>生成 #}
-{% macro generate_story_anchor(story, tooltip_id, new_tab) %}
+{% macro generate_story_anchor(story, tooltip_id, new_tab, auto_color) %}
     {% set value = story %}
+    {% if arg_check(auto_color, True) %}
+        {% set auto_color = auto_color %}
+    {% else %}
+        {% set auto_color = True %}
+    {% endif %}
+
     {% set target_url = generate_story_url(story) %}
 
     {% if value.filetype == 15 %}
-        <a href="{{ target_url }}" {{ anchor_new_tab(new_tab) }} {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} {% if value.is_memory %}class="text-momo"{% endif %}>{{ generate_story_name(story) }}</a>
+        <a href="{{ target_url }}" {{ anchor_new_tab(new_tab) }} {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} {% if value.is_memory and auto_color %}class="text-momo"{% endif %}>{{ generate_story_name(story) }}</a>
     {% else %}
-        <a href="{{ target_url }}" {{ anchor_new_tab(new_tab) }} {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} {% if value.is_battle %}class="text-danger"{% endif %}>{{ generate_story_name(story) }}</a>
+        <a href="{{ target_url }}" {{ anchor_new_tab(new_tab) }} {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} {% if value.is_battle and auto_color %}class="text-danger"{% endif %}>{{ generate_story_name(story) }}</a>
     {% endif %}
     {% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}
 {% endmacro %}
@@ -98,7 +104,7 @@
 {% endmacro %}
 
 {% macro get_social_for_composer(composer) %}
-    <a href="{{ composer.contact.url.value }}" target="_blank"><img src="{{ get_static('images/social/' + composer.contact.platform.en + '.png') }}" class="social-logo">{{ composer.contact.url.platform.en }}: {{ composer.nickname }}</a>
+    <a href="{{ composer.contact.value }}" target="_blank"><img src="{{ get_static('images/social/' + composer.contact.platform.en + '.png') }}" class="social-logo">{{ composer.contact.platform.en }}: {{ composer.nickname }}</a>
 {% endmacro %}
 
 {# 生成story parts “出现于”(appearedAt) HTML代码 #}
@@ -196,7 +202,7 @@
 {% endmacro %}
 
 {# usage: track_all.html #}
-{% macro output_track_stat_badge_with_tags(tags, stat) %}
+{% macro output_track_stat_badge(tags) %}
     <div class="track-stats-badge stats-badge">{% if tags|length != 0 %}{% for i in tags %}{% if loop.index == MAX_TRACK_TAG_OUTPUT %}{% break %}{% endif %}{{ generate_tag_span(i) }}&nbsp;{% endfor %}{% endif %}</div>
 {% endmacro %}
 

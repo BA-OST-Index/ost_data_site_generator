@@ -1,11 +1,3 @@
-[submodule "exported_data"]
-	path = exported_data
-	url = https://github.com/BA-OST-Index/ost_data_export.git
-	branch = main
-[submodule "data_html"]
-	path = data_html
-	url = https://github.com/BA-OST-Index/ost_data_site.git
-	branch = main
 [submodule "static"]
 	path = static
 	url = https://github.com/BA-OST-Index/ost_data_site_static.git

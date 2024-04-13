@@ -4,7 +4,7 @@
 {% block title %}活动/{% if event.name.zh_cn %}{{ event.name.zh_cn }}{% else %}{{ event.name.zh_cn_jp }}{% endif %}{% endblock title %}
 {% block article_content %}
     <h1>活动/{{ auto_zhcn_gen(event.name) }}</h1>
-    <p>本页列出 活动“{{ auto_zhcn_gen(event.desc) }}” 的全部项目。</p>
+    <p><b><i>{{ auto_zhcn_gen(event.desc) }}</i></b></p>
     <ul>
         {% for i in event.include %}
             <li><a href="{{ i.0 }}/">{{ auto_zhcn_gen(i.1.name) }} (ID: {{ i.0 }})</a></li>

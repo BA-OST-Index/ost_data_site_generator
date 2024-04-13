@@ -31,15 +31,15 @@
         <td class="infobox-col-title">曲目类型</td>
         <td class="infobox-col-value">{{ tracktype_to_name(track.track_type) }}</td>
     </tr>
-    {% if track.composer.composer_id == "0" %}
+    {% if track.composer.composer_id != "0" %}
     <tr><td colspan="2" class="infobox-subtitle">作曲家信息</td></tr>
     <tr>
         <td class="infobox-col-title">昵称</td>
         <td class="infobox-col-value">{{ track.composer.nickname }}</td>
     </tr>
     <tr>
-        <td class="infobox-col-title">联系</td>
-        <td class="infobox-col-value">{{ get_social_for_composer(track.composer) }}</td>
+        <td class="infobox-col-title">联系方式</td>
+        <td class="infobox-col-value"><a href="/zh_cn/composer/{{ track.composer.namespace[-1] }}.html">{{ track.composer.no }}. {{ track.composer.nickname }}</a></td>
     </tr>
     {% endif %}
     <tr><td colspan="2" class="infobox-subtitle">版本信息</td></tr>
