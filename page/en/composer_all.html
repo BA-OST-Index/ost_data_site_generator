@@ -1,5 +1,5 @@
 {% extends "template/zh_cn/base.html" %}
-{% from 'template/zh_cn/_macro.html' import nothing_to_show %}
+{% from 'template/en/_macro.html' import nothing_to_show %}
 
 {% block title %}All Composers{% endblock title %}
 {% block article_content %}
@@ -7,8 +7,8 @@
     <p>This page lists all composers.</p>
     <ul>
         {% for i in composer.include %}
-            {% set tag = i.1 %}
-            <li><a href="/en/composer/{{ i['namespace'][-1] }}.html">{{ i.no }}. {{ i.nickname }}</a></li>
+            {% set composer = i.1 %}
+            <li><a href="/en/composer/{{ composer['namespace'][-1] }}.html">{{ composer.no }}. {{ composer.nickname }}</a></li>
         {% else %}
             <li>{{ nothing_to_show }}</li>
         {% endfor %}

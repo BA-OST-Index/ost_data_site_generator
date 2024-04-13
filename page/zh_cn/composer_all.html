@@ -7,8 +7,8 @@
     <p>此页面列出所有作曲人。</p>
     <ul>
         {% for i in composer.include %}
-            {% set tag = i.1 %}
-            <li><a href="/zh_cn/composer/{{ i['namespace'][-1] }}.html">{{ i.no }}. {{ i.nickname }}</a></li>
+            {% set composer = i.1 %}
+            <li><a href="/zh_cn/composer/{{ composer['namespace'][-1] }}.html">{{ composer.no }}. {{ composer.nickname }}</a></li>
         {% else %}
             <li>{{ nothing_to_show }}</li>
         {% endfor %}
