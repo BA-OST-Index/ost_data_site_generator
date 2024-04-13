@@ -4,7 +4,6 @@
 {% block article_content %}
     <h1>Event/{{ event.parent_data.last_parent.name.en }}/Stories</h1>
     <p>This page lists all the stories of the event <i>{{ event.parent_data.last_parent.name.en }}</i>.</p>
-    <p><b><i>{{ event.parent_data.last_parent.desc.en }}</i></b></p>
     <h2>All Stories</h2>
     <ul>
         {% for i in event.include %}

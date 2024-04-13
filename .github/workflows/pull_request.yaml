@@ -1,9 +1,8 @@
-name: Dev Branch
+name: Pull Request
 
 on:
-  push:
-    branches:
-      - 'dev'
+  pull_request:
+    types: [opened, reopened]
 
 jobs:
   build:

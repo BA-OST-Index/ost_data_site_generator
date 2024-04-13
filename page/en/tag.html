@@ -1,5 +1,5 @@
 {% extends "template/en/base.html" %}
-{% from 'template/en/_macro_page.html' import output_usedby_track_list, output_usedby_background_list %}
+{% from 'template/en/_macro_page.html' import output_usedby_track, output_usedby_background %}
 
 {% block title %}Tag/{{ tag.name.en }}{% endblock title %}
 {% block article_content %}
@@ -9,7 +9,7 @@
     {% include "template/en/infobox/tag.html" %}
     <h2>Usage Info</h2>
     <h3>Tracks</h3>
-    {{ output_usedby_track_list(tag.used_by.data_track, "", "tag") }}
+    {{ output_usedby_track(tag.used_by.data_track) }}
     <h3>Backgrounds</h3>
-    {{ output_usedby_background_list(tag.used_by.data_background, "", "story") }}
+    {{ output_usedby_background(tag.used_by.data_background) }}
 {% endblock %}

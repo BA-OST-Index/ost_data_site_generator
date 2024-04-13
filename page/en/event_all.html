@@ -3,7 +3,7 @@
 {% block title %}Event/{{ event.name.en }}{% endblock title %}
 {% block article_content %}
     <h1>Event/{{ event.name.en }}</h1>
-    <p><b><i>{{ event.desc.en }}</i></b></p>
+    <p>{{ event.desc.en }}</p>
     <ul>
         {% for i in event.include %}
             <li><a href="{{ i.0 }}/">{{ i.1.name.en }} (ID: {{ i.0 }})</a></li>

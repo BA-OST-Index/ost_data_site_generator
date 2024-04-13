@@ -1,46 +1,19 @@
 {% extends "template/zh_cn/base.html" %}
-{% from 'template/base/_macro.html' import generate_tooltip_anchor, generate_popup_for_tooltip_anchor %}
-{% from 'template/zh_cn/_macro.html' import output_track_stat_badge, output_track_stat_badge_all %}
+{% from 'template/zh_cn/_macro.html' import output_track_stat_badge_with_tags %}
 
 {% block title %}{{ track.name.zh_cn }}{% endblock title %}
-{% block other_head %}
-    <script src="{{ get_static('js/page_all_track_display.js') }}"></script>
-{% endblock other_head %}
 {% block article_content %}
     <h1>{{ track.name.zh_cn }}</h1>
     <p>{{ track.desc.zh_cn }}</p>
-
-    <div>
-        <p>选择显示曲子标签的模式：
-            <select id="track_badge_display" onchange="setTrackBadgeDisplayStatus(this)">
-                <option value="0">不显示</option>
-                <option value="1">显示曲子用途</option>
-                <option value="2">显示曲子标签</option>
-            </select>
-        </p>
-        <script>
-            (() => {
-                const ele = document.getElementById("track_badge_display");
-                if (localStorage.getItem("track_badge") === null) {
-                    setDefaultTrackBadgePreference();
-                }
-                ele.value = localStorage.getItem("track_badge");
-            })();
-        </script>
-    </div>
-
     <ul>
         {% for i in track.include %}
-            {% set tooltip_id = generate_tooltip_id("track", i.instance_id) %}
-
             {% if 1 <= i.1.filetype <= 4 %}
-                <li><a href="{{ i.1.no }}.html" {{ generate_tooltip_anchor(tooltip_id) }}>{{ i.1.no }}. {{ i.1.name.realname.en }}</a> {{ generate_popup_for_tooltip_anchor(tooltip_id) }} <div class="page-all-track-badge page-all-track-badge-stats">{{ output_track_stat_badge_all(i.1.stats) }}</div><div class="page-all-track-badge page-all-track-badge-tags">{{ output_track_stat_badge(i.1.tags) }}</div>
+                <li><a href="{{ i.1.no }}.html">{{ i.1.no }}. {{ i.1.name.realname.en }}</a> {{ output_track_stat_badge_with_tags(i.1.tags, i.1.stats) }}
                     {% if i.1.desc.zh_cn != "" %}<br />{{ i.1.desc.zh_cn }}{% endif %}</li>
             {% else %}
-                <li><a href="{{ i.1.namespace.1 }}/index.html">{{ i.1.name.zh_cn }}</a>
+                <li><a href="{{ i.1.namespace.1 }}/index.html">{{ i.1.name.zh_cn }}</a> {{ output_track_stat_badge_with_tags(i.1.tags, i.1.stats) }}
                     {% if i.1.desc.zh_cn != "" %}<br />{{ i.1.desc.zh_cn }}{% endif %}</li>
             {% endif %}
         {% endfor %}
     </ul>
-    <script>displayTrackBadgeElement();</script>
 {% endblock article_content %}
