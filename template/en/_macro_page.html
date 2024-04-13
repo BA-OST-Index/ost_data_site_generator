@@ -16,7 +16,20 @@
             {% set related_parts = story.1 %}
             {% set storyinfo_tooltip = generate_tooltip_id("story", story_.instance_id) %}
 
-            <li id="story-{{ story_.instance_id }}">{{ generate_story_anchor(story_, storyinfo_tooltip) }}&nbsp;{{ generate_appearedat_html(story_, related_parts) }}</li>
+            {% set auto_color = False %}
+            {% if instance_key == "track" %}
+                {% if story_.bgm_special %}
+                    {# 如果存在特殊BGM（回忆大厅/战斗曲） #}
+                    {% for track in story_.bgm_special %}
+                        {% if track.uuid == instance_uuid %}
+                            {# 如果正好是这首 #}
+                            {% set auto_color = True %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+
+            <li id="story-{{ story_.instance_id }}">{{ generate_story_anchor(story_, storyinfo_tooltip, False, auto_color) }}&nbsp;{{ generate_appearedat_html(story_, related_parts) }}</li>
 {#            {% do tooltip_data.update({storyinfo_tooltip: tooltip_storyinfo(story_)}) %}#}
 
 {#            {% for i in related_parts %}#}

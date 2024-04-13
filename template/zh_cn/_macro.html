@@ -19,7 +19,7 @@
 {% macro generate_story_url(story) %}{{ py_generate_story_url(curr_lang, story) }}{% endmacro %}
 
 {# 通用的Story名称生成 #}
-{% macro generate_story_name(story) %}{% set ft = story.filetype %}{% if ft == 15 %}<span><img src="{{ get_static('images/student/icon/' + story.student.image.collection_texture + '.webp') }}" class="icon-stu">{{ auto_zhcn_gen(story.student.name.name) }}的第{{ story.pos.no }}个羁绊故事 <p class="student-lobby-unlock student-lobby-unlock-p">{{ story.pos.favor_rank }}</p>：{{ auto_zhcn_gen(story.name) }}</span>{% elif ft == 14 %}<span>活动{{ auto_zhcn_gen(story.parent_data.0.name) }}&nbsp;第{{ story.pos.segment }}个故事：{{ auto_zhcn_gen(story.name) }}</span>{% else %}{{ filetype_to_name(ft) }}故事&nbsp;第{{ story.pos.volume }}篇&nbsp;第{{ story.pos.chapter }}章&nbsp;第{{ story.pos.segment }}话：{{ auto_zhcn_gen(story.name) }}{% endif %}{% endmacro %}
+{% macro generate_story_name(story) %}{% set ft = story.filetype %}{% if ft == 15 %}<span><img src="{{ get_static('images/student/icon/' + story.student.image.collection_texture + '.webp') }}" class="icon-stu">{{ auto_zhcn_gen(story.student.name.name) }}的第{{ story.pos.no }}个羁绊故事 <p class="student-lobby-unlock student-lobby-unlock-p">{{ story.pos.favor_rank }}</p>：{{ auto_zhcn_gen(story.name) }}</span>{% elif ft == 14 %}<span>活动{{ auto_zhcn_gen(story.parent_data.0.name) }}&nbsp;第{{ story.pos.segment }}个故事：{{ auto_zhcn_gen(story.name) }}</span>{% else %}{{ filetype_to_name(ft) }}故事&nbsp;第{{ story.pos.volume }}篇&nbsp;第{{ story.pos.chapter }}章&nbsp;第{{ story.pos.segment }}话：{{ auto_zhcn_gen(story.name) }}{% if story.is_battle %}<span class="icon-type-container"><img class="icon-type-story-battle" src="{{ get_static('images/ui/Type_Attack.png') }}"></span>{% endif %}{% endif %}{% endmacro %}
 
 {# 通用的UI <a>生成 #}
 {% macro generate_ui_anchor(ui) %}
@@ -83,14 +83,21 @@
 {% endmacro %}
 
 {# 通用的Story <a>生成 #}
-{% macro generate_story_anchor(story, tooltip_id, new_tab) %}
+{# auto_color 参数用来控制剧情故事的标题是否变色（用于track方面，只有当当前歌曲为特殊曲时才变色） #}
+{% macro generate_story_anchor(story, tooltip_id, new_tab, auto_color) %}
     {% set value = story %}
+    {% if arg_check(auto_color, True) %}
+        {% set auto_color = auto_color %}
+    {% else %}
+        {% set auto_color = True %}
+    {% endif %}
+
     {% set target_url = generate_story_url(story) %}
 
     {% if value.filetype == 15 %}
-        <a href="{{ target_url }}" {{ anchor_new_tab(new_tab) }} {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} {% if value.is_memory %}class="text-momo"{% endif %}>{{ generate_story_name(story) }}</a>
+        <a href="{{ target_url }}" {{ anchor_new_tab(new_tab) }} {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} {% if value.is_memory and auto_color %}class="text-momo"{% endif %}>{{ generate_story_name(story) }}</a>
     {% else %}
-        <a href="{{ target_url }}" {{ anchor_new_tab(new_tab) }} {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} {% if value.is_battle %}class="text-danger"{% endif %}>{{ generate_story_name(story) }}</a>
+        <a href="{{ target_url }}" {{ anchor_new_tab(new_tab) }} {% if arg_check(tooltip_id) %}{{ generate_tooltip_anchor(tooltip_id) }}{% endif %} {% if value.is_battle and auto_color %}class="text-danger"{% endif %}>{{ generate_story_name(story) }}</a>
     {% endif %}
     {% if arg_check(tooltip_id) %}{{ generate_popup_for_tooltip_anchor(tooltip_id) }}{% endif %}
 {% endmacro %}
