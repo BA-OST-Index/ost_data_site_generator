@@ -28,7 +28,7 @@ jobs:
     # Parser part
     - name: Init encironment for Parser
       run: bash push_init.sh
-    - naem: Run Parser's main.py
+    - name: Run Parser's main.py
       run: |
         cd data_parser
         python main.py
