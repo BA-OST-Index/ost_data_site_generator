@@ -5,9 +5,13 @@
     <h1>UI/{{ ui.name.zh_cn }}</h1>
     {% include "template/zh_cn/infobox/ui.html" %}
     {% from "template/zh_cn/_macro.html" import get_social_for_composer, auto_zhcn_gen, generate_track_anchor %}
+    {% from "template/zh_cn/_macro_page.html" import output_usedby_character %}
+
     <p><b>{{ ui.name.zh_cn }}</b> 为蔚蓝档案UI（用户界面）中的一部分。</p>
     <p>描述：{{ ui.desc.zh_cn }}</p>
     <h2 id="track">使用的曲子</h2>
     <p>曲子：{{ generate_track_anchor(ui.track, 0, 0, 0, 0, 0) }}</p>
     <p>作曲者：{{ ui.track.composer.nickname }} ({{ get_social_for_composer(ui.track.composer) }})</p>
+    <h2>人物（看板娘）</h2>
+    {{ output_usedby_character({"character": ui.characters}, None, None, "story", False) }}
 {% endblock %}

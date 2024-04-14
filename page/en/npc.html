@@ -2,7 +2,7 @@
 
 {% block title %}NPC/{{ char.name.en }}{% endblock title %}
 {% block article_content %}
-    {% from "template/en/_macro_page.html" import output_usedby_story, output_usedby_track, output_relatedto_character, output_usedby_background, output_usedby_character_dict %}
+    {% from "template/en/_macro_page.html" import output_usedby_story, output_usedby_track, output_relatedto_character, output_usedby_background, output_usedby_character_dict, output_usedby_ui %}
 
     <h1>NPC/{{ char.name.en }}</h1>
     {% include "template/en/infobox/npc.html" %}
@@ -29,6 +29,9 @@
     <h3>Characters along the way</h3>
     <p>The following characters are the ones who have appeared with this character.</p>
     {{ output_usedby_character_dict(char.used_by.data_character, char.uuid + "-direct", char.namespace[-1], "character", True)  }}
+    <h3>UI</h3>
+    <p>The following lists the UIs where the character is used as a <i><a href="https://en.wikipedia.org/wiki/Yuru-chara">Yuru-chara</a></i>.</p>
+    {{ output_usedby_ui(char.used_by.data_ui) }}
 
     <h2>Related Characters</h2>
     {{ output_relatedto_character({"character": char.related_to.character_other}, "True") }}
