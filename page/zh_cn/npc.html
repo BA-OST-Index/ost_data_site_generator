@@ -2,7 +2,7 @@
 
 {% block title %}NPC/{{ char.name.zh_cn_jp }}{% endblock title %}
 {% block article_content %}
-    {% from "template/zh_cn/_macro_page.html" import output_usedby_story, output_usedby_track, output_relatedto_character, output_usedby_background, output_usedby_character_dict %}
+    {% from "template/zh_cn/_macro_page.html" import output_usedby_story, output_usedby_track, output_relatedto_character, output_usedby_background, output_usedby_character_dict, output_usedby_ui %}
     {% from 'template/zh_cn/_macro.html' import auto_zhcn_gen %}
 
     <h1>NPC/{{ auto_zhcn_gen(char.name) }}</h1>
@@ -30,6 +30,9 @@
     <h3>一同出现的人物</h3>
     <p>以下均为与该人物一起出现过的人物。</p>
     {{ output_usedby_character_dict(char.used_by.data_character, char.uuid + "-direct", char.namespace[-1], "character", True)  }}
+    <h3>UI</h3>
+    <p>以下列出该人物在哪些UI中作为看板娘。</p>
+    {{ output_usedby_ui(char.used_by.data_ui) }}
 
     <h2>相关人物</h2>
     {{ output_relatedto_character({"character": char.related_to.character_other}, "True") }}

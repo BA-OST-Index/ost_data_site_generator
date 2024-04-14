@@ -1,6 +1,6 @@
 {% extends "template/zh_cn/base.html" %}
 {% from "template/zh_cn/_macro.html" import replace_newline_for_p %}
-{% from 'template/zh_cn/_macro_page.html' import output_usedby_story, output_usedby_track, output_relatedto_character, output_usedby_background, output_usedby_character_dict %}
+{% from 'template/zh_cn/_macro_page.html' import output_usedby_story, output_usedby_track, output_relatedto_character, output_usedby_background, output_usedby_character_dict, output_usedby_ui %}
 {% from "template/zh_cn/_macro.html" import auto_zhcn_gen, nothing_to_show, generate_track_anchor %}
 
 {% block title %}学生/{{ char.student.name.name.zh_cn_jp }}{% endblock title %}
@@ -68,6 +68,9 @@
     {{ output_usedby_background(char.student.used_by.data_background_by_comm, char.student.uuid + "-indirect", char.student.uuid, "character", True) }}
     <h3>其它背景</h3>
     {{ output_usedby_background(char.student.used_by.data_background, char.student.uuid, char.student.uuid, "character", True) }}
+    <h3>UI</h3>
+    <p>以下列出该人物在哪些UI中作为看板娘。</p>
+    {{ output_usedby_ui(char.student.used_by.data_ui) }}
 
     <h2>相关人物</h2>
     <h3>其它版本</h3>
