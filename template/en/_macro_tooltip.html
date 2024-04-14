@@ -112,22 +112,22 @@
             {# 遍历数据 #}
             {% set processed_data = py_tooltip_track(track, instance_id, instance_type, outer_data) %}
             {% for i in processed_data %}
-                {% set auto_color = False %}
+                {% set auto_color = namespace(auto=False) %}
                 {% if instance_type == "track" %}
                     {% if i.0.bgm_special %}
                         {# 如果存在特殊BGM（回忆大厅/战斗曲） #}
                         {% for track in i.0.bgm_special %}
                             {% if track.uuid == instance_uuid %}
                                 {# 如果正好是这首 #}
-                                {% set auto_color = True %}
+                                {% set auto_color.auto = True %}
                             {% endif %}
                         {% endfor %}
                     {% endif %}
                 {% else %}
-                    {% set auto_color = True %}
+                    {% set auto_color.auto = True %}
                 {% endif %}
 
-                <li>{{ generate_story_anchor(i.0, None, "", auto_color)|page_minify_html }}&nbsp;{{ generate_appearedat_html(i.0, i.1)|page_minify_html }}</li>
+                <li>{{ generate_story_anchor(i.0, None, "", auto_color.auto)|page_minify_html }}&nbsp;{{ generate_appearedat_html(i.0, i.1)|page_minify_html }}</li>
             {% endfor %}
         </ol>
 
