@@ -3,9 +3,6 @@
 {% from 'template/en/_macro.html' import output_track_stat_badge, output_track_stat_badge_all %}
 
 {% block title %}{% if track.filetype == -12 %}All Tracks from {{ track.namespace.1 }}{% else %}All Track Types{% endif %}{% endblock title %}
-{% block other_head %}
-    <script src="{{ get_static('js/page_all_track_display.js') }}"></script>
-{% endblock other_head %}
 {% block article_content %}
     <h1>{% if track.filetype == -12 %}All Tracks from {{ track.namespace.1 }}{% else %}All Track Types{% endif %}</h1>
     <p>This page lists all the {% if track.filetype == -12 %}tracks{% else %}track types{% endif %} available to view.</p>
@@ -30,7 +27,7 @@
     </div>
     <ul>
         {% for i in track.include %}
-            {% set tooltip_id = generate_tooltip_id("track", i.instance_id) %}
+            {% set tooltip_id = generate_tooltip_id("track", i.1.instance_id) %}
 
             {% if 1 <= i.1.filetype <= 4 %}
                 <li><a href="{{ i.1.no }}.html" {{ generate_tooltip_anchor(tooltip_id) }}>{{ i.1.no }}. {{ i.1.name.realname.en }}</a> {{ generate_popup_for_tooltip_anchor(tooltip_id) }} <div class="page-all-track-badge page-all-track-badge-stats">{{ output_track_stat_badge_all(i.1.stats) }}</div><div class="page-all-track-badge page-all-track-badge-tags">{{ output_track_stat_badge(i.1.tags) }}</div>

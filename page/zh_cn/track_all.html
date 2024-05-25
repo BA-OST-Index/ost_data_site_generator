@@ -3,9 +3,6 @@
 {% from 'template/zh_cn/_macro.html' import output_track_stat_badge, output_track_stat_badge_all %}
 
 {% block title %}{{ track.name.zh_cn }}{% endblock title %}
-{% block other_head %}
-    <script src="{{ get_static('js/page_all_track_display.js') }}"></script>
-{% endblock other_head %}
 {% block article_content %}
     <h1>{{ track.name.zh_cn }}</h1>
     <p>{{ track.desc.zh_cn }}</p>
@@ -31,7 +28,7 @@
 
     <ul>
         {% for i in track.include %}
-            {% set tooltip_id = generate_tooltip_id("track", i.instance_id) %}
+            {% set tooltip_id = generate_tooltip_id("track", i.1.instance_id) %}
 
             {% if 1 <= i.1.filetype <= 4 %}
                 <li><a href="{{ i.1.no }}.html" {{ generate_tooltip_anchor(tooltip_id) }}>{{ i.1.no }}. {{ i.1.name.realname.en }}</a> {{ generate_popup_for_tooltip_anchor(tooltip_id) }} <div class="page-all-track-badge page-all-track-badge-stats">{{ output_track_stat_badge_all(i.1.stats) }}</div><div class="page-all-track-badge page-all-track-badge-tags">{{ output_track_stat_badge(i.1.tags) }}</div>
