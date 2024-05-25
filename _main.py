@@ -1,4 +1,4 @@
-import json
+import pickle
 import os
 import webbrowser
 import shutil
@@ -51,8 +51,8 @@ class GeneratorTool:
 
     @staticmethod
     def load_file(filepath: str):
-        with open(filepath, mode="r", encoding="UTF-8") as file:
-            return json.load(file)
+        with open(filepath, mode="rb") as file:
+            return pickle.load(file)
 
     @staticmethod
     def find_template(filetype):

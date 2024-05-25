@@ -1,5 +1,5 @@
 import os
-import json
+import pickle
 import shutil
 from main_tool import *
 
@@ -106,8 +106,8 @@ class TooltipHtmlGenerator:
 
     @staticmethod
     def get_json(filepath):
-        with open(filepath, mode="r", encoding="utf-8") as f:
-            return json.load(f)
+        with open(filepath, mode="rb") as f:
+            return pickle.load(f)
 
     def get_render_result(self, template, **data):
         return JinjaTool.page_minify_html(template.render(**data))

@@ -1,7 +1,7 @@
 import time
 import htmlmin
 import os
-import json
+import pickle
 import urllib.parse
 from random import choices as ran_choices
 from collections import OrderedDict
@@ -149,8 +149,8 @@ class JinjaTool:
     @lru_cache
     def get_outer_json(instance_id: str, instance_type: str):
         def read_file(filepath):
-            with open(os.path.join("exported_data", filepath), mode="r", encoding="UTF-8") as file:
-                return json.load(file)
+            with open(os.path.join("exported_data", filepath), mode="rb") as file:
+                return pickle.load(file)
 
         # track
         if instance_type == "track":

@@ -1,4 +1,4 @@
-import json
+import pickle
 import os
 import time
 import webbrowser
@@ -67,8 +67,8 @@ name = "en/ui/1.html"
 data_path = "exported_data/event/812/ui/1.json"
 '''
 
-with open(data_path, mode="r", encoding="UTF-8") as file:
-    data = json.load(file)
+with open(data_path, mode="rb") as file:
+    data = pickle.load(file)
 
 template = environment.get_template(path)
 st = time.time_ns()
