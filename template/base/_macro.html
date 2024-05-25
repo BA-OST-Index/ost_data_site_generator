@@ -17,3 +17,5 @@
 {% macro generate_tag_badge(color_css, text) %}<span class="badge badge-{{ color_css }} badge-tag">{{ text }}</span>{% endmacro %}
 
 {% macro generate_tick_img_by_bool(flag, img_size) %}{% if flag == True %}{% set img_url = get_static('images/site/Yes_check.svg') %}{% else %}{% set img_url = get_static('images/site/X_mark.svg') %}{% endif %}{% if not arg_check(img_size) %}{% set img_size = "1em" %}{% endif %}<img src="{{ img_url }}" style="height: {{ img_size }}" />{% endmacro %}
+
+{% macro generate_netease_iframe(url) %}{% if url != "" %}<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="100%" src="{{ url }}&auto=0&height=100"></iframe>{% endif %}{% endmacro %}

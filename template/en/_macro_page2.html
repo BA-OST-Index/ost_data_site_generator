@@ -1,4 +1,4 @@
-{% from 'template/base/_macro.html' import generate_tick_img_by_bool %}
+{% from 'template/base/_macro.html' import generate_tick_img_by_bool, generate_netease_iframe %}
 
 {% macro video_stats_table(stats) %}
     <table class="video-stats-table stats-table">
@@ -102,3 +102,28 @@
         </tbody>
     </table>
 {% endmacro %}
+
+{% macro track_playback_table(playback) %}
+    <table class="track-playback-table stats-table">
+        <tbody>
+            <tr class="stats-title">
+                <td colspan="8">{{ playback.id }} - {{ playback.path }}</td>
+            </tr>
+            <tr>
+                <td>Description: Type is [{{ playback.type.en }}]. {{ playback.desc.en }}</td>
+            </tr>
+            <tr>
+                <td rowspan="2" colspan="2">Playback Data</td>
+                <td colspan="6">Start Time: <code>{{ playback.timestamp.0 }}</code></td>
+            </tr>
+            <tr>
+                <td colspan="6">End Time: <code>{{ playback.timestamp.1 }}</code></td>
+            </tr>
+            <tr>
+                <td colspan="8">{% if playback.iframe_url == "" %}<span>iframe data not available</span>{% else %}{{ generate_netease_iframe(playback.iframe_url) }}{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endmacro %}
+
+{% macro output_track_playback_table(playbacks) %}{% for i in playbacks %}{{ track_playback_table(i) }}{% endfor %}{% endmacro %}

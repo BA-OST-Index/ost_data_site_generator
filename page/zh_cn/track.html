@@ -4,7 +4,7 @@
 {% block article_content %}
     {% from "template/zh_cn/_macro_page.html" import output_usedby_background, output_usedby_story, output_usedby_battle, output_usedby_ui, output_usedby_video, output_usedby_character_dict, track_version_video_player, output_track_album %}
     {% from "template/zh_cn/_macro.html" import tracktype_to_name, generate_album_anchor, generate_track_anchor, nothing_to_show, output_track_stat_badge_all, generate_character_anchor %}
-    {% from "template/zh_cn/_macro_page2.html" import track_stats_table %}
+    {% from "template/zh_cn/_macro_page2.html" import track_stats_table, output_track_playback_table %}
 
     <h1>曲子/{{ track.no }}. {{ track.name.realname.en }}{% if track.name.realname.zh_cn %}&nbsp;({{ track.name.realname.zh_cn }}){% endif %} {{ output_track_stat_badge_all(track.stats) }}</h1>
     {% include "template/zh_cn/infobox/track.html" %}
@@ -31,6 +31,9 @@
     <p>此曲子已被收录至以下专辑。</p>
     {{ output_track_album(track.album, track) }}
 
+    <h2>游戏内播放信息</h2>
+    <p>以下信息自动生成自游戏内文件。</p>
+    {{ output_track_playback_table(track.playback_info) }}
     <h2>在线播放音乐</h2>
     <p>提示：为避免潜在版权侵犯风险，我们此处使用<b>第三方嵌入式网页播放器</b>来提供服务。你也可以在信息栏（infobox）中手动访问它们。</p>
     <p>单击下列链接时，您也同时同意各平台/服务提供商的对应服务条款。</p>

@@ -1,4 +1,5 @@
-{% from 'template/base/_macro.html' import generate_tick_img_by_bool %}
+{% from 'template/base/_macro.html' import generate_tick_img_by_bool, generate_netease_iframe %}
+{% from 'template/zh_cn/_macro.html' import auto_zhcn_gen %}
 
 {% macro video_stats_table(stats) %}
     <table class="video-stats-table stats-table">
@@ -102,3 +103,28 @@
         </tbody>
     </table>
 {% endmacro %}
+
+{% macro track_playback_table(playback) %}
+    <table class="track-playback-table stats-table">
+        <tbody>
+            <tr class="stats-title">
+                <td colspan="8">{{ playback.id }} - {{ playback.path }}</td>
+            </tr>
+            <tr>
+                <td>简介：类型为【{{ playback.type.zh_cn }}】。{{ auto_zhcn_gen(playback.desc) }}</td>
+            </tr>
+            <tr>
+                <td rowspan="2" colspan="2">循环播放数据</td>
+                <td colspan="6">开始时间：<code>{{ playback.timestamp.0 }}</code></td>
+            </tr>
+            <tr>
+                <td colspan="6">结束时间：<code>{{ playback.timestamp.1 }}</code></td>
+            </tr>
+            <tr>
+                <td colspan="8">{% if playback.iframe_url == "" %}<span>iframe数据不存在</span>{% else %}{{ generate_netease_iframe(playback.iframe_url) }}{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endmacro %}
+
+{% macro output_track_playback_table(playbacks) %}{% for i in playbacks %}{{ track_playback_table(i) }}{% endfor %}{% endmacro %}
