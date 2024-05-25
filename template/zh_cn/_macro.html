@@ -19,16 +19,17 @@
 {% macro generate_story_url(story) %}{{ py_generate_story_url(curr_lang, story) }}{% endmacro %}
 
 {# 通用的Story名称生成 #}
-{% macro generate_story_name(story) %}{% set ft = story.filetype %}{% if ft == 15 %}<span><img src="{{ get_static('images/student/icon/' + story.student.image.collection_texture + '.webp') }}" class="icon-stu">{{ auto_zhcn_gen(story.student.name.name) }}的第{{ story.pos.no }}个羁绊故事 <p class="student-lobby-unlock student-lobby-unlock-p">{{ story.pos.favor_rank }}</p>：{{ auto_zhcn_gen(story.name) }}</span>{% elif ft == 14 %}<span>活动{{ auto_zhcn_gen(story.parent_data.0.name) }}&nbsp;第{{ story.pos.segment }}个故事：{{ auto_zhcn_gen(story.name) }}</span>{% else %}{{ filetype_to_name(ft) }}故事&nbsp;第{{ story.pos.volume }}篇&nbsp;第{{ story.pos.chapter }}章&nbsp;第{{ story.pos.segment }}话：{{ auto_zhcn_gen(story.name) }}{% if story.is_battle %}<span class="icon-type-container"><img class="icon-type-story-battle" src="{{ get_static('images/ui/Type_Attack.png') }}"></span>{% endif %}{% endif %}{% endmacro %}
+{% macro generate_story_name(story) %}{% set ft = story.filetype %}{% if ft == 15 %}<span><img src="{{ get_static('images/student/icon/' + story.student.image.collection_texture + '.webp') }}" class="icon-stu">{{ auto_zhcn_gen(story.student.name.name) }}的第{{ story.pos.no }}个羁绊故事 <p class="student-lobby-unlock student-lobby-unlock-p">{{ story.pos.favor_rank }}</p>：{{ auto_zhcn_gen(story.name) }}</span>{% elif ft == 14 %}<span>活动&nbsp;{{ auto_zhcn_gen(story.parent_data.0.name) }}&nbsp;第{{ story.pos.segment }}个故事：{{ auto_zhcn_gen(story.name) }}</span>{% else %}{{ filetype_to_name(ft) }}故事&nbsp;第{{ story.pos.volume }}篇&nbsp;第{{ story.pos.chapter }}章&nbsp;第{{ story.pos.segment }}话：{{ auto_zhcn_gen(story.name) }}{% if story.is_battle %}<span class="icon-type-container"><img class="icon-type-story-battle" src="{{ get_static('images/ui/Type_Attack.png') }}"></span>{% endif %}{% endif %}{% endmacro %}
 
 {# 通用的UI <a>生成 #}
 {% macro generate_ui_anchor(ui) %}
     {% if ui.filetype == 32 %}
         {% set url %}/{{ curr_lang }}/event/{{ ui.event_id }}/ui/{{ ui.id }}.html#track{% endset %}
+        <span><a href="{{ url }}" target="_blank">活动&nbsp;{{ auto_zhcn_gen(ui.parent_data.name) }}&nbsp;的UI&nbsp;{{ auto_zhcn_gen(ui.name) }}</a>&nbsp;-&nbsp;{{ auto_zhcn_gen(ui.desc) }}</span>
     {% else %}
         {% set url %}/{{ curr_lang }}/ui/{{ ui.namespace.1 }}.html#track{% endset %}
+        <span><a href="{{ url }}" target="_blank">{{ auto_zhcn_gen(ui.name) }}</a>&nbsp;-&nbsp;{{ auto_zhcn_gen(ui.desc) }}</span>
     {% endif %}
-    <span><a href="{{ url }}" target="_blank">{{ auto_zhcn_gen(ui.name) }}</a>&nbsp;-&nbsp;{{ auto_zhcn_gen(ui.desc) }}</span>
 {% endmacro %}
 
 {# 通用的Track <a>生成 #}

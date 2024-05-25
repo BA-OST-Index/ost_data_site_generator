@@ -1,13 +1,21 @@
 {% extends "template/en/base.html" %}
 
-{% block title %}UI/{{ ui.name.en }}{% endblock title %}
+{% if ui.filetype == 32 %}
+    {% set title = ui.parent_data.name.en + " " + ui.name.en %}
+{% else %}
+    {% set title = ui.name.en %}
+{% endif %}
+
+{% block title %}UI/{{ title }}{% endblock title %}
 {% block article_content %}
-    <h1>UI/{{ ui.name.en }}</h1>
+    {% if ui.filetype == 32 %}
+    <h1>UI/{{ title }}</h1>
+    {% endif %}
     {% include "template/en/infobox/ui.html" %}
     {% from "template/en/_macro.html" import get_social_for_composer, generate_track_anchor %}
     {% from "template/en/_macro_page.html" import output_usedby_character %}
 
-    <p><b>{{ ui.name.en }}</b> is a part of the UI (user interface) in Blue Archive.</p>
+    <p><b>{{ title }}</b> is a part of the UI (user interface) in Blue Archive.</p>
     <p>Description: {{ ui.desc.en }}</p>
     <h2 id="track">Used Track</h2>
     <p>Track: {{ generate_track_anchor(ui.track, 0, 0, 0, 0, 0) }}</p>

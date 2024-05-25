@@ -1,13 +1,23 @@
 {% extends "template/zh_cn/base.html" %}
 
-{% block title %}UI/{{ ui.name.zh_cn }}{% endblock title %}
+{% if ui.filetype == 32 %}
+    {% if ui.parent_data.name.zh_cn %}
+        {% set title = ui.parent_data.name.zh_cn + " " + ui.name.zh_cn %}
+    {% else %}
+        {% set title = ui.parent_data.name.zh_cn_jp + " " + ui.name.zh_cn %}
+    {% endif %}
+{% else %}
+    {% set title = ui.name.zh_cn %}
+{% endif %}
+
+{% block title %}UI/{{ title }}{% endblock title %}
 {% block article_content %}
-    <h1>UI/{{ ui.name.zh_cn }}</h1>
+    <h1>UI/{{ title }}</h1>
     {% include "template/zh_cn/infobox/ui.html" %}
     {% from "template/zh_cn/_macro.html" import get_social_for_composer, auto_zhcn_gen, generate_track_anchor %}
     {% from "template/zh_cn/_macro_page.html" import output_usedby_character %}
 
-    <p><b>{{ ui.name.zh_cn }}</b> 为蔚蓝档案UI（用户界面）中的一部分。</p>
+    <p><b>{{ title }}</b> 为蔚蓝档案UI（用户界面）中的一部分。</p>
     <p>描述：{{ ui.desc.zh_cn }}</p>
     <h2 id="track">使用的曲子</h2>
     <p>曲子：{{ generate_track_anchor(ui.track, 0, 0, 0, 0, 0) }}</p>
