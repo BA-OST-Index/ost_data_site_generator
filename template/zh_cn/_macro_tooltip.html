@@ -17,6 +17,8 @@
 {% set MAX_CHAR_DISPLAY_FOR_TRACK = 11 %} {# one-indexed, total 10 (for track usage) #}
 {% set MAX_TRACK_DISPLAY = 6 %} {# one-indexed, total 5 #}
 {% set MAX_STORY_DISPLAY = 6 %} {# one-indexed, total 6 #}
+{% set MAX_STORY_CHARACTER_DISPLAY = 11 %} {# one-indexed, total 10 #}
+{% set MAX_STORY_TRACK_DISPLAY = 6 %} {# one-indexed, total 5 #}
 {% set MAX_CHAR_FOR_OTHER_CHAR = 11 %}
 
 {# 提取所有story_part里头的desc #}
@@ -27,7 +29,7 @@
 {# ----------------------------------------------------------------------------------------------------- #}
 
 {# 用于StoryInfo（非StoryPartInfo） #}
-{% macro tooltip_storyinfo(story) %}<div class="tooltip-div"><p class="tooltip-title tooltip-ellipsis">{{ auto_zhcn_gen(story.name) }}</p><ul>{% for desc in story.desc %}<li>{{ auto_zhcn_gen(desc) }}</li>{% endfor %}</ul></div>{% endmacro %}
+{% macro tooltip_storyinfo(story) %}<div class="tooltip-div"><p class="tooltip-title tooltip-ellipsis">{{ auto_zhcn_gen(story.name) }}</p><ul>{% for desc in story.desc %}<li>{{ auto_zhcn_gen(desc) }}</li>{% endfor %}</ul><hr /><p class="tooltip-title tooltip-ellipsis">故事信息：</p>{% set _ = convert_story_into_single_part(story) %}<p>人物（至多10个）：{{ generate_character_anchor_flat(extract_storypart_data_character(_), MAX_STORY_CHARACTER_DISPLAY_DISPLAY) }}</p><p>歌曲（至多5个）：{% if all_tracks|length == 0 %}无歌曲可显示！{% else %}{% for track in all_tracks %}{% if loop.index == MAX_STORY_TRACK_DISPLAY %}&nbsp; 及更多。{% break %}{% else %}&nbsp;|&nbsp;{{ generate_track_anchor(track, 0, 0, 0, 0, 0)|page_minify_html }}{% endif %}{% endfor %}{% endif %}</p></div>{% endmacro %}
 
 {# 用于Track对StoryPartInfo的显示 #}
 {# 传入的story是StoryInfo，用于显示大故事信息 [Deprecated] #}
@@ -41,8 +43,8 @@
         {% set all_characters = extract_storypart_data_character(story_part) %}
         {% set all_tracks = extract_storypart_data_track(story_part) %}
 
-        <p>{% if all_characters|length == 0 %}<span>No characters to display!</span>{% else %}人物：{{ generate_character_anchor_flat(all_characters, MAX_CHAR_DISPLAY)|page_minify_html }}{% endif %}</p><hr />
-        <p>{% if all_tracks|length == 0 %}无歌曲可显示！{% else %}歌曲：{% for track in all_tracks %}{% if loop.index == MAX_TRACK_DISPLAY %}&nbsp; 及更多人。{% break %}{% else %}&nbsp;|&nbsp;{{ generate_track_anchor(track, 0, 0, 0, 0, 0)|page_minify_html }}{% endif %}{% endfor %}{% endif %}</p>
+        <p>{% if all_characters|length == 0 %}<span>无人物可显示！</span>{% else %}人物：{{ generate_character_anchor_flat(all_characters, MAX_CHAR_DISPLAY)|page_minify_html }}{% endif %}</p><hr />
+        <p>{% if all_tracks|length == 0 %}无歌曲可显示！{% else %}歌曲：{% for track in all_tracks %}{% if loop.index == MAX_TRACK_DISPLAY %}&nbsp; 及更多。{% break %}{% else %}&nbsp;|&nbsp;{{ generate_track_anchor(track, 0, 0, 0, 0, 0)|page_minify_html }}{% endif %}{% endfor %}{% endif %}</p>
     </div>
 {% endmacro %}
 

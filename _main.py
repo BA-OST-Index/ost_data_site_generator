@@ -130,6 +130,7 @@ def get_jinja_env(filters: dict = None, globals: dict = None):
     environment.globals["extract_storypart_data_track"] = JinjaTool.storypart_extract_all_data_track
     environment.globals["extract_storypart_data_character"] = JinjaTool.storypart_extract_all_data_characters
     environment.globals["extract_storypart_data_background"] = JinjaTool.storypart_extract_all_data_background
+    environment.globals["convert_story_into_single_part"] = JinjaTool.convert_story_into_single_part
     environment.globals["get_static"] = JinjaTool.get_static
     # Globals - TemplateTool
     environment.globals["get_character_data"] = TemplateTool.get_character_data

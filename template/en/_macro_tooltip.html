@@ -16,6 +16,8 @@
 {% set MAX_CHAR_DISPLAY_FOR_TRACK = 11 %} {# one-indexed, total 10 (for track usage) #}
 {% set MAX_TRACK_DISPLAY = 6 %} {# one-indexed, total 5 #}
 {% set MAX_STORY_DISPLAY = 6 %} {# one-indexed, total 6 #}
+{% set MAX_STORY_CHARACTER_DISPLAY = 11 %} {# one-indexed, total 10 #}
+{% set MAX_STORY_TRACK_DISPLAY = 6 %} {# one-indexed, total 5 #}
 
 {# 提取所有story_part里头的desc #}
 {% macro get_story_part_desc(story_part) %}{% for segment in story_part.data %}{{ segment.desc.en }}{% endfor %}{% endmacro %}
@@ -25,7 +27,7 @@
 {# ----------------------------------------------------------------------------------------------------- #}
 
 {# 用于StoryInfo（非StoryPartInfo） #}
-{% macro tooltip_storyinfo(story) %}<div class="tooltip-div"><p class="tooltip-title tooltip-ellipsis">{{ story.name.en|js_string_safe }}</p><ul>{% for desc in story.desc %}<li>{{ desc.en|js_string_safe }}</li>{% endfor %}</ul></div>{% endmacro %}
+{% macro tooltip_storyinfo(story) %}<div class="tooltip-div"><p class="tooltip-title tooltip-ellipsis">{{ story.name.en|js_string_safe }}</p><ul>{% for desc in story.desc %}<li>{{ desc.en|js_string_safe }}</li>{% endfor %}</ul><hr /><p class="tooltip-title tooltip-ellipsis">Story Info: </p>{% set _ = convert_story_into_single_part(story) %}<p>Character (max 10)：{{ generate_character_anchor_flat(extract_storypart_data_character(_), MAX_STORY_CHARACTER_DISPLAY_DISPLAY) }}</p><p>Track (max 5)：{% if all_tracks|length == 0 %}No tracks.{% else %}{% for track in all_tracks %}{% if loop.index == MAX_STORY_TRACK_DISPLAY %}&nbsp; and more.{% break %}{% else %}&nbsp;|&nbsp;{{ generate_track_anchor(track, 0, 0, 0, 0, 0)|page_minify_html }}{% endif %}{% endfor %}{% endif %}</p></div>{% endmacro %}
 
 {# 用于Track对StoryPartInfo的显示 #}
 {# 传入的story是StoryInfo，用于显示大故事信息 [Deprecated] #}

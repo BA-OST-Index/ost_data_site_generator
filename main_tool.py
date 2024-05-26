@@ -226,6 +226,34 @@ class JinjaTool:
         return JinjaTool.storypart_extract_all_data(part, "character")
 
     @staticmethod
+    def convert_story_into_single_part(story):
+        ALL_KEY_NAME = ["background", "track", "character"]
+
+        all_data_uuid = []
+        all_data = {
+            "character": [],
+            "track": [],
+            "background": []
+        }
+
+        if story["filetype_sub"] == 0:
+            for part in story["part"]:
+                for seg in part["data"]:
+                    for key_name in ALL_KEY_NAME:
+                        for entry in seg[key_name]:
+                            if entry["uuid"] not in all_data_uuid:
+                                all_data_uuid.append(entry["uuid"])
+                                all_data[key_name].append(entry)
+        elif story["filetype_sub"] == 1:
+            for key_name in ALL_KEY_NAME:
+                all_data[key_name] = list(story["part"]["all"][key_name].values())
+        else:
+            raise ValueError(story["filetype_sub"])
+
+        return {"data": [all_data]}
+
+
+    @staticmethod
     @lru_cache()
     def get_static(path):
         global STATIC_BASE_URL
