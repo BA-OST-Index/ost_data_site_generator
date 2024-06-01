@@ -1,4 +1,4 @@
-import json
+import pickle
 import os
 import time
 
@@ -50,8 +50,8 @@ ALL_LANGS = ["en", "zh_cn"]
 
 
 def _load_json(filepath):
-    with open(os.path.join(TEST_FILE_BASEPATH, filepath), "r", encoding="utf-8") as f:
-        return json.load(f)
+    with open(os.path.join(TEST_FILE_BASEPATH, filepath), "rb") as f:
+        return pickle.load(f)
 
 
 def check_template(jinja_env, return_template):
