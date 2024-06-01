@@ -29,16 +29,20 @@
                     {% endfor %}
                 {% endif %}
             {% elif instance_key == "character" %}
-                {% for i in related_parts %}
-                    {% if i.0.is_battle == True %}
-                        {% for j in extract_storypart_data_character(i.0) %}
-                            {% if j.uuid == instance_uuid %}
-                                {% set auto_color.auto = True %}
-                                {% break %}
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-                {% endfor %}
+                {% if story_.is_memory %}
+                    {% set auto_color.auto = True %}
+                {% else %}
+                    {% for i in related_parts %}
+                        {% if i.0.is_battle == True %}
+                            {% for j in extract_storypart_data_character(i.0) %}
+                                {% if j.uuid == instance_uuid %}
+                                    {% set auto_color.auto = True %}
+                                    {% break %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
             {% else %}
                 {% set auto_color.auto = True %}
             {% endif %}
