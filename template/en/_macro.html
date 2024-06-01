@@ -157,6 +157,22 @@
     {% endif %}
 {% endmacro %}
 
+{# 平铺歌曲track生成 #}
+{% macro generate_track_anchor_flat(tracks, max_track) %}
+    {% if not arg_check(max_track) %}{% set max_char = 99999 %}{% endif %}
+
+    {% if tracks|length != 0 %}
+        {% set track_to_show = [] %}
+        {% for i in tracks %}
+            {% if loop.index == max_track %}{% break %}
+            {% else %}{% do track_to_show.append(i) %}
+            {% endif %}
+        {% endfor %}
+
+        {% for track in track_to_show[:-1] %}<span>{{ generate_track_anchor(track, 0, 0, 0, 0, 0)|page_minify_html }}&nbsp;|&nbsp;</span>{% endfor %}{{ generate_track_anchor(track_to_show[-1], 0, 0, 0, 0, 0)|page_minify_html }}{% if tracks|length > track_to_show|length %}<span>&nbsp;and more.</span>{% endif %}
+    {% endif %}
+{% endmacro %}
+
 {# 视频标签生成 #}
 {% macro output_video_stat_badge(stat) %}
     <div class="video-stats-badge stats-badge">

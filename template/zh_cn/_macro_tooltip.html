@@ -1,4 +1,4 @@
-{% from "template/zh_cn/_macro.html" import filetype_to_name, tracktype_to_name, generate_track_anchor, generate_story_anchor, generate_appearedat_html, generate_character_anchor_flat, auto_zhcn_gen, generate_character_anchor, output_track_stat_badge_p2p3, output_storypart_source_by_lang %}
+{% from "template/zh_cn/_macro.html" import filetype_to_name, tracktype_to_name, generate_track_anchor, generate_story_anchor, generate_appearedat_html, generate_character_anchor_flat, auto_zhcn_gen, generate_character_anchor, output_track_stat_badge_p2p3, output_storypart_source_by_lang, generate_track_anchor_flat %}
 {% set curr_lang = "zh_cn" %}
 
 {# JS代码生成 #}
@@ -29,7 +29,7 @@
 {# ----------------------------------------------------------------------------------------------------- #}
 
 {# 用于StoryInfo（非StoryPartInfo） #}
-{% macro tooltip_storyinfo(story) %}<div class="tooltip-div"><p class="tooltip-title tooltip-ellipsis">{{ auto_zhcn_gen(story.name) }}</p><ul>{% for desc in story.desc %}<li>{{ auto_zhcn_gen(desc) }}</li>{% endfor %}</ul><hr /><p class="tooltip-title tooltip-ellipsis">故事信息：</p>{% set _ = convert_story_into_single_part(story) %}<p>人物（至多10个）：{{ generate_character_anchor_flat(extract_storypart_data_character(_), MAX_STORY_CHARACTER_DISPLAY_DISPLAY) }}</p><p>歌曲（至多5个）：{% if all_tracks|length == 0 %}无歌曲可显示！{% else %}{% for track in all_tracks %}{% if loop.index == MAX_STORY_TRACK_DISPLAY %}&nbsp; 及更多。{% break %}{% else %}&nbsp;|&nbsp;{{ generate_track_anchor(track, 0, 0, 0, 0, 0)|page_minify_html }}{% endif %}{% endfor %}{% endif %}</p></div>{% endmacro %}
+{% macro tooltip_storyinfo(story) %}<div class="tooltip-div"><p class="tooltip-title tooltip-ellipsis">{{ auto_zhcn_gen(story.name) }}</p><ul>{% for desc in story.desc %}<li>{{ auto_zhcn_gen(desc) }}</li>{% endfor %}</ul><hr /><p class="tooltip-title tooltip-ellipsis">故事信息：</p>{% set _ = convert_story_into_single_part(story) %}<p>人物（至多10个）：{{ generate_character_anchor_flat(extract_storypart_data_character(_), MAX_STORY_CHARACTER_DISPLAY_DISPLAY) }}</p><p>歌曲（至多5个）：{{ generate_track_anchor_flat(extract_storypart_data_track(_), MAX_STORY_TRACK_DISPLAY) }}</p></div>{% endmacro %}
 
 {# 用于Track对StoryPartInfo的显示 #}
 {# 传入的story是StoryInfo，用于显示大故事信息 [Deprecated] #}

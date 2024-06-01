@@ -1,4 +1,4 @@
-{% from "template/en/_macro.html" import filetype_to_name, tracktype_to_name, generate_track_anchor, generate_story_anchor, generate_appearedat_html, generate_character_anchor_flat, generate_character_anchor, output_track_stat_badge_p2p3, output_storypart_source_by_lang %}
+{% from "template/en/_macro.html" import filetype_to_name, tracktype_to_name, generate_track_anchor, generate_story_anchor, generate_appearedat_html, generate_character_anchor_flat, generate_character_anchor, output_track_stat_badge_p2p3, output_storypart_source_by_lang, generate_track_anchor_flat %}
 
 {# JS代码生成 #}
 {% macro tooltip_add_data_js(data) %}
@@ -27,7 +27,7 @@
 {# ----------------------------------------------------------------------------------------------------- #}
 
 {# 用于StoryInfo（非StoryPartInfo） #}
-{% macro tooltip_storyinfo(story) %}<div class="tooltip-div"><p class="tooltip-title tooltip-ellipsis">{{ story.name.en|js_string_safe }}</p><ul>{% for desc in story.desc %}<li>{{ desc.en|js_string_safe }}</li>{% endfor %}</ul><hr /><p class="tooltip-title tooltip-ellipsis">Story Info: </p>{% set _ = convert_story_into_single_part(story) %}<p>Character (max 10)：{{ generate_character_anchor_flat(extract_storypart_data_character(_), MAX_STORY_CHARACTER_DISPLAY_DISPLAY) }}</p><p>Track (max 5)：{% if all_tracks|length == 0 %}No tracks.{% else %}{% for track in all_tracks %}{% if loop.index == MAX_STORY_TRACK_DISPLAY %}&nbsp; and more.{% break %}{% else %}&nbsp;|&nbsp;{{ generate_track_anchor(track, 0, 0, 0, 0, 0)|page_minify_html }}{% endif %}{% endfor %}{% endif %}</p></div>{% endmacro %}
+{% macro tooltip_storyinfo(story) %}<div class="tooltip-div"><p class="tooltip-title tooltip-ellipsis">{{ story.name.en|js_string_safe }}</p><ul>{% for desc in story.desc %}<li>{{ desc.en|js_string_safe }}</li>{% endfor %}</ul><hr /><p class="tooltip-title tooltip-ellipsis">Story Info: </p>{% set _ = convert_story_into_single_part(story) %}<p>Character (max 10)：{{ generate_character_anchor_flat(extract_storypart_data_character(_), MAX_STORY_CHARACTER_DISPLAY_DISPLAY) }}</p><p>Track (max 5)：{{ generate_track_anchor_flat(extract_storypart_data_track(_), MAX_STORY_TRACK_DISPLAY) }}</p></div>{% endmacro %}
 
 {# 用于Track对StoryPartInfo的显示 #}
 {# 传入的story是StoryInfo，用于显示大故事信息 [Deprecated] #}
