@@ -24,7 +24,7 @@
 {# 通用的UI <a>生成 #}
 {% macro generate_ui_anchor(ui) %}
     {% if ui.filetype == 32 %}
-        {% set url %}/{{ curr_lang }}/event/{{ ui.event_id }}/ui/{{ ui.id }}.html#track{% endset %}
+        {% set url %}/{{ curr_lang }}/event/{{ ui.event_id }}/ui/{{ ui.namespace[-1] }}.html#track{% endset %}
         <span><a href="{{ url }}" target="_blank">活动&nbsp;{{ auto_zhcn_gen(ui.parent_data.name) }}&nbsp;的UI&nbsp;{{ auto_zhcn_gen(ui.name) }}</a>&nbsp;-&nbsp;{{ auto_zhcn_gen(ui.desc) }}</span>
     {% else %}
         {% set url %}/{{ curr_lang }}/ui/{{ ui.namespace.1 }}.html#track{% endset %}

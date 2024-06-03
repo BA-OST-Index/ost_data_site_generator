@@ -21,7 +21,7 @@
 {# 通用的UI <a>生成 #}
 {% macro generate_ui_anchor(ui) %}
     {% if ui.filetype == 32 %}
-        {% set url %}/{{ curr_lang }}/event/{{ ui.event_id }}/ui/{{ ui.id }}.html#track{% endset %}
+        {% set url %}/{{ curr_lang }}/event/{{ ui.event_id }}/ui/{{ ui.namespace[-1] }}.html#track{% endset %}
         <span><a href="{{ url }}" target="_blank">Event&nbsp;{{ ui.parent_data.name.en|js_string_safe }}&nbsp;UI&nbsp;{{ ui.name.en|js_string_safe }}</a>&nbsp;-&nbsp;{{ ui.desc.en|js_string_safe }}</span>
     {% else %}
         {% set url %}/{{ curr_lang }}/ui/{{ ui.namespace.1 }}.html#track{% endset %}
