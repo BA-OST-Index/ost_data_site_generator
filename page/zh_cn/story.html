@@ -21,7 +21,7 @@
     {% if story.filetype == 11 %}
         <p>“<b>{{ auto_zhcn_gen(story.name) }}</b>”是主线故事第{{ story.pos.volume }}篇第{{ story.pos.chapter }}章的第{{ story.pos.segment }}个故事。</p>
     {% elif story.filetype == 15 %}
-        <p>“<b>{{ auto_zhcn_gen(story.name) }}</b>”是学生<img src="{{ get_static('images/student/icon/' + story.student.image.collection_texture + '.webp') }}" class="icon-stu"/>{{ auto_zhcn_gen(story.student.name.personal_name) }}的第{{ story.pos.no }}个羁绊故事（要求最低羁绊等级为{{ story.pos.favor_rank }}）。</p>
+        <p>“<b>{{ auto_zhcn_gen(story.name) }}</b>”是学生<img src="{{ get_static('images/student/icon/' + story.student.image.collection_texture + '.webp') }}" class="icon-stu"/>{{ auto_zhcn_gen(story.student.name.name) }}的第{{ story.pos.no }}个羁绊故事（要求最低羁绊等级为{{ story.pos.favor_rank }}）。</p>
     {% elif story.filetype == 14 %}
         <p>“<b>{{ auto_zhcn_gen(story.name) }}</b>”是活动“{{ auto_zhcn_gen(story.parent_data.0.name) }}” 的第{{ story.pos.segment }}个故事。</p>
     {% else %}
