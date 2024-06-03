@@ -174,7 +174,7 @@
 {% endmacro %}
 
 {% macro output_usedby_background_list(data_background, html_id, instance_id, instance_type) %}
-    {% if instance_type in ["story"] %}
+    {% if instance_type in ["story", "track"] %}
         {% set tooltip_data = {} %}
         {% set enable_tooltip = 1 %}
     {% endif %}
@@ -275,7 +275,7 @@
 {% endmacro %}
 
 {% macro output_usedby_character(data_character, html_id, instance_id, instance_type, output_combat_info, combat_leader_pos, character_html_id) %}
-    {% if instance_type in ["story", "character", "background"] %}
+    {% if instance_type in ["story", "character", "background", "track", "background-direct"] %}
         {% set enable_tooltip = 1 %}
         {% set tooltip_data = {} %}
     {% endif %}

@@ -1,4 +1,5 @@
-{% from "template/en/_macro_page.html" import output_usedby_track, output_usedby_background %}
+{% from 'template/en/_macro.html' import generate_track_anchor, generate_background_anchor, generate_character_anchor %}
+{% from "template/en/_macro_page.html" import output_usedby_track, output_usedby_track_list, output_usedby_background, output_usedby_background_list %}
 {% set actual_data = story.part %}
 
 <h2>Story Data</h2>
@@ -7,6 +8,10 @@
 {% set actual_data_all = actual_data.all %}
 <h4>Characters</h4>
 {{ output_usedby_character({"character": actual_data_all.character.values()}, "story-" + story.instance_id, story.instance_id, "story") }}
+<h4>Special Characters</h4>
+<p>The characters here, specifically, are ones who participate in the battles. Relationship characters won't show up here.</p>
+{% set _ = [] %}{% for i in actual_data.special.char %}{% do _.append(actual_data_all.character[i]) %}{% endfor %}
+{{ output_usedby_character({"character": _}, "story-" + story.instance_id, story.instance_id, "story") }}
 <h4>Tracks</h4>
 {{ output_usedby_track_list(actual_data_all.track.values(), "story-" + story.instance_id, "story", story.instance_id) }}
 <h4>Backgrounds</h4>
@@ -16,21 +21,26 @@
 <h4>Tracks</h4>
 <ul>
     {% for track_id in actual_data.all.track.keys() %}
-        <li><code>{{ track_id }}</code></li>
+        <li>{{ generate_track_anchor(actual_data.all.track[track_id], 0, 0, "story-" + story.instance_id, generate_tooltip_id("track", actual_data.all.track[track_id].instance_id)) }}</li>
         <ul>
-            <li>Backgrounds：{% for bg_id in actual_data._track_to_bg[track_id] %}<code>{{ bg_id }}</code>、{% endfor %}</li>
-            <li>Characters：{% for char_id in actual_data.track_to_char[track_id] %}<code>{{ char_id }}</code>、{% endfor %}</li>
+            <li>Background:<br />
+                {% set _ = [] %}{% for i in actual_data._track_to_bg[track_id] %}{% do _.append(actual_data.all.background[i]) %}{% endfor %}{{ output_usedby_background_list(_, "story-" + story.instance_id, actual_data.all.track[track_id].instance_id, "track") }}</li>
+            <li>Character:<br />
+                {% set _ = [] %}{% for i in actual_data.track_to_char[track_id] %}{% do _.append(actual_data.all.character[i]) %}{% endfor %}{{ output_usedby_character({"character": _}, "story-" + story.instance_id, actual_data.all.track[track_id].instance_id, "track") }}</li>
         </ul>
     {% endfor %}
 </ul>
 <h4>Characters</h4>
 <ul>
     {% for char_id in actual_data.all.character.keys() %}
-        <li><code>{{ char_id }}</code></li>
+        <li>{{ generate_character_anchor(actual_data.all.character[char_id], 1, 1, "story-" + story.instance_id, generate_tooltip_id("character", get_char_instance_id(actual_data.all.character[char_id]))) }}</li>
         <ul>
-            <li>Backgrounds：{% for bg_id in actual_data._char_to_bg[char_id] %}<code>{{ bg_id }}</code>、{% endfor %}</li>
-            <li>Tracks：{% for track_id in actual_data.char_to_track[char_id] %}<code>{{ track_id }}</code>、{% endfor %}</li>
-            <li>Characters：{% for char2_id in actual_data.char_to_char[char_id] %}<code>{{ char2_id }}</code>、{% endfor %}</li>
+            <li>Background:<br />
+                {% set _ = [] %}{% for bg_id in actual_data._char_to_bg[char_id] %}{% do _.append(actual_data.all.background[bg_id]) %}{% endfor %}{{ output_usedby_background_list(_, "story-" + story.instance_id, get_char_instance_id(actual_data.all.character[char_id]), "character") }}</li>
+            <li>Track:<br />
+                {% set _ = {} %}{% for track_id in actual_data.char_to_track[char_id] %}{% do _.update({track_id: actual_data.all.track[track_id]}) %}{% endfor %}{{ output_usedby_track(_, 0, "story-" + story.instance_id, get_char_instance_id(actual_data.all.character[char_id]), "character") }}</li>
+            <li>Character:<br />
+                {% set _ = [] %}{% for char2_id in actual_data.char_to_char[char_id] %}{% do _.append(actual_data.all.character[char2_id]) %}{% endfor %}{{ output_usedby_character({"character": _}, "story-" + story.instance_id, get_char_instance_id(actual_data.all.character[char_id]), "character") }}</li>
         </ul>
     {% endfor %}
 </ul>
@@ -39,8 +49,10 @@
     {% for bg_id in actual_data.all.background.keys() %}
         <li><code>{{ bg_id }}</code></li>
         <ul>
-            <li>Characters：{% for char_id in actual_data.bg_to_char[bg_id] %}<code>{{ char_id }}</code>、{% endfor %}</li>
-            <li>Tracks：{% for track_id in actual_data.bg_to_track[bg_id] %}<code>{{ track_id }}</code>、{% endfor %}</li>
+            <li>Character:<br />
+                {% set _ = [] %}{% for char_id in actual_data.bg_to_char[bg_id] %}{% do _.append(actual_data.all.character[char_id]) %}{% endfor %}{{ output_usedby_character({"character": _}, "story-" + story.instance_id, actual_data.all.background[bg_id].uuid, "background") }}</li>
+            <li>Track:<br />
+                {% set _ = {} %}{% for track_id in actual_data.bg_to_track[bg_id] %}{% do _.update({track_id: actual_data.all.track[track_id]})%}{% endfor %}{{ output_usedby_track(_, 0, "story-" + story.instance_id, actual_data.all.background[bg_id].uuid, "background") }}</li>
         </ul>
     {% endfor %}
 </ul>
