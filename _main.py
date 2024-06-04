@@ -120,6 +120,7 @@ def get_jinja_env(filters: dict = None, globals: dict = None):
     environment.filters["page_minify_html"] = JinjaTool.page_minify_html
     environment.filters["is_list"] = lambda obj: isinstance(obj, list)
     environment.filters["is_dict"] = lambda obj: isinstance(obj, dict)
+    environment.filters["is_str"] = lambda obj: isinstance(obj, str)
     # Globals - JinjaTool
     environment.globals["get_current_utc"] = JinjaTool.get_current_utc
     environment.globals["get_init_time"] = JinjaTool.get_init_time

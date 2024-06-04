@@ -1,17 +1,31 @@
-{% from 'template/zh_cn/_macro.html' import generate_track_anchor, generate_background_anchor, generate_character_anchor %}
+{% from 'template/zh_cn/_macro.html' import generate_track_anchor, generate_background_anchor, generate_character_anchor, nothing_to_show %}
 {% from "template/zh_cn/_macro_page.html" import output_usedby_track, output_usedby_track_list, output_usedby_background, output_usedby_background_list %}
 {% set actual_data = story.part %}
 
 <h2>故事数据</h2>
 <p>本篇故事数据为<b>脚本自动生成</b>，未进行人工校对及划分剧情，但我们仍设法获得了一部分数据之间的关系。</p>
+
 <h3>全部数据</h3>
 {% set actual_data_all = actual_data.all %}
+
 <h4>人物</h4>
 {{ output_usedby_character({"character": actual_data_all.character.values()}, "story-" + story.instance_id, story.instance_id, "story") }}
+
 <h4>特殊人物</h4>
 <p>此处的“特殊人物”特指参与了作战的人物。羁绊故事人物等不会出现在此处。</p>
-{% set _ = [] %}{% for i in actual_data.special.char %}{% do _.append(actual_data_all.character[i]) %}{% endfor %}
-{{ output_usedby_character({"character": _}, "story-" + story.instance_id, story.instance_id, "story") }}
+{% set _ = [] %}{% for i in actual_data.special.char %}{% if i in actual_data_all.character.keys() %}{% do _.append(actual_data_all.character[i]) %}{% else %}{% do _.append(i) %}{% endif %}{% endfor %}
+<ul>
+    {% for i in _ %}
+        {% if i|is_str %}
+            <li><code>{{ i }}</code></li>
+        {% else %}
+            <li>{{ generate_character_anchor(actual_data.all.character[i], 1, 1, "story-" + story.instance_id, story.instance_id) }}</li>
+        {% endif %}
+    {% else %}
+        <li>{{ nothing_to_show }}</li>
+    {% endfor %}
+</ul>
+
 <h4>歌曲</h4>
 {{ output_usedby_track_list(actual_data_all.track.values(), "story-" + story.instance_id, "story", story.instance_id) }}
 <h4>背景</h4>
@@ -26,21 +40,64 @@
             <li>背景：<br />
                 {% set _ = [] %}{% for i in actual_data._track_to_bg[track_id] %}{% do _.append(actual_data.all.background[i]) %}{% endfor %}{{ output_usedby_background_list(_, "story-" + story.instance_id, actual_data.all.track[track_id].instance_id, "track") }}</li>
             <li>人物：<br />
-                {% set _ = [] %}{% for i in actual_data.track_to_char[track_id] %}{% do _.append(actual_data.all.character[i]) %}{% endfor %}{{ output_usedby_character({"character": _}, "story-" + story.instance_id, actual_data.all.track[track_id].instance_id, "track") }}</li>
+                {% set _ = [] %}
+                {% for i in actual_data.track_to_char[track_id] %}
+                    {% if i in actual_data.all.character.keys() %}{% do _.append(actual_data.all.character[i]) %}
+                    {% else %}{% do _.append(i) %}{% endif %}
+                {% endfor %}
+                <ul>
+                    {% for i in _ %}
+                        {% if i|is_str %}
+                            <li><code>{{ i }}</code></li>
+                        {% else %}
+                            <li>{{ generate_character_anchor(i, 1, 1, "story-" + story.instance_id, generate_tooltip_id("track", actual_data.all.track[track_id].instance_id, "character", get_char_instance_id(i))) }}</li>
+                        {% endif %}
+                    {% else %}
+                        <li>{{ nothing_to_show }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
         </ul>
     {% endfor %}
 </ul>
 <h4>人物</h4>
 <ul>
     {% for char_id in actual_data.all.character.keys() %}
-        <li>{{ generate_character_anchor(actual_data.all.character[char_id], 1, 1, "story-" + story.instance_id, generate_tooltip_id("character", get_char_instance_id(actual_data.all.character[char_id]))) }}</li>
+        {% if char_id in actual_data.all.character.keys() %}
+            <li>{{ generate_character_anchor(actual_data.all.character[char_id], 1, 1, "story-" + story.instance_id, generate_tooltip_id("character", get_char_instance_id(actual_data.all.character[char_id]))) }}</li>
+            {% set instance_id = get_char_instance_id(actual_data.all.character[char_id]) %}
+            {% set instance_type = "character" %}
+        {% else %}
+            <li><code>{{ char_id }}</code></li>
+            {% set instance_id = story.instance_id %}
+            {% set instance_type = "story" %}
+        {% endif %}
+
         <ul>
             <li>背景：<br />
-                {% set _ = [] %}{% for bg_id in actual_data._char_to_bg[char_id] %}{% do _.append(actual_data.all.background[bg_id]) %}{% endfor %}{{ output_usedby_background_list(_, "story-" + story.instance_id, get_char_instance_id(actual_data.all.character[char_id]), "character") }}</li>
+                {% set _ = [] %}
+                {% for bg_id in actual_data._char_to_bg[char_id] %}{% do _.append(actual_data.all.background[bg_id]) %}{% endfor %}
+                {{ output_usedby_background_list(_, "story-" + story.instance_id, instance_id, instance_type) }}</li>
             <li>歌曲：<br />
-                {% set _ = {} %}{% for track_id in actual_data.char_to_track[char_id] %}{% do _.update({track_id: actual_data.all.track[track_id]}) %}{% endfor %}{{ output_usedby_track(_, 0, "story-" + story.instance_id, get_char_instance_id(actual_data.all.character[char_id]), "character") }}</li>
+                {% set _ = {} %}{% for track_id in actual_data.char_to_track[char_id] %}{% do _.update({track_id: actual_data.all.track[track_id]}) %}{% endfor %}{{ output_usedby_track(_, 0, "story-" + story.instance_id, instance_id, instance_type) }}</li>
             <li>人物：<br />
-                {% set _ = [] %}{% for char2_id in actual_data.char_to_char[char_id] %}{% do _.append(actual_data.all.character[char2_id]) %}{% endfor %}{{ output_usedby_character({"character": _}, "story-" + story.instance_id, get_char_instance_id(actual_data.all.character[char_id]), "character") }}</li>
+                {% set _ = [] %}
+                {% for char2_id in actual_data.char_to_char[char_id] %}
+                    {% if char2_id in actual_data.all.character.keys() %}{% do _.append(actual_data.all.character[char2_id]) %}
+                    {% else %}{% do _.append(char2_id) %}{% endif %}
+                {% endfor %}
+                <ul>
+                    {% for i in _ %}
+                        {% if i|is_str %}
+                            <li><code>{{ i }}</code></li>
+                        {% else %}
+                            <li>{{ generate_character_anchor(i, 1, 1, "story-" + story.instance_id, generate_tooltip_id("character", instance_id, "character", get_char_instance_id(i))) }}</li>
+                        {% endif %}
+                    {% else %}
+                        <li>{{ nothing_to_show }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
         </ul>
     {% endfor %}
 </ul>
@@ -50,7 +107,20 @@
         <li><code>{{ bg_id }}</code></li>
         <ul>
             <li>人物：<br />
-                {% set _ = [] %}{% for char_id in actual_data.bg_to_char[bg_id] %}{% do _.append(actual_data.all.character[char_id]) %}{% endfor %}{{ output_usedby_character({"character": _}, "story-" + story.instance_id, actual_data.all.background[bg_id].uuid, "background") }}</li>
+                {% set _ = [] %}
+                {% for char_id in actual_data.bg_to_char[bg_id] %}{% if char_id in actual_data.all.character.keys() %}{% do _.append(actual_data.all.character[char_id]) %}{% else %}{% do _.append(char_id) %}{% endif %}{% endfor %}
+                <ul>
+                    {% for i in _ %}
+                        {% if i|is_str %}
+                            <li><code>{{ i }}</code></li>
+                        {% else %}
+                            <li>{{ generate_character_anchor(i, 1, 1, "story-" + story.instance_id, generate_tooltip_id("character", get_char_instance_id(i), "background", actual_data.all.background[bg_id].uuid)) }}</li>
+                        {% endif %}
+                    {% else %}
+                        <li>{{ nothing_to_show }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
             <li>歌曲：<br />
                 {% set _ = {} %}{% for track_id in actual_data.bg_to_track[bg_id] %}{% do _.update({track_id: actual_data.all.track[track_id]})%}{% endfor %}{{ output_usedby_track(_, 0, "story-" + story.instance_id, actual_data.all.background[bg_id].uuid, "background") }}</li>
         </ul>
