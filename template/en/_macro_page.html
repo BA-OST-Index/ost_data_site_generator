@@ -32,16 +32,24 @@
                 {% if story_.is_memory %}
                     {% set auto_color.auto = True %}
                 {% else %}
-                    {% for i in related_parts %}
-                        {% if i.0.is_battle == True %}
-                            {% for j in extract_storypart_data_character(i.0) %}
-                                {% if j.uuid == instance_uuid %}
-                                    {% set auto_color.auto = True %}
-                                    {% break %}
-                                {% endif %}
-                            {% endfor %}
-                        {% endif %}
-                    {% endfor %}
+                    {% if story_.filetype_sub == 0 %}
+                        {% for i in related_parts %}
+                            {% if i.0.is_battle == True %}
+                                {% for j in extract_storypart_data_character(i.0) %}
+                                    {% if j.uuid == instance_uuid %}
+                                        {% set auto_color.auto = True %}
+                                        {% break %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {% for i in story_.part.special.char %}
+                            {% if i == instance_uuid %}
+                                {% set auto_color.auto = True %}
+                                {% break %}
+                            {% endif %}
+                    {% endif %}
                 {% endif %}
             {% else %}
                 {% set auto_color.auto = True %}
@@ -172,7 +180,7 @@
 {% endmacro %}
 
 {% macro output_usedby_background_list(data_background, html_id, instance_id, instance_type) %}
-    {% if instance_type in ["story", "track"] %}
+    {% if instance_type in ["story", "track", "character"] %}
         {% set tooltip_data = {} %}
         {% set enable_tooltip = 1 %}
     {% endif %}

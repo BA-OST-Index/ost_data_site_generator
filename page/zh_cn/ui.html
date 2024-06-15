@@ -1,13 +1,14 @@
 {% extends "template/zh_cn/base.html" %}
+{% from "template/zh_cn/_macro.html" import auto_zhcn_text_only %}
 
 {% if ui.filetype == 32 %}
     {% if ui.parent_data.name.zh_cn %}
-        {% set title = ui.parent_data.name.zh_cn + " " + ui.name.zh_cn %}
+        {% set title = auto_zhcn_text_only(ui.parent_data.name) + " " + auto_zhcn_text_only(ui.name) %}
     {% else %}
-        {% set title = ui.parent_data.name.zh_cn_jp + " " + ui.name.zh_cn %}
+        {% set title = auto_zhcn_text_only(ui.parent_data.name) + " " + auto_zhcn_text_only(ui.name) %}
     {% endif %}
 {% else %}
-    {% set title = ui.name.zh_cn %}
+    {% set title = auto_zhcn_text_only(ui.name) %}
 {% endif %}
 
 {% block title %}UI/{{ title }}{% endblock title %}

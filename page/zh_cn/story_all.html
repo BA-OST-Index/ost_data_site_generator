@@ -1,7 +1,7 @@
 {% extends "template/zh_cn/base.html" %}
-{% from 'template/zh_cn/_macro.html' import auto_zhcn_gen %}
+{% from 'template/zh_cn/_macro.html' import auto_zhcn_gen, auto_zhcn_text_only %}
 
-{% block title %}{{ story.name.zh_cn_jp }}的全部故事{% endblock title %}
+{% block title %}{{ auto_zhcn_text_only(story.name) }}的全部故事{% endblock title %}
 {% block article_content %}
     <h1>{{ auto_zhcn_gen(story.name) }}的全部故事</h1>
     {% if 'image' in story and story.image.value != "" %}

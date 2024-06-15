@@ -1,6 +1,7 @@
 {% extends "template/zh_cn/base.html" %}
+{% from "template/zh_cn/_macro.html" import auto_zhcn_text_only %}
 
-{% block title %}NPC/{{ char.name.zh_cn_jp }}{% endblock title %}
+{% block title %}NPC/{{ auto_zhcn_text_only(char.name) }}{% endblock title %}
 {% block article_content %}
     {% from "template/zh_cn/_macro_page.html" import output_usedby_story, output_usedby_track, output_relatedto_character, output_usedby_background, output_usedby_character_dict, output_usedby_ui %}
     {% from 'template/zh_cn/_macro.html' import auto_zhcn_gen %}

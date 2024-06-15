@@ -9,7 +9,9 @@
     {% set _story_no_string = "V" + story.pos.volume|string + "C" + story.pos.chapter|string + "E" + story.pos.segment|string %}
 {% endif %}
 
-{% block title %}故事/[{{ _story_no_string }}] {% if story.name.zh_cn_jp %}{{ story.name.zh_cn_jp }}{% else %}{{ story.name.zh_cn }}{% endif %}{% endblock title %}
+{% from "template/zh_cn/_macro.html" import auto_zhcn_text_only %}
+
+{% block title %}故事/[{{ _story_no_string }}] {{ auto_zhcn_text_only(story.name) }}{% endblock title %}
 {% block article_content %}
     {% from "template/zh_cn/_macro_tooltip.html" import tooltip_storypart_source, tooltip_add_data_js %}
     {% from "template/base/_macro.html" import get_story_text_color_css, get_storypart_text_color_css, generate_popup_for_tooltip_anchor, generate_tag_badge %}

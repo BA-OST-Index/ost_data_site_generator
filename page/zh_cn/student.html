@@ -1,9 +1,9 @@
 {% extends "template/zh_cn/base.html" %}
 {% from "template/zh_cn/_macro.html" import replace_newline_for_p %}
 {% from 'template/zh_cn/_macro_page.html' import output_usedby_story, output_usedby_track, output_relatedto_character, output_usedby_background, output_usedby_character_dict, output_usedby_ui %}
-{% from "template/zh_cn/_macro.html" import auto_zhcn_gen, nothing_to_show, generate_track_anchor %}
+{% from "template/zh_cn/_macro.html" import auto_zhcn_gen, nothing_to_show, generate_track_anchor, auto_zhcn_text_only %}
 
-{% block title %}学生/{{ char.student.name.name.zh_cn_jp }}{% endblock title %}
+{% block title %}学生/{{ auto_zhcn_text_only(char.student.name.name) }}{% endblock title %}
 {% block article_content %}
     <h1>学生/{{ auto_zhcn_gen(char.student.name.name) }}</h1>
     {% include "template/zh_cn/infobox/student.html" %}

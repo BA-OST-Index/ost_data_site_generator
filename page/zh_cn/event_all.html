@@ -1,7 +1,7 @@
 {% extends "template/zh_cn/base.html" %}
-{% from 'template/zh_cn/_macro.html' import auto_zhcn_gen, nothing_to_show %}
+{% from 'template/zh_cn/_macro.html' import auto_zhcn_gen, nothing_to_show, auto_zhcn_text_only %}
 
-{% block title %}活动/{% if event.name.zh_cn %}{{ event.name.zh_cn }}{% else %}{{ event.name.zh_cn_jp }}{% endif %}{% endblock title %}
+{% block title %}活动/{{ auto_zhcn_text_only(event.name) }}{% endblock title %}
 {% block article_content %}
     <h1>活动/{{ auto_zhcn_gen(event.name) }}</h1>
     <p><b><i>{{ auto_zhcn_gen(event.desc) }}</i></b></p>
