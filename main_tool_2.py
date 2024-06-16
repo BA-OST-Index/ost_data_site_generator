@@ -362,8 +362,8 @@ class TooltipHtmlGenerator:
 
         for type in self.data_types:
             print("writing tooltip", type)
-            js_writer(f"data_zh_cn_{type}_{INIT_TIME}.js", self.data["zh_cn"][type], type)
-            js_writer(f"data_en_{type}_{INIT_TIME}.js", self.data["en"][type], type)
+            js_writer(f"data_zh_cn_{type}.js", self.data["zh_cn"][type], type)
+            js_writer(f"data_en_{type}.js", self.data["en"][type], type)
 
 
 def generate_tooltip(jinja_env):

@@ -8,11 +8,11 @@
     {% include "template/zh_cn/header.html" %}
 {% endblock header %}
 {% block other_head %}
-    <script async src="/static/js/auto/tooltip/data_zh_cn_album_{{ get_init_time() }}.js"></script>
-    <script async src="/static/js/auto/tooltip/data_zh_cn_background_{{ get_init_time() }}.js"></script>
-    <script async src="/static/js/auto/tooltip/data_zh_cn_character_{{ get_init_time() }}.js"></script>
-    <script async src="/static/js/auto/tooltip/data_zh_cn_track_{{ get_init_time() }}.js"></script>
-    <script async src="/static/js/auto/tooltip/data_zh_cn_story_{{ get_init_time() }}.js"></script>
+    <script async src="/static/js/auto/tooltip/data_zh_cn_album.js?t={{ get_init_time() }}"></script>
+    <script async src="/static/js/auto/tooltip/data_zh_cn_background.js?t={{ get_init_time() }}"></script>
+    <script async src="/static/js/auto/tooltip/data_zh_cn_character.js?t={{ get_init_time() }}"></script>
+    <script async src="/static/js/auto/tooltip/data_zh_cn_track.js?t={{ get_init_time() }}"></script>
+    <script async src="/static/js/auto/tooltip/data_zh_cn_story.js?t={{ get_init_time() }}"></script>
 
     <script src="{{ get_static('js/page_all_track_display.js') }}"></script> {# backward-compatibility for track_all.html #}
 {% endblock other_head %}
