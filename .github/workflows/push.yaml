@@ -28,14 +28,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: 'recursive'
-        fetch-depth: 0
+        fetch-depth: 1
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.x'
+        # Locally running version, usable
+        python-version: '3.10'
     - name: Install necessary Python packages
       run: |
         pip install -r requirements.txt
@@ -60,15 +61,15 @@ jobs:
 
     # Deployment
     - name: Setup Pages
-      uses: actions/configure-pages@v3
+      uses: actions/configure-pages@v5
     - name: Upload artifact
-      uses: actions/upload-pages-artifact@v2
+      uses: actions/upload-pages-artifact@v4
       with:
         # Upload entire repository
         path: './data_html'
     - name: Deploy to GitHub Pages
       id: deployment
-      uses: actions/deploy-pages@v2
+      uses: actions/deploy-pages@v4
     - name: CloudFlare Page Purge
       uses: jakejarvis/cloudflare-purge-action@master
       env:
